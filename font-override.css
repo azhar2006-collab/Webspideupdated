@@ -1,0 +1,321 @@
+/* Global Image Merging & Border Removal Styles */
+.card-visual img,
+.illus-wrap img,
+.hww-illus img,
+.hww-illus-row img,
+.service-card img,
+.service-card .card-visual img,
+.service-card .illus-wrap img,
+.hww-card img,
+.hww-content-pane img,
+.hww-illus svg,
+.hww-illus-row svg,
+img[src*="Workflow"],
+img[src*="Services"],
+img[src*="workflow"],
+img[src*="services"] {
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  background-color: transparent !important;
+  mix-blend-mode: multiply !important;
+  filter: contrast(1.18) brightness(1.04) saturate(1.1) !important;
+}
+
+/* Ensure wrapper containers have no border, shadow, or background box */
+.card-visual,
+.illus-wrap,
+.hww-illus-row,
+.hww-illus,
+.hww-content-pane,
+.hww-card-right,
+.hww-card {
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+  background-color: transparent !important;
+}
+
+/* Reduced Icon Sizes Across All Sections */
+
+/* 1. Orbit & Hero Orbital Icons */
+.orbit-icon {
+  width: 44px !important;
+  height: 44px !important;
+  min-width: 44px !important;
+  min-height: 44px !important;
+}
+
+.orbit-icon svg {
+  width: 18px !important;
+  height: 18px !important;
+}
+
+.orb-card-icon {
+  width: 34px !important;
+  height: 34px !important;
+  min-width: 34px !important;
+  min-height: 34px !important;
+}
+
+.orb-card-icon svg {
+  width: 16px !important;
+  height: 16px !important;
+}
+
+/* 2. Banner Section Card Icons */
+.b1-icon,
+.b2-icon {
+  width: 34px !important;
+  height: 34px !important;
+  min-width: 34px !important;
+  min-height: 34px !important;
+}
+
+.b1-icon svg,
+.b2-icon svg {
+  width: 16px !important;
+  height: 16px !important;
+}
+
+/* 3. Why Choose Us Timeline Feature Icons */
+.icon-circle {
+  width: 42px !important;
+  height: 42px !important;
+  min-width: 42px !important;
+  min-height: 42px !important;
+}
+
+.icon-circle svg {
+  width: 19px !important;
+  height: 19px !important;
+}
+
+/* 4. How We Work Process & Sub-step Icons */
+.hww-sub-icon {
+  width: 28px !important;
+  height: 28px !important;
+  min-width: 28px !important;
+  min-height: 28px !important;
+  margin-bottom: 5px !important;
+}
+
+.hww-sub-icon svg {
+  width: 14px !important;
+  height: 14px !important;
+}
+
+.hww-badge {
+  width: 34px !important;
+  height: 34px !important;
+  min-width: 34px !important;
+  min-height: 34px !important;
+}
+
+.hww-badge-num {
+  font-size: 0.88rem !important;
+}
+
+.hww-step-num {
+  width: 26px !important;
+  height: 26px !important;
+  min-width: 26px !important;
+  min-height: 26px !important;
+  font-size: 0.82rem !important;
+}
+
+/* 5. Navigation & Mega Menu Icons */
+.mega-col-icon {
+  width: 30px !important;
+  height: 30px !important;
+  min-width: 30px !important;
+  min-height: 30px !important;
+}
+
+.mega-col-icon svg {
+  width: 15px !important;
+  height: 15px !important;
+}
+
+.nav-icon {
+  width: 14px !important;
+  height: 14px !important;
+}
+
+/* 6. Tech Stack Section — Exact Proportions Matching GitHub Layout */
+.ts-section-wrapper {
+  max-width: 1150px !important;
+  padding: 36px 20px 45px !important;
+}
+
+.ts-header {
+  margin-bottom: 28px !important;
+}
+
+.ts-badge {
+  font-size: 11px !important;
+  padding: 5px 16px !important;
+  margin-bottom: 12px !important;
+  letter-spacing: 1.5px !important;
+}
+
+.ts-header h2 {
+  font-size: clamp(18px, 2.4vw, 24px) !important;
+  margin-bottom: 6px !important;
+  line-height: 1.25 !important;
+}
+
+.ts-header h3 {
+  font-size: clamp(13px, 1.5vw, 15px) !important;
+  margin-bottom: 8px !important;
+}
+
+.ts-header p {
+  font-size: 0.95rem !important;
+  line-height: 1.65 !important;
+  max-width: 520px !important;
+}
+
+.ts-row {
+  margin-bottom: 24px !important;
+  align-items: center !important;
+  gap: 14px !important;
+}
+
+/* Connector line — centered on the 66px hex icon (33px from left) */
+.ts-timeline::before {
+  left: 33px !important;
+  width: 2px !important;
+}
+
+.ts-row-label {
+  width: 135px !important;
+  flex-shrink: 0 !important;
+}
+
+.ts-row-label span {
+  font-size: 14px !important;
+  font-weight: 800 !important;
+  line-height: 1.35 !important;
+}
+
+.ts-hex-wrap {
+  width: 66px !important;
+  height: 66px !important;
+  min-width: 66px !important;
+  min-height: 66px !important;
+}
+
+.ts-hex-wrap::before {
+  width: 82px !important;
+  height: 82px !important;
+}
+
+.ts-hex-wrap::after {
+  width: 66px !important;
+  height: 66px !important;
+}
+
+.ts-hex-wrap > svg:first-child {
+  width: 66px !important;
+  height: 66px !important;
+}
+
+.ts-hex-wrap .ts-hex-icon svg {
+  width: 26px !important;
+  height: 26px !important;
+}
+
+.ts-card {
+  padding: 14px 20px !important;
+  border-radius: 14px !important;
+  flex: 1 !important;
+  min-width: 0 !important;
+}
+
+.ts-tech-grid {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  align-items: center !important;
+  gap: 12px 18px !important;
+  overflow: visible !important;
+  justify-content: flex-start !important;
+}
+
+.ts-tech-item {
+  width: 78px !important;
+  gap: 6px !important;
+  flex-shrink: 0 !important;
+}
+
+.ts-tech-item img {
+  width: 44px !important;
+  height: 44px !important;
+  min-width: 44px !important;
+  min-height: 44px !important;
+  object-fit: contain !important;
+}
+
+.ts-tech-item span {
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  white-space: normal !important;
+  line-height: 1.25 !important;
+}
+
+@media (min-width: 768px) {
+  .ts-tech-grid {
+    flex-wrap: wrap !important;
+    gap: 14px 20px !important;
+    overflow-x: visible !important;
+  }
+  .ts-tech-item {
+    width: 82px !important;
+  }
+  .ts-tech-item img {
+    width: 46px !important;
+    height: 46px !important;
+  }
+  .ts-tech-item span {
+    font-size: 12.5px !important;
+  }
+  .ts-hex-wrap {
+    width: 68px !important;
+    height: 68px !important;
+    min-width: 68px !important;
+    min-height: 68px !important;
+  }
+  .ts-hex-wrap > svg:first-child {
+    width: 68px !important;
+    height: 68px !important;
+  }
+  .ts-hex-wrap::after {
+    width: 68px !important;
+    height: 68px !important;
+  }
+  .ts-hex-wrap::before {
+    width: 84px !important;
+    height: 84px !important;
+  }
+  .ts-timeline::before {
+    left: 34px !important;
+  }
+  .ts-row-label span {
+    font-size: 14.5px !important;
+  }
+}
+
+/* 7. Service Icon Badges */
+.service-icon {
+  width: 34px !important;
+  height: 34px !important;
+  min-width: 34px !important;
+}
+
+.service-icon svg {
+  width: 16px !important;
+  height: 16px !important;
+}

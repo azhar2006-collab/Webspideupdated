@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Log In ‹ Webspide — WordPress Model Admin</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Exo+2:wght@400;600;700;800&display=swap" rel="stylesheet" />
+
+
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --wp-body-bg: #f0f0f1;
+  --wp-card-bg: #ffffff;
+  --wp-primary: #1F4FB2;
+  --wp-primary-hover: #173e8e;
+  --wp-accent: #8B5CF6;
+  --wp-magenta: #C026B8;
+  --wp-border: #c3c4c7;
+  --wp-text: #2c3338;
+  --wp-text-muted: #646970;
+  --wp-danger: #d63638;
+  --wp-danger-bg: #fcf0f1;
+}
+
+body {
+  background: var(--wp-body-bg);
+  color: var(--wp-text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+  font-size: 13px;
+  line-height: 1.4em;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+}
+
+/* WP Login Wrapper */
+.login-container {
+  width: 100%;
+  max-width: 380px;
+  margin: 0 auto;
+}
+
+/* Brand Logo */
+.login-logo {
+  text-align: center;
+  margin-bottom: 24px;
+}
+.login-logo a {
+  text-decoration: none;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+.logo-name {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.6rem;
+  font-weight: 900;
+  background: linear-gradient(90deg, #1F4FB2, #8B5CF6, #C026B8);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: 2px;
+  display: inline-flex;
+  align-items: center;
+}
+.logo-name .w-logo {
+  height: 2.2rem;
+  width: auto;
+  margin-right: 2px;
+  vertical-align: middle;
+  object-fit: contain;
+}
+.logo-sub {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 2.5px;
+  color: #8B5CF6;
+  text-transform: uppercase;
+}
+
+/* Error Notice */
+.login-error-notice {
+  background: #fff;
+  border-left: 4px solid var(--wp-danger);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  padding: 12px 14px;
+  margin-bottom: 20px;
+  border-radius: 2px;
+  font-size: 13px;
+  line-height: 1.4;
+  display: none;
+  animation: shake 0.35s ease;
+}
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20%, 60% { transform: translateX(-6px); }
+  40%, 80% { transform: translateX(6px); }
+}
+
+/* Success / Notification Alert */
+.login-info-notice {
+  background: #f0fdf4;
+  border-left: 4px solid #16a34a;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+  padding: 12px 14px;
+  margin-bottom: 20px;
+  border-radius: 2px;
+  font-size: 13px;
+  color: #166534;
+  display: none;
+}
+
+/* Login Card Form */
+.login-card {
+  background: var(--wp-card-bg);
+  border: 1px solid var(--wp-border);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+  padding: 28px 24px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+}
+
+
+.form-group {
+  margin-bottom: 18px;
+}
+.form-group label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: #1d2327;
+  margin-bottom: 6px;
+}
+
+.input-wrap {
+  position: relative;
+}
+
+.form-control {
+  width: 100%;
+  padding: 9px 12px;
+  font-size: 14px;
+  border: 1px solid var(--wp-border);
+  border-radius: 4px;
+  background: #fff;
+  color: #2c3338;
+  outline: none;
+  transition: all .15s ease-in-out;
+}
+.form-control:focus {
+  border-color: var(--wp-primary);
+  box-shadow: 0 0 0 1px var(--wp-primary);
+}
+
+.toggle-password-btn {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--wp-text-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+}
+.toggle-password-btn:hover {
+  color: #1d2327;
+}
+
+.login-options-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+.remember-wrap {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12.5px;
+  color: #50575e;
+  cursor: pointer;
+  user-select: none;
+}
+.remember-wrap input[type="checkbox"] {
+  cursor: pointer;
+}
+
+.btn-login {
+  width: 100%;
+  padding: 10px 16px;
+  font-size: 14px;
+  font-weight: 700;
+  font-family: inherit;
+  color: #fff;
+  background: var(--wp-primary);
+  border: 1px solid var(--wp-primary);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background .15s, transform .15s, box-shadow .15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.btn-login:hover {
+  background: var(--wp-primary-hover);
+  border-color: var(--wp-primary-hover);
+  box-shadow: 0 2px 8px rgba(31,79,178,0.3);
+}
+.btn-login:active {
+  transform: scale(0.99);
+}
+
+/* Credentials Tip Box */
+.credentials-hint-box {
+  background: #fcfcfc;
+  border: 1px solid #e2e8f0;
+  border-left: 3px solid #8B5CF6;
+  border-radius: 3px;
+  padding: 10px 12px;
+  font-size: 11.5px;
+  color: #475467;
+  margin-top: 16px;
+  line-height: 1.5;
+}
+.credentials-hint-box strong {
+  color: #07164F;
+}
+.code-tag {
+  background: #edf2f7;
+  padding: 1px 5px;
+  border-radius: 3px;
+  font-family: monospace;
+  font-size: 11px;
+  color: #7A0D78;
+}
+
+/* Navigation footer links */
+.login-nav-links {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 12.5px;
+}
+.login-nav-links a {
+  color: #50575e;
+  text-decoration: none;
+  transition: color .15s;
+}
+.login-nav-links a:hover {
+  color: var(--wp-primary);
+  text-decoration: underline;
+}
+</style>
+</head>
+<body>
+
+<div class="login-container">
+  <!-- Brand Logo -->
+  <div class="login-logo">
+    <a href="index.html" title="Webspide Technologies">
+      <div class="logo-name">
+        <img src="w-logo.png" alt="W" class="w-logo" onerror="this.style.display='none'" />
+        <span>EBSPIDE</span>
+      </div>
+      <span class="logo-sub">Administration</span>
+    </a>
+  </div>
+
+  <!-- Error Message Alert -->
+  <div class="login-error-notice" id="loginErrorNotice">
+    <span id="loginErrorMsg"><strong>Error:</strong> Invalid username or password.</span>
+  </div>
+
+  <!-- Info Message Alert -->
+  <div class="login-info-notice" id="loginInfoNotice">
+    <span id="loginInfoMsg">Authentication successful! Redirecting...</span>
+  </div>
+
+  <!-- Login Form Card -->
+  <div class="login-card">
+    <form id="adminLoginForm" onsubmit="handleAdminLogin(event)">
+      
+      <!-- Username / Email -->
+      <div class="form-group">
+        <label for="adminUser">Username or Email Address</label>
+        <input type="text" id="adminUser" class="form-control" placeholder="admin" autocomplete="username" required autofocus />
+      </div>
+
+      <!-- Password -->
+      <div class="form-group">
+        <label for="adminPass">Password</label>
+        <div class="input-wrap">
+          <input type="password" id="adminPass" class="form-control" placeholder="••••••••" autocomplete="current-password" required />
+          <button type="button" class="toggle-password-btn" id="btnTogglePass" onclick="togglePasswordVisibility()" title="Show/Hide Password" aria-label="Toggle password visibility">
+            <svg id="eyeIcon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Remember Me -->
+      <div class="login-options-row">
+        <label class="remember-wrap">
+          <input type="checkbox" id="rememberMe" />
+          <span>Remember Me</span>
+        </label>
+      </div>
+
+      <!-- Submit Button -->
+      <button type="submit" class="btn-login" id="btnLoginSubmit">
+        <span>Log In</span>
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </button>
+
+      <!-- Default Credentials Help Box -->
+      <div class="credentials-hint-box">
+        <strong>Default Admin Login:</strong><br/>
+        Username: <span class="code-tag">admin</span><br/>
+        Password: <span class="code-tag">webspide2026</span>
+      </div>
+
+    </form>
+  </div>
+
+  <!-- Bottom Links -->
+  <div class="login-nav-links">
+    <a href="blog.html">← Go to Webspide Blog</a>
+    <a href="index.html">← Back to Main Website</a>
+  </div>
+</div>
+
+<script>
+const AUTH_KEY = 'webspide_admin_auth';
+const SESSION_KEY = 'webspide_admin_session';
+
+// Default Master Admin Credentials
+const DEFAULT_AUTH = {
+  username: 'admin',
+  password: 'webspide2026'
+};
+
+// Initialize auth in localStorage if not set
+function getAuthCredentials() {
+  const data = localStorage.getItem(AUTH_KEY);
+  if (!data) {
+    localStorage.setItem(AUTH_KEY, JSON.stringify(DEFAULT_AUTH));
+    return DEFAULT_AUTH;
+  }
+  try {
+    return JSON.parse(data);
+  } catch (e) {
+    return DEFAULT_AUTH;
+  }
+}
+
+function showErrorNotice(msg) {
+  const errorBox = document.getElementById('loginErrorNotice');
+  const errorMsg = document.getElementById('loginErrorMsg');
+  errorMsg.innerHTML = `<strong>Error:</strong> ${msg}`;
+  errorBox.style.display = 'block';
+  errorBox.style.animation = 'none';
+  errorBox.offsetHeight;
+  errorBox.style.animation = 'shake 0.35s ease';
+}
+
+function showSuccessNotice(msg) {
+  const infoBox = document.getElementById('loginInfoNotice');
+  const infoMsg = document.getElementById('loginInfoMsg');
+  infoMsg.textContent = msg;
+  infoBox.style.display = 'block';
+  document.getElementById('loginErrorNotice').style.display = 'none';
+}
+
+// Password toggle
+function togglePasswordVisibility() {
+  const passInput = document.getElementById('adminPass');
+  const icon = document.getElementById('eyeIcon');
+  if (passInput.type === 'password') {
+    passInput.type = 'text';
+    icon.innerHTML = '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>';
+  } else {
+    passInput.type = 'password';
+    icon.innerHTML = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';
+  }
+}
+
+// Handle Standard Form Submission
+function handleAdminLogin(e) {
+  e.preventDefault();
+
+  const user = document.getElementById('adminUser').value.trim().toLowerCase();
+  const pass = document.getElementById('adminPass').value;
+  const remember = document.getElementById('rememberMe').checked;
+  const btn = document.getElementById('btnLoginSubmit');
+
+  const auth = getAuthCredentials();
+
+  // Validate credentials
+  const isValidUser = (user === auth.username.toLowerCase());
+  const isValidPass = (pass === auth.password);
+
+  if (isValidUser && isValidPass) {
+    const token = 'ws_auth_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+    
+    sessionStorage.setItem(SESSION_KEY, token);
+
+    if (remember) {
+      localStorage.setItem(SESSION_KEY, token);
+    }
+
+    btn.innerHTML = '<span>Logging in...</span>';
+    btn.disabled = true;
+
+    showSuccessNotice('Login successful! Redirecting...');
+    setTimeout(() => {
+      window.location.href = 'blog-admin.html';
+    }, 400);
+
+  } else {
+    showErrorNotice('The username or password you entered is incorrect.');
+    document.getElementById('adminPass').value = '';
+    document.getElementById('adminPass').focus();
+  }
+}
+
+// Check if already authenticated on page load
+document.addEventListener('DOMContentLoaded', function() {
+  const isSessionActive = sessionStorage.getItem(SESSION_KEY) || localStorage.getItem(SESSION_KEY);
+  if (isSessionActive) {
+    window.location.href = 'blog-admin.html';
+  }
+});
+</script>
+</body>
+</html>

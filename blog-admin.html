@@ -1,0 +1,2065 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Dashboard ‹ Webspide — WordPress Model Admin</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800;900&family=Exo+2:wght@400;500;600;700;800&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet" />
+
+<style>
+/* ══════════════════════════════════════════════
+   WORDPRESS ADMIN DESIGN SYSTEM & THEME
+   ══════════════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --wp-admin-bar-bg: #101828;
+  --wp-menu-bg: #1d2327;
+  --wp-menu-item-hover: #13171a;
+  --wp-menu-current: #1F4FB2;
+  --wp-menu-text: #f0f0f1;
+  --wp-menu-icon: #a7aaad;
+  --wp-body-bg: #f0f0f1;
+  --wp-card-bg: #ffffff;
+  --wp-primary: #1F4FB2;
+  --wp-primary-hover: #173e8e;
+  --wp-accent: #8B5CF6;
+  --wp-magenta: #C026B8;
+  --wp-border: #c3c4c7;
+  --wp-border-light: #dcdcde;
+  --wp-text: #2c3338;
+  --wp-text-muted: #646970;
+  --wp-link: #2271b1;
+  --wp-danger: #d63638;
+  --wp-success: #008a20;
+  --wp-warning: #dba617;
+  --sidebar-w: 220px;
+  --admin-bar-h: 46px;
+}
+
+body {
+  background: var(--wp-body-bg);
+  color: var(--wp-text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+  font-size: 13px;
+  line-height: 1.4em;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ══════════════════════════════════════════════
+   1. TOP WP ADMIN BAR
+   ══════════════════════════════════════════════ */
+#wpadminbar {
+  height: var(--admin-bar-h);
+  background: var(--wp-admin-bar-bg);
+  color: #c3c4c7;
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 99999;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+
+.wp-bar-left, .wp-bar-right {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.wp-bar-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #c3c4c7;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 0 10px;
+  height: var(--admin-bar-h);
+  transition: background .15s, color .15s;
+  cursor: pointer;
+}
+.wp-bar-item:hover {
+  background: #222c38;
+  color: #72aee6;
+}
+.wp-brand-logo {
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 900;
+  letter-spacing: 1px;
+  background: linear-gradient(90deg, #75A8F7, #c084fc);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.wp-brand-logo img {
+  height: 20px;
+  width: auto;
+}
+
+.wp-bar-btn-new {
+  background: rgba(139,92,246,0.2);
+  color: #fff !important;
+  border-radius: 4px;
+  height: 28px;
+  padding: 0 10px;
+  margin-left: 8px;
+  font-weight: 600;
+}
+.wp-bar-btn-new:hover {
+  background: var(--wp-accent);
+}
+
+/* ══════════════════════════════════════════════
+   2. MAIN WRAPPER (SIDEBAR + CONTENT)
+   ══════════════════════════════════════════════ */
+#wpwrap {
+  display: flex;
+  margin-top: var(--admin-bar-h);
+  min-height: calc(100vh - var(--admin-bar-h));
+  flex: 1;
+}
+
+/* WP Sidebar */
+#adminmenuwrap {
+  width: var(--sidebar-w);
+  background: var(--wp-menu-bg);
+  flex-shrink: 0;
+  position: sticky;
+  top: var(--admin-bar-h);
+  height: calc(100vh - var(--admin-bar-h));
+  overflow-y: auto;
+  z-index: 1000;
+}
+
+#adminmenu {
+  list-style: none;
+  margin: 0;
+  padding: 10px 0;
+}
+
+.wp-menu-separator {
+  height: 1px;
+  background: rgba(255,255,255,0.08);
+  margin: 8px 0;
+}
+
+.wp-menu-header {
+  padding: 6px 16px 2px;
+  font-size: 11px;
+  text-transform: uppercase;
+  color: #646970;
+  letter-spacing: 0.5px;
+  font-weight: 700;
+}
+
+.wp-menu-item > a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 16px;
+  color: var(--wp-menu-text);
+  text-decoration: none;
+  font-size: 13.5px;
+  font-weight: 500;
+  transition: all .15s;
+  position: relative;
+}
+.wp-menu-item > a svg {
+  width: 17px;
+  height: 17px;
+  stroke: var(--wp-menu-icon);
+  fill: none;
+  stroke-width: 2;
+  flex-shrink: 0;
+}
+.wp-menu-item:hover > a {
+  background: var(--wp-menu-item-hover);
+  color: #72aee6;
+}
+.wp-menu-item:hover > a svg {
+  stroke: #72aee6;
+}
+.wp-menu-item.current > a {
+  background: var(--wp-menu-current);
+  color: #ffffff;
+  font-weight: 600;
+}
+.wp-menu-item.current > a svg {
+  stroke: #ffffff;
+}
+
+.wp-submenu {
+  list-style: none;
+  background: #2c3338;
+  padding: 4px 0;
+}
+.wp-submenu a {
+  display: block;
+  padding: 6px 16px 6px 42px;
+  color: #c3c4c7;
+  text-decoration: none;
+  font-size: 12.5px;
+  transition: color .15s;
+}
+.wp-submenu a:hover, .wp-submenu a.current-sub {
+  color: #72aee6;
+}
+
+/* ══════════════════════════════════════════════
+   3. MAIN CONTENT AREA
+   ══════════════════════════════════════════════ */
+#wpcontent {
+  flex: 1;
+  padding: 24px 30px 60px;
+  background: var(--wp-body-bg);
+  overflow-x: hidden;
+  max-width: 1600px;
+}
+
+.wrap-title-bar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+.wrap-title-bar h1 {
+  font-size: 23px;
+  font-weight: 600;
+  color: #1d2327;
+  line-height: 1.3;
+}
+
+.page-title-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  border: 1px solid var(--wp-primary);
+  border-radius: 4px;
+  background: #f6f7f7;
+  color: var(--wp-primary);
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all .15s;
+}
+.page-title-action:hover {
+  background: var(--wp-primary);
+  color: #fff;
+}
+
+/* WP Notices */
+.notice {
+  background: #fff;
+  border-left: 4px solid var(--wp-link);
+  box-shadow: 0 1px 1px rgba(0,0,0,0.04);
+  padding: 10px 14px;
+  margin: 12px 0 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-radius: 2px;
+  font-size: 13px;
+}
+.notice-success { border-left-color: var(--wp-success); }
+.notice-warning { border-left-color: var(--wp-warning); }
+.notice-error   { border-left-color: var(--wp-danger); }
+
+/* ══════════════════════════════════════════════
+   VIEW 1: ALL POSTS TABLE (WP FORMAT)
+   ══════════════════════════════════════════════ */
+.subsubsub {
+  list-style: none;
+  display: flex;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--wp-text-muted);
+  margin-bottom: 14px;
+  padding: 0;
+}
+.subsubsub li a {
+  color: var(--wp-link);
+  text-decoration: none;
+  font-weight: 500;
+}
+.subsubsub li a.current {
+  color: #000;
+  font-weight: 700;
+}
+.subsubsub .count {
+  color: var(--wp-text-muted);
+  font-weight: 400;
+}
+
+.tablenav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+.tablenav-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.tablenav-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.wp-select, .wp-input {
+  padding: 5px 8px;
+  font-size: 13px;
+  border: 1px solid var(--wp-border);
+  border-radius: 4px;
+  background: #fff;
+  color: var(--wp-text);
+  outline: none;
+}
+.wp-select:focus, .wp-input:focus {
+  border-color: var(--wp-link);
+  box-shadow: 0 0 0 1px var(--wp-link);
+}
+.button {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px 12px;
+  border: 1px solid var(--wp-border);
+  border-radius: 4px;
+  background: #f6f7f7;
+  color: var(--wp-text);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all .15s;
+  text-decoration: none;
+}
+.button:hover {
+  background: #f0f0f1;
+  border-color: #8c8f94;
+}
+.button-primary {
+  background: var(--wp-primary) !important;
+  color: #fff !important;
+  border-color: var(--wp-primary) !important;
+}
+.button-primary:hover {
+  background: var(--wp-primary-hover) !important;
+}
+
+/* WP Posts Table */
+.wp-list-table {
+  width: 100%;
+  border: 1px solid var(--wp-border-light);
+  background: #fff;
+  border-collapse: collapse;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+.wp-list-table th {
+  background: #f6f7f7;
+  padding: 10px 12px;
+  font-weight: 700;
+  text-align: left;
+  border-bottom: 1px solid var(--wp-border-light);
+  color: #2c3338;
+}
+.wp-list-table td {
+  padding: 12px;
+  border-bottom: 1px solid #f0f0f1;
+  vertical-align: top;
+}
+.wp-list-table tr:hover td {
+  background: #f9f9f9;
+}
+
+.post-title-cell strong {
+  font-size: 14px;
+  color: var(--wp-link);
+}
+.row-actions {
+  display: flex;
+  gap: 8px;
+  font-size: 12px;
+  margin-top: 4px;
+  visibility: visible;
+}
+.row-actions a {
+  color: var(--wp-link);
+  text-decoration: none;
+}
+.row-actions a:hover {
+  text-decoration: underline;
+}
+.row-actions .trash-action {
+  color: var(--wp-danger);
+}
+
+.table-img-thumb {
+  width: 54px;
+  height: 38px;
+  object-fit: cover;
+  border-radius: 3px;
+  border: 1px solid #dcdcde;
+}
+.badge-status {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 700;
+}
+.badge-pub {
+  background: #edf7ed;
+  color: #1e4620;
+}
+.badge-scheduled {
+  background: #e0f2fe;
+  color: #0369a1;
+  border: 1px solid #bae6fd;
+}
+.badge-draft {
+  background: #fff4e5;
+  color: #663c00;
+}
+
+/* ══════════════════════════════════════════════
+   VIEW 2: FULL-PAGE POST EDITOR (WP GUTENBERG / CLASSIC)
+   NO POPUP MODAL - 100% CLEAN SCROLLABLE PAGE!
+   ══════════════════════════════════════════════ */
+#viewPostEditor {
+  display: none;
+}
+
+.editor-header-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--wp-border-light);
+  margin-bottom: 24px;
+}
+
+.post-editor-layout {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 28px;
+  align-items: start;
+}
+
+/* Left Editor Column (Scrolls naturally with page) */
+.editor-main-col {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.post-title-input {
+  width: 100%;
+  padding: 12px 16px;
+  font-size: 24px;
+  font-family: 'Exo 2', -apple-system, sans-serif;
+  font-weight: 800;
+  border: 1px solid var(--wp-border);
+  border-radius: 4px;
+  background: #fff;
+  color: #1d2327;
+  outline: none;
+  transition: border-color .15s;
+}
+.post-title-input:focus {
+  border-color: var(--wp-primary);
+  box-shadow: 0 0 0 1px var(--wp-primary);
+}
+
+/* WP Toolbar */
+.wp-editor-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  background: #f6f7f7;
+  border: 1px solid var(--wp-border);
+  border-bottom: none;
+  border-radius: 4px 4px 0 0;
+  padding: 6px 8px;
+}
+.wp-editor-btn {
+  background: #fff;
+  border: 1px solid #c3c4c7;
+  padding: 4px 10px;
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 3px;
+  cursor: pointer;
+  color: #2c3338;
+}
+.wp-editor-btn:hover {
+  background: var(--wp-primary);
+  color: #fff;
+  border-color: var(--wp-primary);
+}
+
+.post-content-textarea {
+  width: 100%;
+  min-height: 420px;
+  padding: 16px;
+  font-size: 14.5px;
+  line-height: 1.75em;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, sans-serif;
+  border: 1px solid var(--wp-border);
+  border-radius: 0 0 4px 4px;
+  background: #fff;
+  color: #1d2327;
+  outline: none;
+  resize: vertical;
+}
+.post-content-textarea:focus {
+  border-color: var(--wp-primary);
+  box-shadow: 0 0 0 1px var(--wp-primary);
+}
+
+/* WP Post Meta Boxes */
+.postbox {
+  background: #fff;
+  border: 1px solid var(--wp-border-light);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+.postbox-header {
+  padding: 12px 16px;
+  background: #fcfcfc;
+  border-bottom: 1px solid var(--wp-border-light);
+  font-weight: 700;
+  font-size: 13.5px;
+  color: #1d2327;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.postbox-inside {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* Publish Meta Box Specifics */
+.misc-pub-section {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 0;
+  font-size: 13px;
+  color: var(--wp-text-muted);
+  border-bottom: 1px solid #f0f0f1;
+}
+.misc-pub-section strong {
+  color: var(--wp-text);
+}
+.postbox-footer {
+  background: #f6f7f7;
+  border-top: 1px solid var(--wp-border-light);
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Featured Image Preview in Box */
+.featured-img-preview-box {
+  width: 100%;
+  min-height: 160px;
+  max-height: 200px;
+  border-radius: 4px;
+  border: 2px dashed var(--wp-border);
+  overflow: hidden;
+  background: #f6f7f7;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  cursor: pointer;
+  transition: all .2s;
+  padding: 12px;
+  text-align: center;
+}
+.featured-img-preview-box:hover, .featured-img-preview-box.dragover {
+  border-color: var(--wp-primary);
+  background: #eef2ff;
+}
+.featured-img-preview-box img {
+  width: 100%;
+  max-height: 180px;
+  object-fit: cover;
+  border-radius: 3px;
+}
+.featured-img-preview-box span.ph-text {
+  color: var(--wp-text-muted);
+  font-size: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+.featured-img-preview-box span.ph-text svg {
+  width: 32px;
+  height: 32px;
+  stroke: var(--wp-link);
+  fill: none;
+  stroke-width: 1.8;
+}
+
+.img-action-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: 4px;
+}
+.img-upload-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 12px;
+  background: #f0f0f1;
+  border: 1px solid var(--wp-border);
+  border-radius: 4px;
+  color: #1d2327;
+  font-size: 12.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all .15s;
+}
+.img-upload-btn:hover {
+  background: var(--wp-primary);
+  color: #fff;
+  border-color: var(--wp-primary);
+}
+
+.img-remove-link {
+  color: var(--wp-danger);
+  font-size: 11.5px;
+  text-decoration: none;
+  cursor: pointer;
+  display: none;
+}
+.img-remove-link:hover {
+  text-decoration: underline;
+}
+
+.preset-image-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 8px;
+}
+.img-chip {
+  padding: 3px 8px;
+  background: #f0f0f1;
+  border-radius: 3px;
+  font-size: 11px;
+  cursor: pointer;
+  border: 1px solid #dcdcde;
+  transition: all .15s;
+}
+.img-chip:hover {
+  background: var(--wp-accent);
+  color: #fff;
+  border-color: var(--wp-accent);
+}
+
+/* ══════════════════════════════════════════════
+   VIEW 3: CATEGORIES MANAGER
+   ══════════════════════════════════════════════ */
+#viewCategories {
+  display: none;
+}
+.categories-layout {
+  display: grid;
+  grid-template-columns: 340px 1fr;
+  gap: 24px;
+  align-items: start;
+}
+
+/* ══════════════════════════════════════════════
+   VIEW 4: SETTINGS / TOOLS
+   ══════════════════════════════════════════════ */
+#viewSettings {
+  display: none;
+}
+.settings-card {
+  background: #fff;
+  border: 1px solid var(--wp-border-light);
+  border-radius: 4px;
+  padding: 24px;
+  max-width: 720px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Toast Alert */
+.wp-toast {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  background: #1d2327;
+  color: #fff;
+  padding: 12px 20px;
+  border-radius: 4px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+  border-left: 4px solid var(--wp-success);
+  font-size: 13.5px;
+  font-weight: 600;
+  z-index: 999999;
+  display: none;
+  animation: fadeIn 0.2s ease;
+}
+@keyframes fadeIn { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+
+/* Responsive */
+@media(max-width: 900px) {
+  .post-editor-layout { grid-template-columns: 1fr; }
+  .categories-layout { grid-template-columns: 1fr; }
+  #adminmenuwrap { width: 64px; }
+  .wp-menu-item > a span, .wp-menu-header, .wp-submenu { display: none; }
+  #wpcontent { padding: 16px; }
+}
+</style>
+</head>
+<body>
+
+<!-- 1. WORDPRESS ADMIN TOP BAR -->
+<div id="wpadminbar">
+  <div class="wp-bar-left">
+    <a href="index.html" class="wp-bar-item wp-brand-logo" title="Visit Webspide Home">
+      <img src="w-logo.png" alt="W" onerror="this.style.display='none'" />
+      <span>EBSPIDE</span>
+    </a>
+ 
+    <button class="wp-bar-item wp-bar-btn-new" onclick="switchView('new-post')">
+      + New Post
+    </button>
+  </div>
+
+  <div class="wp-bar-right">
+    <div class="wp-user-menu" style="position:relative;">
+      <a href="javascript:void(0)" class="wp-bar-item" id="userMenuBtn" onclick="toggleUserDropdown()" style="cursor:pointer;display:inline-flex;align-items:center;gap:8px;">
+        <span id="userGreetingText">Howdy, <strong id="adminTopBarName">Administrator</strong> ▾</span>
+      </a>
+      <div class="wp-user-dropdown" id="userDropdown" style="display:none;position:absolute;right:0;top:var(--admin-bar-h);background:#2c3338;border:1px solid #1d2327;box-shadow:0 4px 12px rgba(0,0,0,0.3);min-width:200px;border-radius:0 0 4px 4px;z-index:999999;">
+        <div style="padding:10px 14px;border-bottom:1px solid rgba(255,255,255,0.1);color:#c3c4c7;font-size:12px;">
+          Signed in as<br/>
+          <strong style="color:#fff;word-break:break-all;" id="currentAdminUserDisplay">admin</strong>
+        </div>
+        <a href="javascript:void(0)" onclick="switchView('settings')" style="display:flex;align-items:center;gap:8px;padding:8px 14px;color:#c3c4c7;text-decoration:none;font-size:12.5px;transition:all .15s;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          Account Settings
+        </a>
+        <a href="javascript:void(0)" onclick="handleAdminLogout()" style="display:flex;align-items:center;gap:8px;padding:8px 14px;color:#d63638;text-decoration:none;font-size:12.5px;border-top:1px solid rgba(255,255,255,0.08);transition:all .15s;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          Log Out
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 2. WRAPPER (SIDEBAR + MAIN CONTENT) -->
+<div id="wpwrap">
+
+  <!-- LEFT ADMIN SIDEBAR -->
+  <aside id="adminmenuwrap">
+    <ul id="adminmenu">
+      <li class="wp-menu-header">Core</li>
+      
+      <li class="wp-menu-item" id="navItemDashboard">
+        <a href="javascript:void(0)" onclick="switchView('posts')">
+          <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          <span>Dashboard</span>
+        </a>
+      </li>
+
+      <li class="wp-menu-separator"></li>
+      <li class="wp-menu-header">Content</li>
+
+      <!-- POSTS / BLOG INVENTORY -->
+      <li class="wp-menu-item current" id="navItemPosts">
+        <a href="javascript:void(0)" onclick="switchView('posts')">
+          <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+          <span>Posts</span>
+        </a>
+        <ul class="wp-submenu">
+          <li><a href="javascript:void(0)" id="subAllPosts" class="current-sub" onclick="switchView('posts')">All Posts</a></li>
+          <li><a href="javascript:void(0)" id="subAddNew" onclick="switchView('new-post')">Add New Post</a></li>
+          <li><a href="javascript:void(0)" id="subCategories" onclick="switchView('categories')">Categories</a></li>
+        </ul>
+      </li>
+
+      <li class="wp-menu-separator"></li>
+      <li class="wp-menu-header">Management</li>
+
+      <li class="wp-menu-item" id="navItemSettings">
+        <a href="javascript:void(0)" onclick="switchView('settings')">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          <span>Tools &amp; Backup</span>
+        </a>
+      </li>
+
+      <li class="wp-menu-item">
+        <a href="blog.html" target="_blank">
+          <svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          <span>Live Site ↗</span>
+        </a>
+      </li>
+    </ul>
+  </aside>
+
+  <!-- MAIN CONTENT CONTAINER -->
+  <main id="wpcontent">
+
+    <!-- GLOBAL NOTICE AREA -->
+    <div id="wpNotice" class="notice notice-success" style="display:none;">
+      <span id="wpNoticeMsg">Action completed successfully.</span>
+      <button onclick="document.getElementById('wpNotice').style.display='none'" style="border:none;background:none;cursor:pointer;font-size:16px;">&times;</button>
+    </div>
+
+    <!-- ══════════════════════════════════════════════
+         SCREEN 1: ALL POSTS TABLE VIEW (WP FORMAT)
+         ══════════════════════════════════════════════ -->
+    <section id="viewAllPosts">
+      <div class="wrap-title-bar">
+        <h1>Posts</h1>
+        <button class="page-title-action" onclick="switchView('new-post')">+ Add New Post</button>
+      </div>
+
+      <!-- WP Filter Tabs (All | Published | Scheduled | Drafts) -->
+      <ul class="subsubsub">
+        <li><a href="javascript:void(0)" class="current" id="filterTabAll" onclick="filterByStatus('all')">All <span class="count" id="countAll">(0)</span></a> |</li>
+        <li><a href="javascript:void(0)" id="filterTabPub" onclick="filterByStatus('published')">Published <span class="count" id="countPub">(0)</span></a> |</li>
+        <li><a href="javascript:void(0)" id="filterTabSched" onclick="filterByStatus('scheduled')">Scheduled <span class="count" id="countSched">(0)</span></a> |</li>
+        <li><a href="javascript:void(0)" id="filterTabDraft" onclick="filterByStatus('draft')">Drafts <span class="count" id="countDraft">(0)</span></a></li>
+      </ul>
+
+      <!-- Table Toolbar Controls -->
+      <div class="tablenav">
+        <div class="tablenav-left">
+          <select class="wp-select" id="filterCategory" onchange="renderPostsTable()">
+            <option value="all">All Categories</option>
+            <option value="Web Development">Web Development</option>
+            <option value="App Development">App Development</option>
+            <option value="Digital Marketing">Digital Marketing</option>
+            <option value="SEO & Content">SEO & Content</option>
+            <option value="UI/UX Design">UI/UX Design</option>
+            <option value="Technology">Technology</option>
+          </select>
+
+          <select class="wp-select" id="sortOrder" onchange="renderPostsTable()">
+            <option value="newest">Sort by Date (Newest)</option>
+            <option value="oldest">Sort by Date (Oldest)</option>
+            <option value="title">Sort by Title (A-Z)</option>
+          </select>
+        </div>
+
+        <div class="tablenav-right">
+          <input type="search" class="wp-input" id="searchPosts" placeholder="Search posts..." oninput="renderPostsTable()" />
+        </div>
+      </div>
+
+      <!-- Posts List Table -->
+      <table class="wp-list-table">
+        <thead>
+          <tr>
+            <th style="width:60px;">Image</th>
+            <th>Title</th>
+            <th>Author</th>
+            <th>Categories</th>
+            <th>Date</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="postsTableBody">
+          <!-- Rendered dynamically -->
+        </tbody>
+      </table>
+    </section>
+
+    <!-- ══════════════════════════════════════════════
+         SCREEN 2: FULL-PAGE POST EDITOR (WP MODEL)
+         NATURAL FULL-PAGE SCROLLING!
+         ══════════════════════════════════════════════ -->
+    <section id="viewPostEditor">
+      <form id="wpPostForm" onsubmit="handleSavePost(event)">
+        <input type="hidden" id="editPostId" value="" />
+
+        <div class="editor-header-bar">
+          <div class="wrap-title-bar" style="margin-bottom:0;">
+            <h1 id="editorPageHeading">Add New Post</h1>
+            <a href="javascript:void(0)" class="button" onclick="switchView('posts')">‹ Back to All Posts</a>
+          </div>
+          <div style="display:flex;gap:8px;">
+            <button type="button" class="button" onclick="saveAsDraft()">Save Draft</button>
+            <button type="submit" class="button button-primary" id="btnPublishPost">Publish</button>
+          </div>
+        </div>
+
+        <!-- 2-COLUMN WORDPRESS EDITOR LAYOUT -->
+        <div class="post-editor-layout">
+          
+          <!-- LEFT MAIN COLUMN (TITLE + CONTENT + EXCERPT) -->
+          <div class="editor-main-col">
+            
+            <!-- Big Title Input -->
+            <div>
+              <input type="text" id="postTitle" class="post-title-input" placeholder="Add title..." required />
+            </div>
+
+            <!-- Content Editor Meta Box -->
+            <div class="postbox" style="margin-bottom:0;">
+              <div class="postbox-header">
+                <span>Article Body Content</span>
+              </div>
+              <div style="padding:0;">
+                <div class="wp-editor-toolbar">
+                  <button type="button" class="wp-editor-btn" onclick="insertTag('h2')">H2</button>
+                  <button type="button" class="wp-editor-btn" onclick="insertTag('h3')">H3</button>
+                  <button type="button" class="wp-editor-btn" onclick="insertTag('p')">Paragraph</button>
+                  <button type="button" class="wp-editor-btn" onclick="insertTag('b')">Bold</button>
+                  <button type="button" class="wp-editor-btn" onclick="insertTag('quote')">Blockquote</button>
+                  <button type="button" class="wp-editor-btn" onclick="insertTag('ul')">Bullet List</button>
+                </div>
+                <textarea id="postContent" class="post-content-textarea" placeholder="Start writing or paste HTML content here..." required></textarea>
+              </div>
+            </div>
+
+            <!-- Excerpt Meta Box -->
+            <div class="postbox">
+              <div class="postbox-header">
+                <span>Excerpt / Short Summary</span>
+              </div>
+              <div class="postbox-inside">
+                <textarea id="postExcerpt" class="wp-input" rows="3" style="width:100%;resize:vertical;" placeholder="Write an excerpt (optional, shown in blog card previews)..." required></textarea>
+                <span style="font-size:12px;color:var(--wp-text-muted);">Excerpts are optional hand-crafted summaries of your content.</span>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- RIGHT SIDEBAR (PUBLISH, CATEGORIES, FEATURED IMAGE) -->
+          <div class="editor-side-col">
+
+            <!-- PUBLISH & SCHEDULE POSTBOX -->
+            <div class="postbox">
+              <div class="postbox-header">
+                <span>Publish / Schedule Settings</span>
+              </div>
+              <div class="postbox-inside">
+                <div class="misc-pub-section">
+                  <span>Status:</span>
+                  <select id="postStatus" class="wp-select" style="font-weight:700;" onchange="handleStatusChange()">
+                    <option value="published">Published (Live now)</option>
+                    <option value="scheduled">Scheduled (Future time)</option>
+                    <option value="draft">Draft</option>
+                  </select>
+                </div>
+                <div class="misc-pub-section">
+                  <span>Schedule Date:</span>
+                  <input type="date" id="postDate" class="wp-input" style="padding:2px 6px;" onchange="handleScheduleDateTimeChange()" />
+                </div>
+                <div class="misc-pub-section">
+                  <span>Schedule Time:</span>
+                  <input type="time" id="postTime" class="wp-input" style="padding:2px 6px;" onchange="handleScheduleDateTimeChange()" />
+                </div>
+                <!-- Dynamic Schedule Info Hint -->
+                <div id="scheduleInfoHint" style="display:none;background:#e0f2fe;border:1px solid #bae6fd;border-radius:4px;padding:6px 10px;font-size:11.5px;color:#0369a1;margin-top:2px;">
+                  🕒 Scheduled to go live on <strong id="scheduleTargetText">--</strong>
+                </div>
+                <div class="misc-pub-section">
+                  <span>Read Time:</span>
+                  <input type="text" id="postReadTime" class="wp-input" style="width:110px;" value="5 min read" />
+                </div>
+                <div class="misc-pub-section">
+                  <span>Author:</span>
+                  <input type="text" id="postAuthor" class="wp-input" style="width:130px;" value="Webspide Team" required />
+                </div>
+              </div>
+              <div class="postbox-footer">
+                <a href="javascript:void(0)" class="row-actions trash-action" onclick="deleteCurrentEditingPost()">Delete Post</a>
+                <button type="submit" class="button button-primary" id="btnPublishPostSide">Publish</button>
+              </div>
+            </div>
+
+            <!-- CATEGORIES POSTBOX -->
+            <div class="postbox">
+              <div class="postbox-header">
+                <span>Category</span>
+              </div>
+              <div class="postbox-inside">
+                <select id="postCategory" class="wp-select" style="width:100%;" required>
+                  <option value="Web Development">Web Development</option>
+                  <option value="App Development">App Development</option>
+                  <option value="Digital Marketing">Digital Marketing</option>
+                  <option value="SEO & Content">SEO & Content</option>
+                  <option value="UI/UX Design">UI/UX Design</option>
+                  <option value="Technology">Technology</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- FEATURED IMAGE POSTBOX (UPLOAD FILE OR URL) -->
+            <div class="postbox">
+              <div class="postbox-header">
+                <span>Featured Image</span>
+              </div>
+              <div class="postbox-inside">
+                <!-- Dropzone / Preview -->
+                <div class="featured-img-preview-box" id="editorImgBox" onclick="document.getElementById('postImageFileInput').click()" title="Click to upload an image from your computer">
+                  <span class="ph-text" id="editorImgPlaceholder">
+                    <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                    <strong>Click to Upload Image</strong>
+                    <span style="font-size:11px;color:#8c8f94;">or drag &amp; drop file here (JPG, PNG, WebP)</span>
+                  </span>
+                  <img id="editorImgPreview" src="" alt="Featured Preview" style="display:none;" />
+                </div>
+
+                <!-- Hidden file input -->
+                <input type="file" id="postImageFileInput" accept="image/*" style="display:none;" onchange="handleImageFileUpload(event)" />
+
+                <!-- Action Bar -->
+                <div class="img-action-bar">
+                  <button type="button" class="img-upload-btn" onclick="document.getElementById('postImageFileInput').click()">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                    <span id="btnUploadLabel">Choose File from Device</span>
+                  </button>
+                </div>
+                <div style="text-align:right;">
+                  <a href="javascript:void(0)" class="img-remove-link" id="btnRemoveImg" onclick="removeFeaturedImage()">Remove Featured Image</a>
+                </div>
+
+                <!-- URL Input Option -->
+                <div style="margin-top:4px;">
+                  <label style="font-size:11.5px;color:var(--wp-text-muted);display:block;margin-bottom:3px;">Or Paste Image URL directly:</label>
+                  <input type="text" id="postImage" class="wp-input" style="width:100%;font-size:12px;" placeholder="https://example.com/image.jpg..." oninput="handleImageUrlInput(this.value)" />
+                </div>
+
+                <!-- Preset Chips -->
+                <div>
+                  <span style="font-size:11px;color:var(--wp-text-muted);display:block;margin-top:6px;">Quick Presets:</span>
+                  <div class="preset-image-chips">
+                    <span class="img-chip" onclick="setEditorPreset('web')">💻 Coding</span>
+                    <span class="img-chip" onclick="setEditorPreset('mobile')">📱 Mobile</span>
+                    <span class="img-chip" onclick="setEditorPreset('marketing')">📈 Marketing</span>
+                    <span class="img-chip" onclick="setEditorPreset('design')">🎨 UI/UX</span>
+                    <span class="img-chip" onclick="setEditorPreset('ai')">🤖 AI &amp; Tech</span>
+                    <span class="img-chip" onclick="setEditorPreset('security')">🔒 Security</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+      </form>
+    </section>
+
+    <!-- ══════════════════════════════════════════════
+         SCREEN 3: CATEGORIES MANAGER (WP FORMAT)
+         ══════════════════════════════════════════════ -->
+    <section id="viewCategories">
+      <div class="wrap-title-bar">
+        <h1>Categories</h1>
+      </div>
+
+      <div class="categories-layout">
+        <!-- Left: Add Category Form -->
+        <div class="postbox">
+          <div class="postbox-header">
+            <span>Add New Category</span>
+          </div>
+          <div class="postbox-inside">
+            <div>
+              <label style="font-weight:600;display:block;margin-bottom:4px;">Category Name</label>
+              <input type="text" id="newCategoryName" class="wp-input" style="width:100%;" placeholder="e.g. Cloud Computing" />
+            </div>
+            <button type="button" class="button button-primary" onclick="addNewCategory()">Add New Category</button>
+          </div>
+        </div>
+
+        <!-- Right: Categories List Table -->
+        <table class="wp-list-table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Count</th>
+            </tr>
+          </thead>
+          <tbody id="categoriesTableBody">
+            <!-- Dynamically Rendered -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════
+         SCREEN 4: TOOLS & BACKUP (WP FORMAT)
+         ══════════════════════════════════════════════ -->
+    <section id="viewSettings">
+      <div class="wrap-title-bar">
+        <h1>Settings &amp; Tools</h1>
+      </div>
+
+      <div class="settings-card">
+        <!-- Admin Credentials Section -->
+        <div>
+          <h3 style="font-size:16px;margin-bottom:6px;display:flex;align-items:center;gap:8px;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1F4FB2" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            Admin Login Credentials
+          </h3>
+          <p style="color:var(--wp-text-muted);margin-bottom:14px;">Update your administrator login username and password.</p>
+          
+          <form onsubmit="handleUpdateCredentials(event)" style="display:flex;flex-direction:column;gap:12px;max-width:440px;">
+            <div>
+              <label style="font-weight:600;display:block;margin-bottom:4px;font-size:12.5px;">Admin Username</label>
+              <input type="text" id="settingAdminUser" class="wp-input" style="width:100%;" required />
+            </div>
+            <div>
+              <label style="font-weight:600;display:block;margin-bottom:4px;font-size:12.5px;">New Password</label>
+              <input type="password" id="settingAdminPass" class="wp-input" style="width:100%;" placeholder="Enter new password..." required />
+            </div>
+            <div>
+              <button type="submit" class="button">Update Credentials</button>
+            </div>
+          </form>
+        </div>
+
+        <hr style="border:none;border-top:1px solid var(--wp-border-light);" />
+
+        <!-- Export Section -->
+        <div>
+          <h3 style="font-size:16px;margin-bottom:6px;">Export Blog Inventory</h3>
+          <p style="color:var(--wp-text-muted);margin-bottom:12px;">Download a JSON backup of all your published and draft articles.</p>
+          <button class="button" onclick="exportJsonData()">Download Export JSON</button>
+        </div>
+
+        <hr style="border:none;border-top:1px solid var(--wp-border-light);" />
+
+        <!-- Reset Section -->
+        <div>
+          <h3 style="font-size:16px;margin-bottom:6px;">Reset Sample Posts</h3>
+          <p style="color:var(--wp-text-muted);margin-bottom:12px;">Reset your blog inventory back to the default curated sample posts.</p>
+          <button class="button" onclick="resetToSeedSamples()">Restore Sample Data</button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<!-- TOAST ALERT -->
+<div class="wp-toast" id="wpToast">Post saved successfully.</div>
+
+<script>
+const AUTH_KEY = 'webspide_admin_auth';
+const SESSION_KEY = 'webspide_admin_session';
+
+// Auth Guard: Redirect immediately to blog-login.html if not authenticated
+(function checkAdminAuth() {
+  const sessionToken = sessionStorage.getItem(SESSION_KEY) || localStorage.getItem(SESSION_KEY);
+  if (!sessionToken) {
+    window.location.replace('blog-login.html');
+  }
+})();
+
+const STORAGE_KEY = 'webspide_blogs';
+
+// Default seed blogs
+const DEFAULT_SEED_BLOGS = [
+  {
+    id: 'blog_1',
+    title: 'The Future of Custom Web Development in 2026: AI, Speed & Micro-Frontends',
+    category: 'Web Development',
+    author: 'Azhar Hussain',
+    date: '2026-08-18',
+    readTime: '6 min read',
+    status: 'published',
+    image: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1200&q=80',
+    excerpt: 'Modern web architectures have evolved radically. Explore how edge computing, AI integrations, and micro-frontend architectures are setting new benchmarks for enterprise applications.',
+    content: `<h2>The Paradigm Shift in Web Architecture</h2>
+<p>Modern enterprises no longer build monolithic web platforms that take minutes to deploy and hours to scale. In 2026, building scalable web products requires lightning-fast load times, localized edge computing, and modular micro-frontends.</p>
+
+<h3>1. Micro-Frontends for Large-Scale Agility</h3>
+<p>By decomposing monolithic frontends into independent, domain-driven micro-apps, distributed engineering teams can build, test, and deploy features in isolation without stepping on each other's toes.</p>
+<blockquote>"Micro-frontends allow continuous deployment with zero downtime, giving high-growth companies an unmatched competitive advantage."</blockquote>
+
+<h3>2. Edge-Rendered Dynamic Content</h3>
+<p>Deploying application logic directly to CDN edge workers reduces latency to under 20ms across global markets. Whether handling personalized user dashboards or dynamic inventory updates, edge computing is now essential.</p>
+
+<h3>3. Seamless AI Assistant Integrations</h3>
+<p>From predictive search autocomplete to conversational customer care agents built directly into the UI, modern web apps leverage client-side AI streaming to deliver intuitive user experiences.</p>
+
+<h2>Conclusion</h2>
+<p>Investing in clean, scalable web architecture today guarantees lower maintenance costs, higher conversion rates, and the resilience needed for future digital expansion.</p>`
+  },
+  {
+    id: 'blog_2',
+    title: 'Mastering Cross-Platform Mobile Apps: Flutter vs React Native in Depth',
+    category: 'App Development',
+    author: 'Luiza Mary',
+    date: '2026-08-15',
+    readTime: '5 min read',
+    status: 'published',
+    image: 'https://images.unsplash.com/photo-1551650975-87deedd944c3?auto=format&fit=crop&w=1200&q=80',
+    excerpt: 'Choosing between Flutter and React Native can make or break your mobile startup. We benchmark performance, native bridge overhead, rendering engines, and team velocity.',
+    content: `<h2>The Dilemma: Choosing the Right Framework</h2>
+<p>Building separate native apps for iOS and Android often doubles development costs and timelines. Cross-platform engineering has reached native parity, with Flutter and React Native dominating the market.</p>
+
+<h3>Flutter's Impeller Rendering Engine</h3>
+<p>Flutter compiles directly to native ARM machine code with its high-performance Impeller engine, ensuring smooth 120 FPS animations, complete widget customizability, and pixel perfection across all devices.</p>
+
+<h3>React Native with New Architecture & TurboModules</h3>
+<p>React Native's latest architecture eliminates the legacy asynchronous bridge, enabling direct C++ JSI communication and instant rendering speeds with the vast JavaScript and React ecosystem.</p>
+
+<h2>Key Evaluation Criteria</h2>
+<ul>
+  <li><strong>Development Speed:</strong> React Native wins if your team already excels in React & TypeScript.</li>
+  <li><strong>Visual Customization:</strong> Flutter excels when custom 2D canvas graphics and intricate transitions are paramount.</li>
+  <li><strong>Ecosystem & Libraries:</strong> Both offer battle-tested enterprise modules and robust community support.</li>
+</ul>`
+  },
+  {
+    id: 'blog_3',
+    title: 'Proven SEO Strategies to Rank Higher and Capture High-Intent Traffic',
+    category: 'SEO & Content',
+    author: 'Rishi Kumar',
+    date: '2026-08-10',
+    readTime: '7 min read',
+    status: 'published',
+    image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=1200&q=80',
+    excerpt: 'Technical SEO and high-intent semantic content are your strongest revenue drivers. Learn the exact playbook we use to rank our clients in top search positions.',
+    content: `<h2>Why Generic SEO No Longer Works</h2>
+<p>Search engines now prioritize topical authority, deep user intent satisfaction, and Core Web Vitals over keyword density. Here is how modern businesses dominate competitive search landscapes.</p>
+
+<h3>1. Semantic Topic Clusters</h3>
+<p>Rather than ranking individual pages for isolated keywords, structure your website around comprehensive pillar topics supported by linked sub-articles that thoroughly address user queries.</p>
+
+<h3>2. Core Web Vitals & Technical Speed</h3>
+<p>A fast website directly improves ranking performance and conversion rates. Key metrics to monitor:</p>
+<ul>
+  <li><strong>Largest Contentful Paint (LCP):</strong> Keep under 1.8 seconds.</li>
+  <li><strong>Interaction to Next Paint (INP):</strong> Respond to user interactions in under 150ms.</li>
+  <li><strong>Cumulative Layout Shift (CLS):</strong> Maintain near zero shift.</li>
+</ul>
+
+<h3>3. Schema Markup & Entity Search</h3>
+<p>Structured JSON-LD schema helps search engine crawlers understand your services, customer reviews, FAQs, and organization credentials for prominent rich snippet placements.</p>`
+  },
+  {
+    id: 'blog_4',
+    title: 'UI/UX Design Systems That Boost Enterprise Conversion Rates',
+    category: 'UI/UX Design',
+    author: 'Priya Sharma',
+    date: '2026-08-05',
+    readTime: '4 min read',
+    status: 'published',
+    image: 'https://images.unsplash.com/photo-1581291518857-4e27b48ff24e?auto=format&fit=crop&w=1200&q=80',
+    excerpt: 'A design system is more than a Figma component library; it is a shared language between design and engineering that eliminates friction and multiplies user engagement.',
+    content: `<h2>The Value of Design Systems</h2>
+<p>Consistent typography, intuitive color hierarchy, and predictable interaction models reduce user cognitive load and accelerate purchase or lead generation conversions.</p>
+
+<h3>Designing for Clarity & Accessibility</h3>
+<p>High-converting interfaces prioritize high-contrast typography, clear visual affordances, and accessible WCAG AAA standards across both desktop and mobile viewports.</p>
+
+<h3>Micro-Interactions That Delight</h3>
+<p>Thoughtful feedback on button clicks, progress indicators during multi-step forms, and smooth state transitions build trust and user confidence.</p>`
+  }
+];
+
+let blogs = [];
+let activeStatusFilter = 'all';
+
+// Preset stock images
+const PRESETS = {
+  web: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1200&q=80',
+  mobile: 'https://images.unsplash.com/photo-1551650975-87deedd944c3?auto=format&fit=crop&w=1200&q=80',
+  marketing: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=1200&q=80',
+  design: 'https://images.unsplash.com/photo-1581291518857-4e27b48ff24e?auto=format&fit=crop&w=1200&q=80',
+  ai: 'https://images.unsplash.com/photo-1677442136019-21780efad99a?auto=format&fit=crop&w=1200&q=80',
+  security: 'https://images.unsplash.com/photo-1563986768609-322da13575f3?auto=format&fit=crop&w=1200&q=80'
+};
+
+function autoPublishDueScheduledPosts() {
+  let hasUpdates = false;
+  const now = new Date();
+  blogs.forEach(blog => {
+    if (blog.status === 'scheduled') {
+      const targetTime = new Date(blog.publishDateTime || blog.date);
+      if (targetTime <= now) {
+        blog.status = 'published';
+        hasUpdates = true;
+      }
+    }
+  });
+  if (hasUpdates) {
+    saveBlogs();
+  }
+  return hasUpdates;
+}
+
+function loadBlogs() {
+  const data = localStorage.getItem(STORAGE_KEY);
+  if (!data) {
+    blogs = [...DEFAULT_SEED_BLOGS];
+    saveBlogs();
+  } else {
+    try {
+      blogs = JSON.parse(data);
+    } catch(e) {
+      blogs = [...DEFAULT_SEED_BLOGS];
+      saveBlogs();
+    }
+  }
+  autoPublishDueScheduledPosts();
+  renderPostsTable();
+  renderCategoriesTable();
+}
+
+function saveBlogs() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(blogs));
+  window.dispatchEvent(new Event('storage'));
+}
+
+function showToast(msg) {
+  const t = document.getElementById('wpToast');
+  t.textContent = msg;
+  t.style.display = 'block';
+  setTimeout(() => { t.style.display = 'none'; }, 3200);
+}
+
+function showNotice(msg, type='success') {
+  const notice = document.getElementById('wpNotice');
+  const msgEl = document.getElementById('wpNoticeMsg');
+  notice.className = `notice notice-${type}`;
+  msgEl.textContent = msg;
+  notice.style.display = 'flex';
+}
+
+/* ══════════════════════════════════════════════
+   VIEW SWITCHER (WP Admin Screens)
+   ══════════════════════════════════════════════ */
+function switchView(viewName, editId = null) {
+  const views = ['viewAllPosts', 'viewPostEditor', 'viewCategories', 'viewSettings'];
+  views.forEach(v => document.getElementById(v).style.display = 'none');
+
+  // Submenu states
+  document.getElementById('subAllPosts').classList.remove('current-sub');
+  document.getElementById('subAddNew').classList.remove('current-sub');
+  document.getElementById('subCategories').classList.remove('current-sub');
+
+  if (viewName === 'posts') {
+    document.getElementById('viewAllPosts').style.display = 'block';
+    document.getElementById('subAllPosts').classList.add('current-sub');
+    renderPostsTable();
+  } else if (viewName === 'new-post') {
+    document.getElementById('viewPostEditor').style.display = 'block';
+    document.getElementById('subAddNew').classList.add('current-sub');
+    resetEditorForm();
+    if (editId) {
+      loadPostIntoEditor(editId);
+    }
+    // Scroll window smoothly to top
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  } else if (viewName === 'categories') {
+    document.getElementById('viewCategories').style.display = 'block';
+    document.getElementById('subCategories').classList.add('current-sub');
+    renderCategoriesTable();
+  } else if (viewName === 'settings') {
+    document.getElementById('viewSettings').style.display = 'block';
+  }
+}
+
+/* ══════════════════════════════════════════════
+   RENDER ALL POSTS TABLE (WP MODEL)
+   ══════════════════════════════════════════════ */
+function renderPostsTable() {
+  const tbody = document.getElementById('postsTableBody');
+  const cat = document.getElementById('filterCategory').value;
+  const sort = document.getElementById('sortOrder').value;
+  const q = document.getElementById('searchPosts').value.toLowerCase().trim();
+
+  // Counts
+  const total = blogs.length;
+  const pubCount = blogs.filter(b => b.status === 'published').length;
+  const schedCount = blogs.filter(b => b.status === 'scheduled').length;
+  const draftCount = blogs.filter(b => b.status === 'draft').length;
+
+  document.getElementById('countAll').textContent = `(${total})`;
+  document.getElementById('countPub').textContent = `(${pubCount})`;
+  document.getElementById('countSched').textContent = `(${schedCount})`;
+  document.getElementById('countDraft').textContent = `(${draftCount})`;
+
+  let filtered = [...blogs];
+
+  if (activeStatusFilter !== 'all') {
+    filtered = filtered.filter(b => b.status === activeStatusFilter);
+  }
+
+  if (cat !== 'all') {
+    filtered = filtered.filter(b => b.category === cat);
+  }
+
+  if (q !== '') {
+    filtered = filtered.filter(b => 
+      b.title.toLowerCase().includes(q) ||
+      b.author.toLowerCase().includes(q) ||
+      (b.excerpt && b.excerpt.toLowerCase().includes(q))
+    );
+  }
+
+  if (sort === 'newest') {
+    filtered.sort((a,b) => new Date(b.publishDateTime || b.date || 0) - new Date(a.publishDateTime || a.date || 0));
+  } else if (sort === 'oldest') {
+    filtered.sort((a,b) => new Date(a.publishDateTime || a.date || 0) - new Date(b.publishDateTime || b.date || 0));
+  } else if (sort === 'title') {
+    filtered.sort((a,b) => a.title.localeCompare(b.title));
+  }
+
+  if (filtered.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:30px;color:#646970;">No posts found matching your criteria.</td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = filtered.map(b => {
+    const fallbackImg = 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=120&q=80';
+    
+    let formattedDate = new Date(b.publishDateTime || b.date || Date.now()).toLocaleDateString('en-US', {
+      month: 'short', day: 'numeric', year: 'numeric'
+    });
+
+    let statusBadge = '';
+    if (b.status === 'scheduled') {
+      const schedTimeStr = b.publishTime ? ` at ${b.publishTime}` : '';
+      statusBadge = `<span class="badge-status badge-scheduled" title="Scheduled to go live on ${formattedDate}${schedTimeStr}">🕒 Scheduled (${formattedDate}${schedTimeStr})</span>`;
+    } else if (b.status === 'published') {
+      statusBadge = `<span class="badge-status badge-pub">Published</span>`;
+    } else {
+      statusBadge = `<span class="badge-status badge-draft">Draft</span>`;
+    }
+
+    return `
+      <tr>
+        <td>
+          <img src="${b.image || fallbackImg}" alt="" class="table-img-thumb" onerror="this.src='${fallbackImg}'" />
+        </td>
+        <td class="post-title-cell">
+          <strong><a href="javascript:void(0)" onclick="switchView('new-post', '${b.id}')">${escapeHtml(b.title)}</a></strong>
+          <div class="row-actions">
+            <a href="javascript:void(0)" onclick="switchView('new-post', '${b.id}')">Edit</a> |
+            <a href="javascript:void(0)" class="trash-action" onclick="deletePost('${b.id}')">Trash</a> |
+            <a href="blog.html?id=${b.id}" target="_blank">View Post ↗</a>
+          </div>
+        </td>
+        <td><strong>${escapeHtml(b.author || 'Webspide')}</strong></td>
+        <td>${escapeHtml(b.category || 'Tech')}</td>
+        <td>${formattedDate}</td>
+        <td>
+          ${statusBadge}
+        </td>
+      </tr>
+    `;
+  }).join('');
+}
+
+function filterByStatus(status) {
+  activeStatusFilter = status;
+  document.getElementById('filterTabAll').classList.toggle('current', status === 'all');
+  document.getElementById('filterTabPub').classList.toggle('current', status === 'published');
+  document.getElementById('filterTabSched').classList.toggle('current', status === 'scheduled');
+  document.getElementById('filterTabDraft').classList.toggle('current', status === 'draft');
+  renderPostsTable();
+}
+
+/* ══════════════════════════════════════════════
+   POST EDITOR & SCHEDULE CONTROLS (WP Model)
+   ══════════════════════════════════════════════ */
+function handleStatusChange() {
+  const status = document.getElementById('postStatus').value;
+  const btnTop = document.getElementById('btnPublishPost');
+  const btnSide = document.getElementById('btnPublishPostSide');
+  const isEditing = !!document.getElementById('editPostId').value;
+
+  if (status === 'scheduled') {
+    btnTop.textContent = 'Schedule';
+    btnSide.textContent = 'Schedule';
+    updateScheduleHint();
+  } else if (status === 'draft') {
+    btnTop.textContent = isEditing ? 'Save Draft' : 'Save Draft';
+    btnSide.textContent = isEditing ? 'Save Draft' : 'Save Draft';
+    document.getElementById('scheduleInfoHint').style.display = 'none';
+  } else {
+    btnTop.textContent = isEditing ? 'Update' : 'Publish';
+    btnSide.textContent = isEditing ? 'Update' : 'Publish';
+    document.getElementById('scheduleInfoHint').style.display = 'none';
+  }
+}
+
+function handleScheduleDateTimeChange() {
+  const dateVal = document.getElementById('postDate').value;
+  const timeVal = document.getElementById('postTime').value || '12:00';
+  
+  if (!dateVal) return;
+
+  const targetDate = new Date(`${dateVal}T${timeVal}`);
+  const now = new Date();
+
+  if (targetDate > now) {
+    document.getElementById('postStatus').value = 'scheduled';
+    document.getElementById('btnPublishPost').textContent = 'Schedule';
+    document.getElementById('btnPublishPostSide').textContent = 'Schedule';
+    updateScheduleHint();
+  } else {
+    if (document.getElementById('postStatus').value === 'scheduled') {
+      document.getElementById('postStatus').value = 'published';
+    }
+    const isEditing = !!document.getElementById('editPostId').value;
+    document.getElementById('btnPublishPost').textContent = isEditing ? 'Update' : 'Publish';
+    document.getElementById('btnPublishPostSide').textContent = isEditing ? 'Update' : 'Publish';
+    document.getElementById('scheduleInfoHint').style.display = 'none';
+  }
+}
+
+function updateScheduleHint() {
+  const dateVal = document.getElementById('postDate').value;
+  const timeVal = document.getElementById('postTime').value || '12:00';
+  const hintBox = document.getElementById('scheduleInfoHint');
+  const targetText = document.getElementById('scheduleTargetText');
+
+  if (dateVal) {
+    const targetDate = new Date(`${dateVal}T${timeVal}`);
+    targetText.textContent = targetDate.toLocaleString('en-US', {
+      month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit'
+    });
+    hintBox.style.display = 'block';
+  } else {
+    hintBox.style.display = 'none';
+  }
+}
+
+function resetEditorForm() {
+  document.getElementById('editPostId').value = '';
+  document.getElementById('editorPageHeading').textContent = 'Add New Post';
+  document.getElementById('btnPublishPost').textContent = 'Publish';
+  document.getElementById('btnPublishPostSide').textContent = 'Publish';
+  document.getElementById('postTitle').value = '';
+  document.getElementById('postContent').value = '';
+  document.getElementById('postExcerpt').value = '';
+  document.getElementById('postStatus').value = 'published';
+  document.getElementById('postCategory').value = 'Web Development';
+  document.getElementById('postAuthor').value = 'Webspide Team';
+  document.getElementById('postReadTime').value = '5 min read';
+
+  const now = new Date();
+  const dateStr = now.toISOString().split('T')[0];
+  const timeStr = now.toTimeString().split(' ')[0].substring(0, 5);
+
+  document.getElementById('postDate').value = dateStr;
+  document.getElementById('postTime').value = timeStr;
+  document.getElementById('scheduleInfoHint').style.display = 'none';
+  
+  setEditorPreset('web');
+}
+
+function loadPostIntoEditor(id) {
+  const b = blogs.find(item => item.id === id);
+  if (!b) return;
+
+  document.getElementById('editPostId').value = b.id;
+  document.getElementById('editorPageHeading').textContent = 'Edit Post';
+  
+  document.getElementById('postTitle').value = b.title || '';
+  document.getElementById('postContent').value = b.content || '';
+  document.getElementById('postExcerpt').value = b.excerpt || '';
+  document.getElementById('postStatus').value = b.status || 'published';
+  document.getElementById('postCategory').value = b.category || 'Web Development';
+  document.getElementById('postAuthor').value = b.author || 'Webspide Team';
+  document.getElementById('postReadTime').value = b.readTime || '5 min read';
+  
+  const postDate = b.date || new Date().toISOString().split('T')[0];
+  const postTime = b.publishTime || (b.publishDateTime ? b.publishDateTime.split('T')[1]?.substring(0,5) : '12:00');
+
+  document.getElementById('postDate').value = postDate;
+  document.getElementById('postTime').value = postTime;
+
+  document.getElementById('postImage').value = b.image || '';
+  updateEditorImagePreview(b.image || '');
+
+  handleStatusChange();
+  if (b.status === 'scheduled') {
+    updateScheduleHint();
+  }
+}
+
+/* ══════════════════════════════════════════════
+   IMAGE UPLOAD & OPTIMIZATION ENGINE
+   ══════════════════════════════════════════════ */
+function handleImageFileUpload(e) {
+  const file = e.target.files && e.target.files[0];
+  if (!file) return;
+  processImageFile(file);
+}
+
+function processImageFile(file) {
+  if (!file.type.startsWith('image/')) {
+    alert('Please select a valid image file (JPG, PNG, WebP, GIF).');
+    return;
+  }
+
+  showToast('Optimizing and loading image...');
+
+  const reader = new FileReader();
+  reader.onload = function(event) {
+    const rawDataUrl = event.target.result;
+    
+    // Auto-compress and scale using Canvas to keep size optimal for storage
+    const img = new Image();
+    img.onload = function() {
+      const maxDim = 1200;
+      let w = img.width;
+      let h = img.height;
+
+      if (w > maxDim || h > maxDim) {
+        if (w > h) {
+          h = Math.round((h * maxDim) / w);
+          w = maxDim;
+        } else {
+          w = Math.round((w * maxDim) / h);
+          h = maxDim;
+        }
+      }
+
+      const canvas = document.createElement('canvas');
+      canvas.width = w;
+      canvas.height = h;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0, w, h);
+
+      // Export as high quality JPEG
+      const optimizedUrl = canvas.toDataURL('image/jpeg', 0.86);
+      
+      document.getElementById('postImage').value = optimizedUrl;
+      updateEditorImagePreview(optimizedUrl);
+      showToast('Image uploaded successfully!');
+    };
+
+    img.onerror = function() {
+      // Fallback to raw data url if canvas fails
+      document.getElementById('postImage').value = rawDataUrl;
+      updateEditorImagePreview(rawDataUrl);
+    };
+
+    img.src = rawDataUrl;
+  };
+
+  reader.onerror = function() {
+    alert('Failed to read the selected file. Please try another image.');
+  };
+
+  reader.readAsDataURL(file);
+}
+
+function handleImageUrlInput(url) {
+  updateEditorImagePreview(url);
+}
+
+function removeFeaturedImage() {
+  document.getElementById('postImage').value = '';
+  const fileInput = document.getElementById('postImageFileInput');
+  if (fileInput) fileInput.value = '';
+  updateEditorImagePreview('');
+  showToast('Featured image removed.');
+}
+
+function updateEditorImagePreview(url) {
+  const imgEl = document.getElementById('editorImgPreview');
+  const phEl = document.getElementById('editorImgPlaceholder');
+  const removeBtn = document.getElementById('btnRemoveImg');
+  const uploadLabel = document.getElementById('btnUploadLabel');
+
+  if (url && url.trim() !== '') {
+    imgEl.src = url;
+    imgEl.style.display = 'block';
+    phEl.style.display = 'none';
+    if (removeBtn) removeBtn.style.display = 'inline-block';
+    if (uploadLabel) uploadLabel.textContent = 'Upload Image from Device';
+  } else {
+    imgEl.src = '';
+    imgEl.style.display = 'none';
+    phEl.style.display = 'flex';
+    if (removeBtn) removeBtn.style.display = 'none';
+    if (uploadLabel) uploadLabel.textContent = 'Choose File from Device';
+  }
+}
+
+function setEditorPreset(key) {
+  const url = PRESETS[key] || '';
+  document.getElementById('postImage').value = url;
+  const fileInput = document.getElementById('postImageFileInput');
+  if (fileInput) fileInput.value = '';
+  updateEditorImagePreview(url);
+}
+
+function insertTag(tag) {
+  const ta = document.getElementById('postContent');
+  const start = ta.selectionStart;
+  const end = ta.selectionEnd;
+  const text = ta.value.substring(start, end) || 'Sample text';
+  let snippet = '';
+
+  switch(tag) {
+    case 'h2': snippet = `<h2>${text}</h2>\n`; break;
+    case 'h3': snippet = `<h3>${text}</h3>\n`; break;
+    case 'p': snippet = `<p>${text}</p>\n`; break;
+    case 'b': snippet = `<strong>${text}</strong>`; break;
+    case 'quote': snippet = `<blockquote>"${text}"</blockquote>\n`; break;
+    case 'ul': snippet = `<ul>\n  <li>${text}</li>\n  <li>Second item</li>\n</ul>\n`; break;
+  }
+
+  ta.value = ta.value.substring(0, start) + snippet + ta.value.substring(end);
+  ta.focus();
+}
+
+function handleSavePost(e) {
+  if (e) e.preventDefault();
+  saveCurrentPost();
+}
+
+function saveAsDraft() {
+  document.getElementById('postStatus').value = 'draft';
+  saveCurrentPost();
+}
+
+function saveCurrentPost() {
+  const id = document.getElementById('editPostId').value;
+  const title = document.getElementById('postTitle').value.trim();
+  const content = document.getElementById('postContent').value.trim();
+  const excerpt = document.getElementById('postExcerpt').value.trim();
+  let status = document.getElementById('postStatus').value;
+  const category = document.getElementById('postCategory').value;
+  const author = document.getElementById('postAuthor').value.trim() || 'Webspide Team';
+  const readTime = document.getElementById('postReadTime').value.trim() || '5 min read';
+  const date = document.getElementById('postDate').value || new Date().toISOString().split('T')[0];
+  const time = document.getElementById('postTime').value || '12:00';
+  const image = document.getElementById('postImage').value.trim() || PRESETS.web;
+
+  if (!title) {
+    alert('Please enter a title for your post.');
+    document.getElementById('postTitle').focus();
+    return;
+  }
+
+  const publishDateTime = `${date}T${time}`;
+  const targetDate = new Date(publishDateTime);
+  const now = new Date();
+
+  // Auto-resolve scheduled status if future date/time is picked
+  if (status !== 'draft') {
+    if (targetDate > now) {
+      status = 'scheduled';
+    } else {
+      status = 'published';
+    }
+  }
+
+  if (id) {
+    // Update existing
+    const idx = blogs.findIndex(b => b.id === id);
+    if (idx !== -1) {
+      blogs[idx] = {
+        ...blogs[idx],
+        title, content, excerpt, status, category, author, readTime, date,
+        publishTime: time,
+        publishDateTime,
+        image,
+        updatedAt: new Date().toISOString()
+      };
+      saveBlogs();
+
+      if (status === 'scheduled') {
+        showToast('Post scheduled successfully.');
+        showNotice(`Post scheduled for <strong>${targetDate.toLocaleString()}</strong>.`);
+      } else if (status === 'draft') {
+        showToast('Draft saved successfully.');
+        showNotice(`Draft saved. <a href="blog.html?id=${id}" target="_blank" style="margin-left:8px;font-weight:700;">Preview post ↗</a>`);
+      } else {
+        showToast('Post updated successfully.');
+        showNotice(`Post updated. <a href="blog.html?id=${id}" target="_blank" style="margin-left:8px;font-weight:700;">View post ↗</a>`);
+      }
+    }
+  } else {
+    // Create new
+    const newId = 'blog_' + Date.now();
+    const newPost = {
+      id: newId,
+      title, content, excerpt, status, category, author, readTime, date,
+      publishTime: time,
+      publishDateTime,
+      image,
+      createdAt: new Date().toISOString()
+    };
+    blogs.unshift(newPost);
+    saveBlogs();
+
+    if (status === 'scheduled') {
+      showToast('Post scheduled successfully.');
+      showNotice(`Post scheduled to go live on <strong>${targetDate.toLocaleString()}</strong>.`);
+    } else if (status === 'draft') {
+      showToast('Draft saved successfully.');
+      showNotice(`Draft created. <a href="blog.html?id=${newId}" target="_blank" style="margin-left:8px;font-weight:700;">Preview post ↗</a>`);
+    } else {
+      showToast('Post published successfully.');
+      showNotice(`Post published. <a href="blog.html?id=${newId}" target="_blank" style="margin-left:8px;font-weight:700;">View post ↗</a>`);
+    }
+  }
+
+  switchView('posts');
+}
+
+function deletePost(id) {
+  const b = blogs.find(item => item.id === id);
+  if (!b) return;
+  if (confirm(`Are you sure you want to move "${b.title}" to Trash?`)) {
+    blogs = blogs.filter(item => item.id !== id);
+    saveBlogs();
+    renderPostsTable();
+    showToast('Post moved to Trash.');
+    showNotice('Post deleted from inventory.', 'warning');
+  }
+}
+
+function deleteCurrentEditingPost() {
+  const id = document.getElementById('editPostId').value;
+  if (id) {
+    deletePost(id);
+    switchView('posts');
+  } else {
+    switchView('posts');
+  }
+}
+
+/* ══════════════════════════════════════════════
+   CATEGORIES TABLE & ADD
+   ══════════════════════════════════════════════ */
+function renderCategoriesTable() {
+  const tbody = document.getElementById('categoriesTableBody');
+  const cats = ['Web Development', 'App Development', 'Digital Marketing', 'SEO & Content', 'UI/UX Design', 'Technology'];
+  
+  // Also collect any custom categories from existing posts
+  blogs.forEach(b => {
+    if (b.category && !cats.includes(b.category)) {
+      cats.push(b.category);
+    }
+  });
+
+  tbody.innerHTML = cats.map(c => {
+    const count = blogs.filter(b => b.category === c).length;
+    return `
+      <tr>
+        <td><strong>${escapeHtml(c)}</strong></td>
+        <td>${count}</td>
+      </tr>
+    `;
+  }).join('');
+}
+
+function addNewCategory() {
+  const input = document.getElementById('newCategoryName');
+  const val = input.value.trim();
+  if (!val) return;
+
+  const sel = document.getElementById('postCategory');
+  const opt = document.createElement('option');
+  opt.value = val;
+  opt.textContent = val;
+  opt.selected = true;
+  sel.appendChild(opt);
+
+  const filterSel = document.getElementById('filterCategory');
+  const filterOpt = document.createElement('option');
+  filterOpt.value = val;
+  filterOpt.textContent = val;
+  filterSel.appendChild(filterOpt);
+
+  input.value = '';
+  renderCategoriesTable();
+  showToast(`Category "${val}" added.`);
+}
+
+/* ══════════════════════════════════════════════
+   TOOLS & EXPORT / RESET
+   ══════════════════════════════════════════════ */
+function exportJsonData() {
+  const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(blogs, null, 2));
+  const a = document.createElement('a');
+  a.setAttribute("href", dataStr);
+  a.setAttribute("download", `webspide_blogs_wp_backup_${new Date().toISOString().split('T')[0]}.json`);
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  showToast('Export downloaded successfully.');
+}
+
+function resetToSeedSamples() {
+  if (confirm('Are you sure you want to restore default sample posts? Any custom edits will be replaced.')) {
+    blogs = [...DEFAULT_SEED_BLOGS];
+    saveBlogs();
+    renderPostsTable();
+    showToast('Restored default sample blogs.');
+    switchView('posts');
+  }
+}
+
+function escapeHtml(str) {
+  if (!str) return '';
+  return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+}
+
+/* ══════════════════════════════════════════════
+   AUTHENTICATION & USER PROFILE HANDLERS
+   ══════════════════════════════════════════════ */
+function toggleUserDropdown() {
+  const dd = document.getElementById('userDropdown');
+  if (!dd) return;
+  dd.style.display = dd.style.display === 'block' ? 'none' : 'block';
+}
+
+document.addEventListener('click', function(e) {
+  const userMenu = document.querySelector('.wp-user-menu');
+  const dd = document.getElementById('userDropdown');
+  if (userMenu && dd && !userMenu.contains(e.target)) {
+    dd.style.display = 'none';
+  }
+});
+
+function handleAdminLogout() {
+  if (confirm('Are you sure you want to log out of the WordPress admin panel?')) {
+    sessionStorage.removeItem(SESSION_KEY);
+    localStorage.removeItem(SESSION_KEY);
+    showToast('Logging out...');
+    setTimeout(() => {
+      window.location.replace('blog-login.html');
+    }, 400);
+  }
+}
+
+function handleUpdateCredentials(e) {
+  e.preventDefault();
+  const newUser = document.getElementById('settingAdminUser').value.trim();
+  const newPass = document.getElementById('settingAdminPass').value;
+
+  if (!newUser || !newPass) {
+    alert('Please fill in both username and password.');
+    return;
+  }
+
+  const authData = {
+    username: newUser,
+    password: newPass
+  };
+
+  localStorage.setItem(AUTH_KEY, JSON.stringify(authData));
+  showToast('Admin login credentials updated successfully!');
+  showNotice('Admin login credentials updated.');
+}
+
+function initAdminCredentialsUI() {
+  const storedAuth = localStorage.getItem(AUTH_KEY);
+  let currentAuth = { username: 'admin' };
+  if (storedAuth) {
+    try { currentAuth = JSON.parse(storedAuth); } catch(e) {}
+  }
+
+  const userDisplay = document.getElementById('currentAdminUserDisplay');
+  const topBarName = document.getElementById('adminTopBarName');
+  const userSettingInput = document.getElementById('settingAdminUser');
+
+  const name = currentAuth.username || 'admin';
+  if (topBarName) topBarName.textContent = name;
+  if (userDisplay) userDisplay.textContent = name;
+  if (userSettingInput) userSettingInput.value = name;
+}
+
+// Initialization
+document.addEventListener('DOMContentLoaded', function() {
+  loadBlogs();
+  initAdminCredentialsUI();
+
+  // Active timer to auto-transition scheduled posts to published in real-time
+  setInterval(function() {
+    if (autoPublishDueScheduledPosts()) {
+      renderPostsTable();
+    }
+  }, 15000);
+
+  // Setup Drag & Drop on Image Box
+  const dropBox = document.getElementById('editorImgBox');
+  if (dropBox) {
+    ['dragenter', 'dragover'].forEach(eventName => {
+      dropBox.addEventListener(eventName, (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        dropBox.classList.add('dragover');
+      }, false);
+    });
+
+    ['dragleave', 'drop'].forEach(eventName => {
+      dropBox.addEventListener(eventName, (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        dropBox.classList.remove('dragover');
+      }, false);
+    });
+
+    dropBox.addEventListener('drop', (e) => {
+      const dt = e.dataTransfer;
+      const files = dt.files;
+      if (files && files.length > 0) {
+        processImageFile(files[0]);
+      }
+    }, false);
+  }
+
+  const urlParams = new URLSearchParams(window.location.search);
+  const editId = urlParams.get('edit');
+  const action = urlParams.get('action');
+
+  if (editId) {
+    switchView('new-post', editId);
+  } else if (action === 'new') {
+    switchView('new-post');
+  } else {
+    switchView('posts');
+  }
+});
+</script>
+</body>
+</html>

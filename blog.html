@@ -46,7 +46,7 @@ body{background:var(--ws-light-bg);color:#101828;font-family:'Exo 2',sans-serif;
 p{font-family:Arial,Helvetica,sans-serif;font-size:1rem;line-height:1.8;}
 h1{font-weight:900!important}
 h2{font-weight:800!important;color:#07164F!important}
-h3{font-weight:800!important;color:#1F4FB2!important}
+h3{font-weight:800!important;color:#101828!important}
 h4{font-weight:800!important;color:#38216E!important}
 h5{font-weight:800!important;color:#8B5CF6!important}
 
@@ -1065,17 +1065,73 @@ h5{font-weight:800!important;color:#8B5CF6!important}
 }
 .modal-body-text h2{
   font-family:'Exo 2',sans-serif;
-  font-size:1.45rem;
+  font-size:1.75rem; /* 28-32px */
   font-weight:800;
   color:#07164F!important;
   margin:32px 0 14px;
 }
 .modal-body-text h3{
   font-family:'Exo 2',sans-serif;
-  font-size:1.25rem;
+  font-size:1.45rem; /* 22-26px */
   font-weight:700;
-  color:#1F4FB2!important;
+  color:#101828!important; /* Uniform dark color, NO BLUE */
   margin:24px 0 10px;
+}
+.modal-body-text h4{
+  font-family:'Exo 2',sans-serif;
+  font-size:1.15rem;
+  font-weight:700;
+  color:#2c3338!important;
+  margin:18px 0 8px;
+}
+.table-responsive-wrapper{
+  width:100%;
+  overflow-x:auto;
+  -webkit-overflow-scrolling:touch;
+  margin:24px 0;
+  border:1px solid #e2e8f0;
+  border-radius:8px;
+}
+.modal-body-text table{
+  width:100%;
+  border-collapse:collapse;
+  font-size:0.95rem;
+  min-width:500px;
+  background:#fff;
+}
+.modal-body-text th{
+  background:#f1f5f9;
+  color:#07164F;
+  font-weight:700;
+  padding:12px 14px;
+  border:1px solid #cbd5e1;
+  text-align:left;
+}
+.modal-body-text td{
+  padding:10px 14px;
+  border:1px solid #e2e8f0;
+  color:#2c3338;
+}
+.modal-body-text tr:nth-child(even) td{
+  background:#f8fafc;
+}
+.modal-tags-row{
+  margin-top:28px;
+  padding-top:16px;
+  border-top:1px solid rgba(139,92,246,0.15);
+  display:flex;
+  align-items:center;
+  gap:8px;
+  flex-wrap:wrap;
+}
+.modal-tag-chip{
+  padding:4px 12px;
+  background:#eef2ff;
+  border:1px solid #c7d2fe;
+  border-radius:14px;
+  color:#1e3a8a;
+  font-size:0.82rem;
+  font-weight:600;
 }
 .modal-body-text ul, .modal-body-text ol{
   margin:0 0 24px 24px;
@@ -1103,6 +1159,320 @@ h5{font-weight:800!important;color:#8B5CF6!important}
   align-items:center;
   flex-wrap:wrap;
   gap:16px;
+}
+
+/* ══════════════════════════
+   PAGINATION STYLES (Correction 6)
+   ══════════════════════════ */
+.blog-pagination-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin-top: 40px;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.blog-pagination-info {
+  font-size: 0.9rem;
+  color: #64748b;
+  font-weight: 500;
+  margin-right: auto;
+}
+.blog-pagination {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.page-btn {
+  min-width: 38px;
+  height: 38px;
+  padding: 0 10px;
+  border-radius: 8px;
+  border: 1.5px solid rgba(139,92,246,0.25);
+  background: #ffffff;
+  color: #07164F;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  font-family: 'Exo 2', sans-serif;
+}
+.page-btn:hover:not(:disabled) {
+  border-color: #8B5CF6;
+  background: rgba(139,92,246,0.08);
+  color: #1F4FB2;
+  transform: translateY(-2px);
+}
+.page-btn.active {
+  background: var(--ws-btn-gradient);
+  color: #ffffff;
+  border-color: transparent;
+  box-shadow: 0 4px 14px rgba(139,92,246,0.35);
+}
+.page-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ══════════════════════════
+   TABLE OF CONTENTS (Correction 7)
+   ══════════════════════════ */
+.blog-toc-box {
+  background: #f8fafc;
+  border: 1.5px solid rgba(139,92,246,0.22);
+  border-radius: 12px;
+  padding: 18px 22px;
+  margin: 24px 0 32px;
+  box-shadow: 0 4px 18px rgba(7,22,79,0.04);
+}
+.blog-toc-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1.5px solid rgba(139,92,246,0.15);
+  padding-bottom: 10px;
+  margin-bottom: 12px;
+}
+.blog-toc-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Exo 2', sans-serif;
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #07164F;
+}
+.blog-toc-title svg {
+  width: 18px;
+  height: 18px;
+  stroke: #1F4FB2;
+}
+.blog-toc-toggle {
+  background: none;
+  border: none;
+  color: #8B5CF6;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+.blog-toc-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 400px;
+  overflow-y: auto;
+}
+.blog-toc-item {
+  position: relative;
+}
+.blog-toc-item.h3 {
+  padding-left: 20px;
+}
+.blog-toc-link {
+  color: #334155;
+  text-decoration: none;
+  font-size: 0.92rem;
+  font-weight: 600;
+  line-height: 1.4;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.15s ease;
+}
+.blog-toc-link:hover {
+  color: #1F4FB2;
+  transform: translateX(4px);
+}
+.blog-toc-link::before {
+  content: '▸';
+  color: #8B5CF6;
+  font-size: 0.8rem;
+}
+
+/* ══════════════════════════
+   SOCIAL SHARE BUTTONS (Correction 9)
+   ══════════════════════════ */
+.blog-share-section {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #f8fafc;
+  border: 1px solid rgba(139,92,246,0.18);
+  border-radius: 12px;
+  padding: 14px 20px;
+  margin: 32px 0 20px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.blog-share-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.92rem;
+  font-weight: 800;
+  color: #07164F;
+  font-family: 'Exo 2', sans-serif;
+}
+.blog-share-btns {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.share-icon-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  border: 1px solid rgba(139,92,246,0.25);
+  background: #fff;
+  color: #07164F;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+}
+.share-icon-btn svg {
+  width: 16px;
+  height: 16px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2;
+}
+.share-icon-btn:hover {
+  transform: translateY(-2px);
+  color: #fff;
+  border-color: transparent;
+}
+.share-icon-btn.in:hover { background: #0077b5; }
+.share-icon-btn.tw:hover { background: #0f1419; }
+.share-icon-btn.fb:hover { background: #1877f2; }
+.share-icon-btn.wa:hover { background: #25d366; }
+.share-icon-btn.copy:hover { background: var(--ws-primary); }
+
+/* ══════════════════════════
+   PREVIOUS & NEXT NAVIGATION (Correction 8)
+   ══════════════════════════ */
+.blog-prev-next-nav {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin: 32px 0;
+}
+.blog-nav-card {
+  background: #ffffff;
+  border: 1.5px solid rgba(139,92,246,0.2);
+  border-radius: 12px;
+  padding: 16px 20px;
+  text-decoration: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  transition: all 0.25s ease;
+  cursor: pointer;
+}
+.blog-nav-card:hover {
+  border-color: #8B5CF6;
+  box-shadow: 0 8px 24px rgba(139,92,246,0.15);
+  transform: translateY(-3px);
+}
+.blog-nav-card.next {
+  text-align: right;
+  align-items: flex-end;
+}
+.blog-nav-card-label {
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #8B5CF6;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.blog-nav-card-title {
+  font-family: 'Exo 2', sans-serif;
+  font-size: 0.98rem;
+  font-weight: 800;
+  color: #07164F;
+  line-height: 1.35;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* ══════════════════════════
+   IN-ARTICLE CONTACT FORM (Correction 4)
+   ══════════════════════════ */
+.blog-contact-card {
+  background: linear-gradient(135deg, rgba(7,22,79,0.03) 0%, rgba(139,92,246,0.08) 100%);
+  border: 1.5px solid rgba(139,92,246,0.25);
+  border-radius: 16px;
+  padding: 28px 32px;
+  margin: 40px 0 20px;
+}
+.blog-contact-card h3 {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: #07164F;
+  margin-bottom: 6px;
+}
+.blog-contact-card p {
+  color: #475467;
+  font-size: 0.95rem;
+  margin-bottom: 20px;
+}
+.blog-contact-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+.blog-contact-input {
+  width: 100%;
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: 1.5px solid rgba(139,92,246,0.22);
+  background: #ffffff;
+  font-size: 0.9rem;
+  font-family: 'Exo 2', sans-serif;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.blog-contact-input:focus {
+  border-color: #8B5CF6;
+  box-shadow: 0 0 0 2px rgba(139,92,246,0.15);
+}
+.blog-contact-submit {
+  padding: 12px 24px;
+  border-radius: 30px;
+  background: var(--ws-btn-gradient);
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 0.92rem;
+  border: none;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  box-shadow: 0 4px 16px rgba(139,92,246,0.3);
+}
+.blog-contact-submit:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(192,38,184,0.4);
+}
+
+@media(max-width: 680px) {
+  .blog-prev-next-nav { grid-template-columns: 1fr; }
+  .blog-contact-grid { grid-template-columns: 1fr; }
+  .blog-contact-card { padding: 20px 18px; }
+  .blog-pagination-wrap { justify-content: center; }
 }
 
 /* ══════════════════════════
@@ -1375,6 +1745,12 @@ h5{font-weight:800!important;color:#8B5CF6!important}
     <!-- Rendered Dynamically via JS -->
   </div>
 
+  <!-- Pagination Controls (Correction 6: 9 Blogs Per Page) -->
+  <div class="blog-pagination-wrap" id="blogPaginationWrap" style="display:none;">
+    <div class="blog-pagination-info" id="blogPaginationInfo">Showing 1-9 of 18 articles</div>
+    <div class="blog-pagination" id="blogPaginationControls"></div>
+  </div>
+
   <!-- Empty State -->
   <div class="blog-empty-state" id="blogEmptyState" style="display:none;">
     <div class="blog-empty-icon">
@@ -1395,7 +1771,7 @@ h5{font-weight:800!important;color:#8B5CF6!important}
   </form>
 </section>
 
-<!-- ARTICLE READER MODAL -->
+<!-- ARTICLE READER MODAL (Corrections 1, 2, 4, 7, 8, 9) -->
 <div class="blog-modal-backdrop" id="blogModalBackdrop">
   <div class="blog-modal" id="blogModal">
     <button class="modal-close-btn" id="modalCloseBtn" aria-label="Close article">
@@ -1406,6 +1782,15 @@ h5{font-weight:800!important;color:#8B5CF6!important}
       <span class="modal-category-badge" id="modalCategoryBadge">Technology</span>
     </div>
     <div class="modal-content-inner">
+      <!-- Breadcrumb row -->
+      <div style="font-size:0.82rem;font-weight:600;color:#64748b;margin-bottom:14px;display:flex;align-items:center;gap:6px;" id="modalBreadcrumbs">
+        <a href="index.html" style="color:#1F4FB2;text-decoration:none;">Home</a>
+        <span>›</span>
+        <a href="blog.html" style="color:#1F4FB2;text-decoration:none;" onclick="closeBlogModal();return false;">Blog</a>
+        <span>›</span>
+        <span id="modalBreadcrumbCategory" style="color:#8B5CF6;">Category</span>
+      </div>
+
       <div class="modal-meta-row">
         <div class="modal-meta-item">
           <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
@@ -1416,7 +1801,10 @@ h5{font-weight:800!important;color:#8B5CF6!important}
           <span id="modalReadTime">5 min read</span>
         </div>
       </div>
+      
+      <!-- Only one main H1 for the blog article -->
       <h1 class="modal-title" id="modalTitle">Article Title</h1>
+      
       <div class="modal-author-box">
         <div class="modal-author-avatar" id="modalAuthorAvatar">W</div>
         <div class="modal-author-info">
@@ -1424,11 +1812,77 @@ h5{font-weight:800!important;color:#8B5CF6!important}
           <span id="modalAuthorRole">Webspide Engineering Team</span>
         </div>
       </div>
+
+      <!-- Table of Contents (Correction 7) -->
+      <div class="blog-toc-box" id="modalTocBox" style="display:none;">
+        <div class="blog-toc-header">
+          <div class="blog-toc-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+            <span>Table of Contents</span>
+          </div>
+          <button type="button" class="blog-toc-toggle" id="modalTocToggle" onclick="toggleToc()">[ Hide ]</button>
+        </div>
+        <nav class="blog-toc-list" id="modalTocList"></nav>
+      </div>
+
+      <!-- Main Article Body -->
       <div class="modal-body-text" id="modalBodyText">
         <!-- Rendered Article HTML -->
       </div>
+
+      <!-- Tags Row -->
+      <div class="modal-tags-row" id="modalTagsRow" style="display:none;">
+        <strong style="font-size:0.88rem;color:#07164F;">Tags:</strong>
+        <div id="modalTagsList" style="display:flex;flex-wrap:wrap;gap:6px;"></div>
+      </div>
+
+      <!-- Social Share Bar (Correction 9) -->
+      <div class="blog-share-section" id="modalShareSection">
+        <div class="blog-share-label">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1F4FB2" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+          Share this article:
+        </div>
+        <div class="blog-share-btns">
+          <button type="button" class="share-icon-btn in" onclick="shareArticle('linkedin')" title="Share on LinkedIn"><svg viewBox="0 0 24 24"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></button>
+          <button type="button" class="share-icon-btn tw" onclick="shareArticle('twitter')" title="Share on X (Twitter)"><svg viewBox="0 0 24 24"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/></svg></button>
+          <button type="button" class="share-icon-btn fb" onclick="shareArticle('facebook')" title="Share on Facebook"><svg viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></button>
+          <button type="button" class="share-icon-btn wa" onclick="shareArticle('whatsapp')" title="Share on WhatsApp"><svg viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg></button>
+          <button type="button" class="share-icon-btn copy" onclick="copyArticleLink()" title="Copy Article Link"><svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+        </div>
+      </div>
+
+      <!-- Previous & Next Navigation (Correction 8) -->
+      <div class="blog-prev-next-nav" id="modalPrevNextNav">
+        <!-- Rendered dynamically -->
+      </div>
+
+      <!-- In-Article Contact Us Form (Correction 4) -->
+      <div class="blog-contact-card" id="modalContactSection">
+        <h3>Have a Project in Mind?</h3>
+        <p>Let's collaborate! Our technology team builds custom web apps, mobile solutions, and high-impact digital marketing campaigns.</p>
+        <form onsubmit="handleInBlogContact(event)" style="display:flex;flex-direction:column;gap:12px;">
+          <div class="blog-contact-grid">
+            <input type="text" id="blogContactName" class="blog-contact-input" placeholder="Your Name *" required />
+            <input type="email" id="blogContactEmail" class="blog-contact-input" placeholder="Your Business Email *" required />
+          </div>
+          <div class="blog-contact-grid">
+            <input type="tel" id="blogContactPhone" class="blog-contact-input" placeholder="Phone Number" />
+            <select id="blogContactService" class="blog-contact-input" style="cursor:pointer;">
+              <option value="Web Development">Web Development</option>
+              <option value="App Development">Mobile App Development</option>
+              <option value="Digital Marketing">Digital Marketing & SEO</option>
+              <option value="UI/UX Design">UI/UX Design</option>
+            </select>
+          </div>
+          <textarea id="blogContactMessage" class="blog-contact-input" rows="3" placeholder="Tell us about your project requirements or timeline..." required></textarea>
+          <div style="text-align:right;">
+            <button type="submit" class="blog-contact-submit">Send Consultation Request &rarr;</button>
+          </div>
+        </form>
+      </div>
+
       <div class="modal-footer" style="justify-content: flex-end;">
-        <button class="nav-cta-new" onclick="document.getElementById('modalCloseBtn').click();">
+        <button class="nav-cta-new" onclick="closeBlogModal();">
           Close Article
         </button>
       </div>
@@ -1459,7 +1913,7 @@ h5{font-weight:800!important;color:#8B5CF6!important}
     </div>
     <div class="ft-col"><h4>Services</h4><div class="ft-links"><a href="index.html#services">Web Development</a><a href="indexandroid1.html">App Development</a><a href="indexseo1.html">Digital Marketing</a><a href="indexecom1.html">Ecommerce Development</a><a href="indexseo1.html">SEO Services</a></div></div>
     <div class="ft-col"><h4>Company</h4><div class="ft-links"><a href="aboutus.html">About Us</a><a href="blog.html">Blog & Insights</a><a href="index.html#contact">Contact Us</a></div></div>
-    <div class="ft-col"><h4>Legal</h4><div class="ft-links"><a href="#">Privacy Policy</a><a href="#">Terms &amp; Conditions</a><a href="#">Refund Policy</a><a href="#">Disclaimer</a></div></div>
+    <div class="ft-col"><h4>Legal</h4><div class="ft-links"><a href="disclaimer.html">Disclaimer</a><a href="privacy-policy.html">Privacy Policy</a><a href="terms-and-conditions.html">Terms &amp; Conditions</a><a href="refund-cancellation-policy.html">Refund &amp; Cancellation</a><a href="end-user-license-agreement.html">End User License Agreement</a><a href="service-level-agreement.html">Service Level Agreement</a></div></div>
   </div>
   <div class="footer-bottom">
     <div class="fb-copy">© 2026 <span>WebSpide Technologies</span>. All rights reserved.</div>
@@ -1620,6 +2074,20 @@ const DEFAULT_SEED_BLOGS = [
   }
 ];
 
+const CATEGORIES_KEY = 'webspide_categories';
+const DEFAULT_CATEGORIES = ['Web Development', 'App Development', 'Digital Marketing', 'SEO & Content', 'UI/UX Design', 'Technology'];
+
+function getStoredCategories() {
+  const stored = localStorage.getItem(CATEGORIES_KEY);
+  if (stored) {
+    try {
+      const parsed = JSON.parse(stored);
+      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+    } catch(e) {}
+  }
+  return DEFAULT_CATEGORIES;
+}
+
 function getStoredBlogs() {
   const data = localStorage.getItem(STORAGE_KEY);
   if (!data) {
@@ -1637,46 +2105,56 @@ function getStoredBlogs() {
 let allBlogs = getStoredBlogs();
 let activeCategory = 'all';
 let searchQuery = '';
+const PAGE_SIZE = 9; // Correction 6: 9 blogs per page
+let currentPage = 1;
 
 // Check if a blog is live and visible to public
 function isPostLive(b) {
   if (!b) return false;
   if (b.status === 'draft') return false;
   if (b.status === 'published') {
-    // If it has a future schedule date, don't show yet
     if (b.publishDateTime && new Date(b.publishDateTime) > new Date()) {
       return false;
     }
     return true;
   }
   if (b.status === 'scheduled') {
-    // Reveal once the scheduled date & time has arrived
     const targetDt = new Date(b.publishDateTime || b.date);
     return targetDt <= new Date();
   }
   return false;
 }
 
-// Update Category Counts
-function updateCategoryPillCounts() {
+// Dynamically Render Category Pills (Syncs with Admin categories)
+function renderCategoryPills() {
+  const container = document.getElementById('categoryPillsContainer');
+  if (!container) return;
+  const categories = getStoredCategories();
   const publishedOnly = allBlogs.filter(isPostLive);
-  document.getElementById('countAll').textContent = publishedOnly.length;
 
-  document.querySelectorAll('.cat-pill').forEach(pill => {
-    const cat = pill.dataset.category;
-    if (cat && cat !== 'all') {
-      const count = publishedOnly.filter(b => b.category && b.category.toLowerCase() === cat.toLowerCase()).length;
-      const countEl = pill.querySelector('.pill-count');
-      if (countEl) countEl.textContent = count;
-    }
+  let html = `<button class="cat-pill ${activeCategory === 'all' ? 'active' : ''}" data-category="all">All Articles <span class="pill-count" id="countAll">${publishedOnly.length}</span></button>`;
+  
+  categories.forEach(cat => {
+    const count = publishedOnly.filter(b => b.category && b.category.toLowerCase() === cat.toLowerCase()).length;
+    html += `<button class="cat-pill ${activeCategory.toLowerCase() === cat.toLowerCase() ? 'active' : ''}" data-category="${escapeHtml(cat)}">${escapeHtml(cat)} <span class="pill-count">${count}</span></button>`;
   });
+
+  container.innerHTML = html;
 }
 
-// Render Blog Cards
+// Update Category Counts
+function updateCategoryPillCounts() {
+  renderCategoryPills();
+}
+
+// Render Blog Cards with 9-per-page Pagination (Correction 6)
 function renderBlogs() {
   const container = document.getElementById('blogGridContainer');
   const emptyState = document.getElementById('blogEmptyState');
   const resultsCountEl = document.getElementById('blogResultsCount');
+  const paginationWrap = document.getElementById('blogPaginationWrap');
+  const paginationControls = document.getElementById('blogPaginationControls');
+  const paginationInfo = document.getElementById('blogPaginationInfo');
 
   // Filter only live & scheduled-due blogs
   let filtered = allBlogs.filter(isPostLive);
@@ -1693,24 +2171,38 @@ function renderBlogs() {
       (b.title && b.title.toLowerCase().includes(q)) ||
       (b.excerpt && b.excerpt.toLowerCase().includes(q)) ||
       (b.author && b.author.toLowerCase().includes(q)) ||
-      (b.category && b.category.toLowerCase().includes(q))
+      (b.category && b.category.toLowerCase().includes(q)) ||
+      (b.tags && b.tags.some(t => t.toLowerCase().includes(q)))
     );
   }
 
-  // Update counts
+  // Update pill counts
   updateCategoryPillCounts();
+  const totalFiltered = filtered.length;
   const totalLive = allBlogs.filter(isPostLive).length;
-  resultsCountEl.textContent = `Showing ${filtered.length} of ${totalLive} published articles`;
+  const totalPages = Math.max(1, Math.ceil(totalFiltered / PAGE_SIZE));
 
-  if (filtered.length === 0) {
+  if (currentPage > totalPages) currentPage = totalPages;
+  if (currentPage < 1) currentPage = 1;
+
+  if (totalFiltered === 0) {
     container.innerHTML = '';
     emptyState.style.display = 'block';
+    paginationWrap.style.display = 'none';
+    resultsCountEl.textContent = `Showing 0 of ${totalLive} published articles`;
     return;
   }
 
   emptyState.style.display = 'none';
 
-  container.innerHTML = filtered.map(blog => {
+  // Slice for current page (9 per page)
+  const startIndex = (currentPage - 1) * PAGE_SIZE;
+  const endIndex = Math.min(startIndex + PAGE_SIZE, totalFiltered);
+  const pageBlogs = filtered.slice(startIndex, endIndex);
+
+  resultsCountEl.textContent = `Showing ${startIndex + 1}–${endIndex} of ${totalFiltered} articles`;
+
+  container.innerHTML = pageBlogs.map(blog => {
     const initial = blog.author ? blog.author.charAt(0).toUpperCase() : 'W';
     const fallbackImg = 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=800&q=80';
     const imgUrl = blog.image || fallbackImg;
@@ -1721,13 +2213,13 @@ function renderBlogs() {
     });
 
     return `
-      <article class="blog-card" data-id="${blog.id}">
-        <div class="blog-card-img-wrap">
-          <img src="${imgUrl}" alt="${blog.title}" class="blog-card-img" onerror="this.src='${fallbackImg}'" loading="lazy" />
-          <span class="blog-card-category">${blog.category || 'Tech'}</span>
+      <article class="blog-card" data-id="${escapeHtml(blog.id)}">
+        <div class="blog-card-img-wrap" onclick="openBlogModal('${escapeHtml(blog.id)}', true)" style="cursor:pointer;">
+          <img src="${imgUrl}" alt="${escapeHtml(blog.imageAlt || blog.title)}" class="blog-card-img" onerror="this.src='${fallbackImg}'" loading="lazy" />
+          <span class="blog-card-category">${escapeHtml(blog.category || 'Technology')}</span>
           <span class="blog-card-readtime">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-            ${blog.readTime || '4 min read'}
+            ${escapeHtml(blog.readTime || '5 min read')}
           </span>
         </div>
         <div class="blog-card-body">
@@ -1737,14 +2229,17 @@ function renderBlogs() {
               <span>${formattedDate}</span>
             </div>
           </div>
-          <h3 class="blog-card-title">${blog.title}</h3>
-          <p class="blog-card-excerpt">${blog.excerpt || ''}</p>
+          <!-- Correction 3: Clicking title redirects/opens article -->
+          <a href="blog.html?id=${encodeURIComponent(blog.id)}" style="text-decoration:none;" onclick="event.preventDefault(); openBlogModal('${escapeHtml(blog.id)}', true);">
+            <h3 class="blog-card-title">${escapeHtml(blog.title)}</h3>
+          </a>
+          <p class="blog-card-excerpt">${escapeHtml(blog.excerpt || '')}</p>
           <div class="blog-card-footer">
             <div class="blog-card-author">
               <div class="blog-author-avatar">${initial}</div>
-              <span class="blog-author-name">${blog.author || 'Webspide Team'}</span>
+              <span class="blog-author-name">${escapeHtml(blog.author || 'Webspide Team')}</span>
             </div>
-            <button class="blog-read-btn" onclick="openBlogModal('${blog.id}')">
+            <button class="blog-read-btn" onclick="openBlogModal('${escapeHtml(blog.id)}', true)">
               Read Article
               <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
             </button>
@@ -1753,19 +2248,77 @@ function renderBlogs() {
       </article>
     `;
   }).join('');
+
+  // Render pagination buttons (Correction 6)
+  if (totalPages > 1) {
+    paginationWrap.style.display = 'flex';
+    paginationInfo.textContent = `Page ${currentPage} of ${totalPages} (${totalFiltered} total articles)`;
+
+    let pagesHtml = '';
+    // Previous button
+    pagesHtml += `<button type="button" class="page-btn" ${currentPage === 1 ? 'disabled' : ''} onclick="goToPage(${currentPage - 1})" title="Previous Page">‹</button>`;
+
+    for (let p = 1; p <= totalPages; p++) {
+      pagesHtml += `<button type="button" class="page-btn ${p === currentPage ? 'active' : ''}" onclick="goToPage(${p})">${p}</button>`;
+    }
+
+    // Next button
+    pagesHtml += `<button type="button" class="page-btn" ${currentPage === totalPages ? 'disabled' : ''} onclick="goToPage(${currentPage + 1})" title="Next Page">›</button>`;
+
+    paginationControls.innerHTML = pagesHtml;
+  } else {
+    paginationWrap.style.display = 'none';
+  }
 }
 
-// Open Modal Reader
-window.openBlogModal = function(id) {
-  const blog = allBlogs.find(b => b.id === id);
+function goToPage(page) {
+  currentPage = page;
+  renderBlogs();
+  const section = document.querySelector('.blog-section');
+  if (section) {
+    section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+}
+
+// Current open blog reference for navigation and sharing
+let currentOpenBlog = null;
+
+// Open Modal Reader (Corrections 1, 2, 4, 7, 8, 9)
+window.openBlogModal = function(idOrSlug, pushState = false) {
+  const blog = allBlogs.find(b => b.id === idOrSlug || b.slug === idOrSlug);
   if (!blog) return;
 
+  currentOpenBlog = blog;
+
+  if (pushState) {
+    try {
+      history.pushState({ blogId: blog.id }, blog.title, `blog.html?id=${encodeURIComponent(blog.id)}`);
+    } catch(e) {}
+  }
+
   const backdrop = document.getElementById('blogModalBackdrop');
+  const modal = document.getElementById('blogModal');
   const fallbackImg = 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1200&q=80';
   
   document.getElementById('modalHeroImg').src = blog.image || fallbackImg;
-  document.getElementById('modalHeroImg').alt = blog.title;
-  document.getElementById('modalCategoryBadge').textContent = blog.category || 'Insights';
+  document.getElementById('modalHeroImg').alt = blog.imageAlt || blog.title;
+  
+  // Breadcrumbs
+  document.getElementById('modalBreadcrumbCategory').textContent = blog.category || 'Technology';
+
+  // Render tags if present
+  const tagsRow = document.getElementById('modalTagsRow');
+  const tagsList = document.getElementById('modalTagsList');
+  if (tagsRow && tagsList) {
+    if (blog.tags && Array.isArray(blog.tags) && blog.tags.length > 0) {
+      tagsList.innerHTML = blog.tags.map(t => `<span class="modal-tag-chip">#${escapeHtml(t)}</span>`).join('');
+      tagsRow.style.display = 'flex';
+    } else {
+      tagsRow.style.display = 'none';
+    }
+  }
+
+  document.getElementById('modalCategoryBadge').textContent = blog.category || 'Technology';
   document.getElementById('modalTitle').textContent = blog.title;
   document.getElementById('modalAuthorName').textContent = blog.author || 'Webspide Tech Team';
   document.getElementById('modalAuthorRole').textContent = blog.authorRole || 'Contributor';
@@ -1779,22 +2332,166 @@ window.openBlogModal = function(id) {
   });
   document.getElementById('modalDate').textContent = formattedDate;
 
-  // Format body text: convert newlines to paragraphs if raw text, or render HTML
+  // Format body HTML and inject into body text
   let contentHtml = blog.content || '';
-  if (!contentHtml.includes('<p>') && !contentHtml.includes('<div>')) {
-    contentHtml = contentHtml.split('\n\n').map(para => `<p>${para.replace(/\n/g, '<br>')}</p>`).join('');
+  // Only wrap in paragraphs if content is raw plain text without any HTML tags
+  if (!/<[a-z][\s\S]*>/i.test(contentHtml)) {
+    contentHtml = contentHtml.split(/\r?\n\r?\n/).map(para => `<p>${escapeHtml(para).replace(/\r?\n/g, '<br>')}</p>`).join('');
   }
-  document.getElementById('modalBodyText').innerHTML = contentHtml;
+  
+  const bodyTextEl = document.getElementById('modalBodyText');
+  bodyTextEl.innerHTML = contentHtml;
 
+  // Correction 7: Generate Table of Contents from <h2> and <h3> tags
+  generateTableOfContents(bodyTextEl);
+
+  // Correction 8: Generate Previous & Next Blog Navigation
+  generatePrevNextNavigation(blog);
+
+  modal.scrollTop = 0;
   backdrop.classList.add('open');
   document.body.style.overflow = 'hidden';
 };
+
+// Generate Table of Contents (Correction 7)
+function generateTableOfContents(containerEl) {
+  const tocBox = document.getElementById('modalTocBox');
+  const tocList = document.getElementById('modalTocList');
+  if (!tocBox || !tocList) return;
+
+  const headings = containerEl.querySelectorAll('h2, h3');
+  if (headings.length < 2) {
+    tocBox.style.display = 'none';
+    return;
+  }
+
+  let tocHtml = '';
+  headings.forEach((heading, idx) => {
+    const headingId = `toc-heading-${idx + 1}`;
+    heading.id = headingId;
+    const tag = heading.tagName.toLowerCase();
+    const title = heading.textContent.trim();
+
+    tocHtml += `
+      <li class="blog-toc-item ${tag}">
+        <a href="#${headingId}" class="blog-toc-link" onclick="event.preventDefault(); scrollToBlogHeading('${headingId}');">
+          ${escapeHtml(title)}
+        </a>
+      </li>
+    `;
+  });
+
+  tocList.innerHTML = tocHtml;
+  tocBox.style.display = 'block';
+}
+
+function scrollToBlogHeading(headingId) {
+  const headingEl = document.getElementById(headingId);
+  const modalEl = document.getElementById('blogModal');
+  if (headingEl && modalEl) {
+    const topPos = headingEl.offsetTop - 30;
+    modalEl.scrollTo({ top: topPos, behavior: 'smooth' });
+  }
+}
+
+function toggleToc() {
+  const list = document.getElementById('modalTocList');
+  const btn = document.getElementById('modalTocToggle');
+  if (!list || !btn) return;
+  const isHidden = list.style.display === 'none';
+  list.style.display = isHidden ? 'flex' : 'none';
+  btn.textContent = isHidden ? '[ Hide ]' : '[ Show ]';
+}
+
+// Generate Previous & Next Navigation (Correction 8)
+function generatePrevNextNavigation(currentBlog) {
+  const navEl = document.getElementById('modalPrevNextNav');
+  if (!navEl) return;
+
+  const liveBlogs = allBlogs.filter(isPostLive);
+  const idx = liveBlogs.findIndex(b => b.id === currentBlog.id);
+
+  const prevBlog = idx > 0 ? liveBlogs[idx - 1] : null;
+  const nextBlog = idx !== -1 && idx < liveBlogs.length - 1 ? liveBlogs[idx + 1] : null;
+
+  let html = '';
+  if (prevBlog) {
+    html += `
+      <div class="blog-nav-card" onclick="openBlogModal('${escapeHtml(prevBlog.id)}', true)">
+        <span class="blog-nav-card-label">← Previous Article</span>
+        <strong class="blog-nav-card-title">${escapeHtml(prevBlog.title)}</strong>
+      </div>
+    `;
+  } else {
+    html += `<div></div>`;
+  }
+
+  if (nextBlog) {
+    html += `
+      <div class="blog-nav-card next" onclick="openBlogModal('${escapeHtml(nextBlog.id)}', true)">
+        <span class="blog-nav-card-label">Next Article →</span>
+        <strong class="blog-nav-card-title">${escapeHtml(nextBlog.title)}</strong>
+      </div>
+    `;
+  } else {
+    html += `<div></div>`;
+  }
+
+  navEl.innerHTML = html;
+}
+
+// Social Sharing (Correction 9)
+function shareArticle(platform) {
+  if (!currentOpenBlog) return;
+  const articleUrl = encodeURIComponent(window.location.origin + window.location.pathname + `?id=${currentOpenBlog.id}`);
+  const title = encodeURIComponent(currentOpenBlog.title);
+
+  let shareUrl = '';
+  if (platform === 'linkedin') {
+    shareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${articleUrl}`;
+  } else if (platform === 'twitter') {
+    shareUrl = `https://twitter.com/intent/tweet?text=${title}&url=${articleUrl}&via=Webspide`;
+  } else if (platform === 'facebook') {
+    shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${articleUrl}`;
+  } else if (platform === 'whatsapp') {
+    shareUrl = `https://api.whatsapp.com/send?text=${title}%20${articleUrl}`;
+  }
+
+  if (shareUrl) {
+    window.open(shareUrl, '_blank', 'width=600,height=500,scrollbars=yes');
+  }
+}
+
+function copyArticleLink() {
+  if (!currentOpenBlog) return;
+  const fullUrl = window.location.origin + window.location.pathname + `?id=${currentOpenBlog.id}`;
+  navigator.clipboard.writeText(fullUrl).then(() => {
+    alert('Article link copied to clipboard!');
+  }).catch(() => {
+    prompt('Copy this article link:', fullUrl);
+  });
+}
+
+// In-Article Consultation Request Handler (Correction 4)
+function handleInBlogContact(e) {
+  e.preventDefault();
+  const name = document.getElementById('blogContactName').value.trim();
+  const email = document.getElementById('blogContactEmail').value.trim();
+  const service = document.getElementById('blogContactService').value;
+  const message = document.getElementById('blogContactMessage').value.trim();
+
+  alert(`Thank you, ${name}! Your consultation request for "${service}" has been received. Our engineering team will contact you at ${email} within 24 hours.`);
+  e.target.reset();
+}
 
 // Close Modal Reader
 function closeBlogModal() {
   const backdrop = document.getElementById('blogModalBackdrop');
   backdrop.classList.remove('open');
   document.body.style.overflow = '';
+  try {
+    history.pushState(null, '', 'blog.html');
+  } catch(e) {}
 }
 
 document.getElementById('modalCloseBtn').addEventListener('click', closeBlogModal);
@@ -1812,7 +2509,8 @@ document.getElementById('categoryPillsContainer').addEventListener('click', func
 
   document.querySelectorAll('.cat-pill').forEach(p => p.classList.remove('active'));
   pill.classList.add('active');
-  activeCategory = pill.dataset.category;
+  activeCategory = pill.dataset.category || 'all';
+  currentPage = 1; // Reset to page 1 on filter
   renderBlogs();
 });
 
@@ -1823,6 +2521,7 @@ const searchClearBtn = document.getElementById('searchClearBtn');
 searchInput.addEventListener('input', function(e) {
   searchQuery = e.target.value;
   searchClearBtn.style.display = searchQuery ? 'block' : 'none';
+  currentPage = 1; // Reset to page 1 on search
   renderBlogs();
 });
 
@@ -1831,16 +2530,33 @@ searchClearBtn.addEventListener('click', function() {
   searchQuery = '';
   searchClearBtn.style.display = 'none';
   searchInput.focus();
+  currentPage = 1;
   renderBlogs();
 });
 
 // Real-time synchronization across browser tabs (Storage Event)
 window.addEventListener('storage', function(e) {
-  if (e.key === STORAGE_KEY) {
+  if (e.key === STORAGE_KEY || e.key === CATEGORIES_KEY) {
     allBlogs = getStoredBlogs();
     renderBlogs();
   }
 });
+
+// Handle browser Back / Forward buttons
+window.addEventListener('popstate', function(e) {
+  const urlParams = new URLSearchParams(window.location.search);
+  const articleId = urlParams.get('id');
+  if (articleId) {
+    openBlogModal(articleId, false);
+  } else {
+    closeBlogModal();
+  }
+});
+
+function escapeHtml(str) {
+  if (!str) return '';
+  return str.toString().replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+}
 
 // Initial render
 document.addEventListener('DOMContentLoaded', function() {
@@ -1856,7 +2572,7 @@ document.addEventListener('DOMContentLoaded', function() {
   const urlParams = new URLSearchParams(window.location.search);
   const articleId = urlParams.get('id');
   if (articleId) {
-    openBlogModal(articleId);
+    openBlogModal(articleId, false);
   }
 });
 </script>

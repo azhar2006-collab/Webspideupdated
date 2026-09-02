@@ -655,8 +655,9 @@ body {
 .rich-content-editable {
   width: 100%;
   min-height: 480px;
-  max-height: 800px;
+  max-height: 1200px;
   overflow-y: auto;
+  resize: vertical;
   padding: 24px 28px;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   font-size: 16px;
@@ -664,6 +665,23 @@ body {
   color: #2c3338;
   outline: none;
   background: #fff;
+  scrollbar-width: thin;
+  scrollbar-color: var(--wp-primary) #f1f5f9;
+}
+.rich-content-editable::-webkit-scrollbar {
+  width: 10px;
+}
+.rich-content-editable::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 4px;
+}
+.rich-content-editable::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 5px;
+  border: 2px solid #f1f5f9;
+}
+.rich-content-editable::-webkit-scrollbar-thumb:hover {
+  background: var(--wp-primary);
 }
 .rich-content-editable:focus {
   background: #ffffff;
@@ -1556,6 +1574,17 @@ body {
               
               <!-- Raw HTML Code Source Area -->
               <textarea id="postContentSource" class="rich-source-textarea" placeholder="HTML code..." oninput="handleSourceInput()"></textarea>
+
+              <!-- Editor Footer with Resize Controls (Correction 7) -->
+              <div class="rich-editor-footer" style="display:flex;align-items:center;justify-content:space-between;background:#f8fafc;border-top:1px solid var(--wp-border-light);padding:6px 12px;font-size:12px;color:var(--wp-text-muted);">
+                <div id="editorWordStats" style="font-weight:500;">Words: 0 | Characters: 0</div>
+                <div style="display:flex;align-items:center;gap:6px;">
+                  <span style="font-size:11px;font-weight:600;">Content Area Size:</span>
+                  <button type="button" class="button" style="padding:2px 8px;font-size:11px;height:24px;" onclick="adjustEditorSize(100)" title="Enlarge content area">➕ Enlarge</button>
+                  <button type="button" class="button" style="padding:2px 8px;font-size:11px;height:24px;" onclick="adjustEditorSize(-100)" title="Reduce content area">➖ Reduce</button>
+                  <button type="button" class="button" style="padding:2px 8px;font-size:11px;height:24px;" onclick="resetEditorSize()" title="Reset to default height">↺ Reset</button>
+                </div>
+              </div>
             </div>
 
             <!-- Table Quick Action Bar (Visible when clicking inside a table) -->
@@ -1677,7 +1706,7 @@ body {
               </div>
             </div>
 
-            <!-- CATEGORIES POSTBOX -->
+            <!-- CATEGORIES POSTBOX (Correction 9: Add & Delete Categories) -->
             <div class="postbox">
               <div class="postbox-header">
                 <span>Category</span>
@@ -1691,6 +1720,21 @@ body {
                   <option value="UI/UX Design">UI/UX Design</option>
                   <option value="Technology">Technology</option>
                 </select>
+
+                <!-- Inline Category Actions (Add / Delete) -->
+                <div style="display:flex;gap:6px;margin-top:4px;">
+                  <button type="button" class="button" style="padding:2px 8px;font-size:11.5px;flex:1;" onclick="toggleInlineAddCategory()">+ Add New Category</button>
+                  <button type="button" class="button" style="padding:2px 8px;font-size:11.5px;color:var(--wp-danger);" onclick="deleteSelectedCategory()" title="Delete currently selected category">🗑 Delete</button>
+                </div>
+
+                <!-- Hidden Inline Add Category Box -->
+                <div id="inlineAddCategoryBox" style="display:none;background:#f8fafc;border:1px solid #cbd5e1;border-radius:4px;padding:8px;margin-top:6px;">
+                  <label style="font-size:11px;font-weight:600;display:block;margin-bottom:3px;">New Category Name:</label>
+                  <div style="display:flex;gap:4px;">
+                    <input type="text" id="inlineCategoryInput" class="wp-input" style="flex:1;font-size:12px;padding:4px 6px;" placeholder="e.g. Artificial Intelligence" onkeydown="if(event.key==='Enter'){event.preventDefault();addCategoryInline();}" />
+                    <button type="button" class="button button-primary" style="padding:4px 10px;font-size:11.5px;" onclick="addCategoryInline()">Add</button>
+                  </div>
+                </div>
               </div>
             </div>
 
@@ -1809,8 +1853,9 @@ body {
         <table class="wp-list-table">
           <thead>
             <tr>
-              <th>Name</th>
-              <th>Count</th>
+              <th>Category Name</th>
+              <th>Articles Count</th>
+              <th style="width:100px;text-align:center;">Action</th>
             </tr>
           </thead>
           <tbody id="categoriesTableBody">
@@ -2208,6 +2253,7 @@ function loadBlogs() {
     }
   }
   autoPublishDueScheduledPosts();
+  refreshCategoryDropdowns();
   renderPostsTable();
   renderCategoriesTable();
 }
@@ -2453,11 +2499,49 @@ function switchEditorMode(mode) {
 }
 
 function handleContentInput() {
+  updateEditorWordStats();
   triggerAutosave();
 }
 
 function handleSourceInput() {
+  updateEditorWordStats();
   triggerAutosave();
+}
+
+function updateEditorWordStats() {
+  const statsEl = document.getElementById('editorWordStats');
+  if (!statsEl) return;
+  const content = getEditorContent();
+  const tempDiv = document.createElement('div');
+  tempDiv.innerHTML = content;
+  const text = tempDiv.textContent || tempDiv.innerText || '';
+  const trimmed = text.trim();
+  const words = trimmed ? trimmed.split(/\s+/).length : 0;
+  const chars = text.length;
+  statsEl.textContent = `Words: ${words} | Characters: ${chars}`;
+}
+
+function adjustEditorSize(delta) {
+  const visualEl = document.getElementById('postContentVisual');
+  const sourceEl = document.getElementById('postContentSource');
+  const target = currentEditorMode === 'visual' ? visualEl : sourceEl;
+  const currentH = target.clientHeight || 480;
+  const newH = Math.max(260, Math.min(1600, currentH + delta));
+  visualEl.style.height = `${newH}px`;
+  visualEl.style.minHeight = `${newH}px`;
+  sourceEl.style.height = `${newH}px`;
+  sourceEl.style.minHeight = `${newH}px`;
+  showToast(`Editor height adjusted to ${newH}px`);
+}
+
+function resetEditorSize() {
+  const visualEl = document.getElementById('postContentVisual');
+  const sourceEl = document.getElementById('postContentSource');
+  visualEl.style.height = '';
+  visualEl.style.minHeight = '480px';
+  sourceEl.style.height = '';
+  sourceEl.style.minHeight = '480px';
+  showToast('Editor height reset to default');
 }
 
 function getEditorContent() {
@@ -2487,7 +2571,11 @@ document.addEventListener('DOMContentLoaded', function() {
       // Clean up Word/GDocs junk while preserving headings, paragraphs, lists, tables, links, bold, italic
       htmlData = sanitizePastedHtml(htmlData);
       document.execCommand('insertHTML', false, htmlData);
-    } else {
+    } else if (textData && /<(h[1-6]|p|div|table|ul|ol|blockquote|a|strong|em|section|article)\b/i.test(textData)) {
+      // Raw HTML snippet pasted as plain text -> sanitize and insert as real elements
+      const cleanHtml = sanitizePastedHtml(textData);
+      document.execCommand('insertHTML', false, cleanHtml);
+    } else if (textData) {
       // Plain text paste -> split by double newlines into paragraphs
       const paras = textData.split(/\r?\n\r?\n/).map(p => `<p>${escapeHtml(p).replace(/\r?\n/g, '<br>')}</p>`).join('');
       document.execCommand('insertHTML', false, paras);
@@ -2499,6 +2587,36 @@ document.addEventListener('DOMContentLoaded', function() {
   visualEl.addEventListener('mouseup', saveCurrentSelection);
   visualEl.addEventListener('keyup', saveCurrentSelection);
   visualEl.addEventListener('focus', saveCurrentSelection);
+
+  // Correction 3: Update heading dropdown to reflect current cursor block type
+  function updateHeadingDropdown() {
+    const sel = window.getSelection();
+    if (!sel || sel.rangeCount === 0) return;
+    let node = sel.getRangeAt(0).startContainer;
+    // Walk up to find nearest block element inside the editor
+    while (node && node !== visualEl) {
+      const tag = (node.tagName || '').toLowerCase();
+      if (['h1','h2','h3','h4','h5','h6','p','blockquote','div'].includes(tag)) {
+        const select = document.getElementById('tbHeadingSelect');
+        if (select) {
+          if (tag === 'h2') select.value = 'h2';
+          else if (tag === 'h3') select.value = 'h3';
+          else if (tag === 'h4') select.value = 'h4';
+          else select.value = 'p';
+        }
+        break;
+      }
+      node = node.parentNode;
+    }
+  }
+  visualEl.addEventListener('mouseup', updateHeadingDropdown);
+  visualEl.addEventListener('keyup', updateHeadingDropdown);
+  document.addEventListener('selectionchange', function() {
+    if (document.activeElement === visualEl || visualEl.contains(document.activeElement)) {
+      updateHeadingDropdown();
+    }
+  });
+
 
   // Table Tool click detection
   visualEl.addEventListener('click', function(e) {
@@ -2514,7 +2632,26 @@ document.addEventListener('DOMContentLoaded', function() {
       currentActiveCell = null;
       currentActiveTable = null;
     }
+
+    // Correction 5: Clicking a hyperlink in the editor shows link edit popup
+    const linkEl = e.target.closest('a');
+    if (linkEl && linkEl.getAttribute('href')) {
+      e.preventDefault();
+      saveCurrentSelection();
+      // Select the entire link node
+      const range = document.createRange();
+      range.selectNode(linkEl);
+      const sel = window.getSelection();
+      sel.removeAllRanges();
+      sel.addRange(range);
+      savedSelectionRange = range.cloneRange();
+      document.getElementById('linkUrlInput').value = linkEl.getAttribute('href') || '';
+      document.getElementById('linkTextInput').value = linkEl.textContent || '';
+      document.getElementById('linkNewTabCheckbox').checked = linkEl.target === '_blank';
+      document.getElementById('linkModalBackdrop').classList.add('open');
+    }
   });
+
 });
 
 function sanitizePastedHtml(html) {
@@ -3166,15 +3303,58 @@ function saveCurrentPost() {
   const readTime = document.getElementById('postReadTime').value.trim() || '5 min read';
   const date = document.getElementById('postDate').value || new Date().toISOString().split('T')[0];
   const time = document.getElementById('postTime').value || '12:00';
-  const image = document.getElementById('postImage').value.trim() || PRESETS.web;
+  const rawImage = document.getElementById('postImage').value.trim();
+  const image = rawImage || PRESETS.web;
   const imageAlt = document.getElementById('postImageAlt').value.trim() || title;
   const metaTitle = document.getElementById('postMetaTitle').value.trim() || `${title} | WebSpide Technologies`;
   const metaDescription = document.getElementById('postMetaDesc').value.trim() || excerpt;
   const tags = [...currentEditingTags];
 
+  // Correction 8: Mandatory validation check for Title, Permalink, Description (Excerpt), and Featured Image
   if (!title) {
-    alert('Please enter a title for your post.');
+    showNotice('❌ <strong>Title is mandatory.</strong> Please enter a post title.', 'error');
     document.getElementById('postTitle').focus();
+    return;
+  }
+
+  if (!slug) {
+    showNotice('❌ <strong>Permalink is mandatory.</strong> Please specify a URL slug for this article.', 'error');
+    document.getElementById('postSlug').focus();
+    return;
+  }
+
+  if (!excerpt) {
+    showNotice('❌ <strong>Excerpt / Description is mandatory.</strong> Please write a short summary in the Excerpt box.', 'error');
+    document.getElementById('postExcerpt').focus();
+    return;
+  }
+
+  if (!rawImage) {
+    showNotice('❌ <strong>Featured Image is mandatory.</strong> Please upload a featured image, paste an image URL, or choose a preset.', 'error');
+    const imgBox = document.getElementById('editorImgBox');
+    if (imgBox) {
+      imgBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      imgBox.style.borderColor = 'var(--wp-danger)';
+      imgBox.style.boxShadow = '0 0 0 2px rgba(214,54,56,0.3)';
+      setTimeout(() => {
+        imgBox.style.borderColor = '';
+        imgBox.style.boxShadow = '';
+      }, 4000);
+    }
+    return;
+  }
+
+  // Correction 1: Duplicate slug/URL check
+  const existingWithSlug = blogs.find(b => b.slug === slug && b.id !== id);
+  if (existingWithSlug) {
+    showNotice(`❌ A blog post with the URL "<strong>/${slug}</strong>" already exists: "<em>${existingWithSlug.title}</em>". Please change the permalink to a unique URL before publishing.`, 'error');
+    document.getElementById('postSlug').focus();
+    document.getElementById('postSlug').style.borderColor = 'var(--wp-danger)';
+    document.getElementById('postSlug').style.boxShadow = '0 0 0 2px rgba(214,54,56,0.25)';
+    setTimeout(() => {
+      document.getElementById('postSlug').style.borderColor = '';
+      document.getElementById('postSlug').style.boxShadow = '';
+    }, 4000);
     return;
   }
 
@@ -3272,25 +3452,65 @@ function deleteCurrentEditingPost() {
 }
 
 /* ══════════════════════════════════════════════
-   CATEGORIES TABLE & ADD
+   CATEGORIES MANAGEMENT (Correction 9: Add & Delete)
    ══════════════════════════════════════════════ */
-function renderCategoriesTable() {
-  const tbody = document.getElementById('categoriesTableBody');
-  const cats = ['Web Development', 'App Development', 'Digital Marketing', 'SEO & Content', 'UI/UX Design', 'Technology'];
-  
-  // Also collect any custom categories from existing posts
+const CATEGORIES_KEY = 'webspide_categories';
+const DEFAULT_CATEGORIES = ['Web Development', 'App Development', 'Digital Marketing', 'SEO & Content', 'UI/UX Design', 'Technology'];
+
+function getAllCategories() {
+  const stored = localStorage.getItem(CATEGORIES_KEY);
+  let cats = DEFAULT_CATEGORIES;
+  if (stored) {
+    try {
+      const parsed = JSON.parse(stored);
+      if (Array.isArray(parsed) && parsed.length > 0) cats = parsed;
+    } catch(e) {}
+  }
+  // Also include any categories present in current blogs
   blogs.forEach(b => {
     if (b.category && !cats.includes(b.category)) {
       cats.push(b.category);
     }
   });
+  return cats;
+}
+
+function saveCategories(cats) {
+  localStorage.setItem(CATEGORIES_KEY, JSON.stringify(cats));
+  refreshCategoryDropdowns();
+  renderCategoriesTable();
+}
+
+function refreshCategoryDropdowns(selectedCategory = null) {
+  const cats = getAllCategories();
+  const postSel = document.getElementById('postCategory');
+  const filterSel = document.getElementById('filterCategory');
+
+  if (postSel) {
+    const curr = selectedCategory || postSel.value || cats[0];
+    postSel.innerHTML = cats.map(c => `<option value="${escapeHtml(c)}"${c === curr ? ' selected' : ''}>${escapeHtml(c)}</option>`).join('');
+  }
+
+  if (filterSel) {
+    const currFilter = filterSel.value || 'all';
+    filterSel.innerHTML = `<option value="all">All Categories</option>` + cats.map(c => `<option value="${escapeHtml(c)}"${c === currFilter ? ' selected' : ''}>${escapeHtml(c)}</option>`).join('');
+  }
+}
+
+function renderCategoriesTable() {
+  const tbody = document.getElementById('categoriesTableBody');
+  if (!tbody) return;
+  const cats = getAllCategories();
 
   tbody.innerHTML = cats.map(c => {
-    const count = blogs.filter(b => b.category === c).length;
+    const count = blogs.filter(b => b.category && b.category.toLowerCase() === c.toLowerCase()).length;
     return `
       <tr>
         <td><strong>${escapeHtml(c)}</strong></td>
-        <td>${count}</td>
+        <td><span class="badge-status" style="background:#eef2ff;color:#1e3a8a;">${count} articles</span></td>
+        <td style="text-align:center;">
+          <button type="button" class="button" style="padding:2px 8px;font-size:11.5px;color:var(--wp-danger);" onclick="deleteCategory('${escapeHtml(c)}')">Delete</button>
+        </td>
       </tr>
     `;
   }).join('');
@@ -3299,24 +3519,74 @@ function renderCategoriesTable() {
 function addNewCategory() {
   const input = document.getElementById('newCategoryName');
   const val = input.value.trim();
+  if (!val) {
+    alert('Please enter a category name.');
+    input.focus();
+    return;
+  }
+
+  const cats = getAllCategories();
+  if (cats.some(c => c.toLowerCase() === val.toLowerCase())) {
+    alert(`Category "${val}" already exists.`);
+    return;
+  }
+
+  cats.push(val);
+  saveCategories(cats);
+  input.value = '';
+  showToast(`Category "${val}" added successfully.`);
+  showNotice(`Category "<strong>${escapeHtml(val)}</strong>" has been created.`);
+}
+
+function deleteCategory(catName) {
+  if (!catName) return;
+  const count = blogs.filter(b => b.category && b.category.toLowerCase() === catName.toLowerCase()).length;
+  const promptMsg = count > 0 
+    ? `Category "${catName}" has ${count} articles assigned. Are you sure you want to delete it? Those articles will keep their category or can be reassigned.`
+    : `Are you sure you want to delete category "${catName}"?`;
+
+  if (confirm(promptMsg)) {
+    let cats = getAllCategories().filter(c => c.toLowerCase() !== catName.toLowerCase());
+    if (cats.length === 0) cats = [...DEFAULT_CATEGORIES];
+    saveCategories(cats);
+    showToast(`Category "${catName}" deleted.`);
+    showNotice(`Category "<strong>${escapeHtml(catName)}</strong>" deleted.`, 'warning');
+  }
+}
+
+function toggleInlineAddCategory() {
+  const box = document.getElementById('inlineAddCategoryBox');
+  if (!box) return;
+  const isHidden = box.style.display === 'none';
+  box.style.display = isHidden ? 'block' : 'none';
+  if (isHidden) {
+    document.getElementById('inlineCategoryInput').focus();
+  }
+}
+
+function addCategoryInline() {
+  const input = document.getElementById('inlineCategoryInput');
+  const val = input.value.trim();
   if (!val) return;
 
-  const sel = document.getElementById('postCategory');
-  const opt = document.createElement('option');
-  opt.value = val;
-  opt.textContent = val;
-  opt.selected = true;
-  sel.appendChild(opt);
+  const cats = getAllCategories();
+  if (cats.some(c => c.toLowerCase() === val.toLowerCase())) {
+    alert(`Category "${val}" already exists.`);
+    return;
+  }
 
-  const filterSel = document.getElementById('filterCategory');
-  const filterOpt = document.createElement('option');
-  filterOpt.value = val;
-  filterOpt.textContent = val;
-  filterSel.appendChild(filterOpt);
-
+  cats.push(val);
+  saveCategories(cats);
   input.value = '';
-  renderCategoriesTable();
-  showToast(`Category "${val}" added.`);
+  document.getElementById('inlineAddCategoryBox').style.display = 'none';
+  document.getElementById('postCategory').value = val;
+  showToast(`Category "${val}" added and selected.`);
+}
+
+function deleteSelectedCategory() {
+  const postSel = document.getElementById('postCategory');
+  if (!postSel || !postSel.value) return;
+  deleteCategory(postSel.value);
 }
 
 /* ══════════════════════════════════════════════

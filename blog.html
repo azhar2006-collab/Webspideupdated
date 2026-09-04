@@ -1222,34 +1222,23 @@ h5{font-weight:800!important;color:#8B5CF6!important}
    TABLE OF CONTENTS (Correction 7)
    ══════════════════════════ */
 .blog-toc-box {
-  background: #f8fafc;
-  border: 1.5px solid rgba(139,92,246,0.22);
+  background: #f1f3f5;
   border-radius: 12px;
-  padding: 18px 22px;
+  padding: 20px 18px;
   margin: 24px 0 32px;
-  box-shadow: 0 4px 18px rgba(7,22,79,0.04);
+  border: 1px solid rgba(0,0,0,0.04);
 }
 .blog-toc-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border-bottom: 1.5px solid rgba(139,92,246,0.15);
-  padding-bottom: 10px;
-  margin-bottom: 12px;
+  margin-bottom: 14px;
 }
 .blog-toc-title {
-  display: flex;
-  align-items: center;
-  gap: 8px;
   font-family: 'Exo 2', sans-serif;
-  font-size: 1.05rem;
-  font-weight: 800;
-  color: #07164F;
-}
-.blog-toc-title svg {
-  width: 18px;
-  height: 18px;
-  stroke: #1F4FB2;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #1e293b;
 }
 .blog-toc-toggle {
   background: none;
@@ -1265,35 +1254,45 @@ h5{font-weight:800!important;color:#8B5CF6!important}
   padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 12px;
   max-height: 400px;
   overflow-y: auto;
+  padding-right: 6px;
+}
+.blog-toc-list::-webkit-scrollbar {
+  width: 6px;
+}
+.blog-toc-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+.blog-toc-list::-webkit-scrollbar-thumb {
+  background: #9ca3af;
+  border-radius: 4px;
+}
+.blog-toc-list::-webkit-scrollbar-thumb:hover {
+  background: #6b7280;
 }
 .blog-toc-item {
   position: relative;
 }
 .blog-toc-item.h3 {
-  padding-left: 20px;
+  padding-left: 14px;
 }
 .blog-toc-link {
-  color: #334155;
+  color: #4b5563;
   text-decoration: none;
   font-size: 0.92rem;
-  font-weight: 600;
-  line-height: 1.4;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  transition: all 0.15s ease;
+  font-weight: 500;
+  line-height: 1.45;
+  display: block;
+  transition: color 0.15s ease;
 }
 .blog-toc-link:hover {
-  color: #1F4FB2;
-  transform: translateX(4px);
+  color: #07164F;
 }
-.blog-toc-link::before {
-  content: '▸';
-  color: #8B5CF6;
-  font-size: 0.8rem;
+.blog-toc-link.active {
+  color: #1F4FB2;
+  font-weight: 700;
 }
 
 /* ══════════════════════════
@@ -1977,12 +1976,18 @@ const DEFAULT_SEED_BLOGS = [
   {
     id: 'blog_1',
     title: 'The Future of Custom Web Development in 2026: AI, Speed & Micro-Frontends',
+    slug: 'the-future-of-custom-web-development-in-2026',
     category: 'Web Development',
+    tags: ['Custom Website Development', 'Web Development', 'Micro-Frontends', 'AI Integration'],
     author: 'Azhar Hussain',
+    authorRole: 'Chief Technology Officer',
     date: '2026-08-18',
     readTime: '6 min read',
     status: 'published',
     image: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1200&q=80',
+    imageAlt: 'Custom Web Development and modern cloud architecture coding in 2026',
+    metaTitle: 'The Future of Custom Web Development in 2026 | WebSpide',
+    metaDescription: 'Discover how micro-frontends, edge computing, and client-side AI streaming are transforming enterprise web development standards in 2026.',
     excerpt: 'Modern web architectures have evolved radically. Explore how edge computing, AI integrations, and micro-frontend architectures are setting new benchmarks for enterprise applications.',
     content: `<h2>The Paradigm Shift in Web Architecture</h2>
 <p>Modern enterprises no longer build monolithic web platforms that take minutes to deploy and hours to scale. In 2026, building scalable web products requires lightning-fast load times, localized edge computing, and modular micro-frontends.</p>
@@ -1994,6 +1999,35 @@ const DEFAULT_SEED_BLOGS = [
 <h3>2. Edge-Rendered Dynamic Content</h3>
 <p>Deploying application logic directly to CDN edge workers reduces latency to under 20ms across global markets. Whether handling personalized user dashboards or dynamic inventory updates, edge computing is now essential.</p>
 
+<div class="table-responsive-wrapper">
+  <table>
+    <thead>
+      <tr>
+        <th>Service</th>
+        <th>Technology</th>
+        <th>Development Type</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Website</td>
+        <td>WordPress</td>
+        <td>CMS Platform</td>
+      </tr>
+      <tr>
+        <td>Web Application</td>
+        <td>React / Next.js</td>
+        <td>Custom Architecture</td>
+      </tr>
+      <tr>
+        <td>E-commerce</td>
+        <td>WooCommerce / Shopify</td>
+        <td>Online Store</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
 <h3>3. Seamless AI Assistant Integrations</h3>
 <p>From predictive search autocomplete to conversational customer care agents built directly into the UI, modern web apps leverage client-side AI streaming to deliver intuitive user experiences.</p>
 
@@ -2003,12 +2037,18 @@ const DEFAULT_SEED_BLOGS = [
   {
     id: 'blog_2',
     title: 'Mastering Cross-Platform Mobile Apps: Flutter vs React Native in Depth',
+    slug: 'mastering-cross-platform-mobile-apps-flutter-vs-react-native',
     category: 'App Development',
+    tags: ['Flutter Apps', 'React Native', 'Mobile Development', 'App Performance'],
     author: 'Luiza Mary',
+    authorRole: 'Lead Mobile Architect',
     date: '2026-08-15',
     readTime: '5 min read',
     status: 'published',
     image: 'https://images.unsplash.com/photo-1551650975-87deedd944c3?auto=format&fit=crop&w=1200&q=80',
+    imageAlt: 'Flutter vs React Native cross-platform mobile development comparison',
+    metaTitle: 'Mastering Cross-Platform Mobile Apps: Flutter vs React Native | WebSpide',
+    metaDescription: 'In-depth benchmark between Flutter and React Native in 2026: performance, native bridge overhead, rendering engines, and team velocity.',
     excerpt: 'Choosing between Flutter and React Native can make or break your mobile startup. We benchmark performance, native bridge overhead, rendering engines, and team velocity.',
     content: `<h2>The Dilemma: Choosing the Right Framework</h2>
 <p>Building separate native apps for iOS and Android often doubles development costs and timelines. Cross-platform engineering has reached native parity, with Flutter and React Native dominating the market.</p>
@@ -2029,12 +2069,18 @@ const DEFAULT_SEED_BLOGS = [
   {
     id: 'blog_3',
     title: 'Proven SEO Strategies to Rank Higher and Capture High-Intent Traffic',
+    slug: 'proven-seo-strategies-to-rank-higher',
     category: 'SEO & Content',
+    tags: ['SEO Strategies', 'Search Engine Optimization', 'Core Web Vitals', 'Organic Growth'],
     author: 'Rishi Kumar',
+    authorRole: 'Head of Growth Marketing',
     date: '2026-08-10',
     readTime: '7 min read',
     status: 'published',
     image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=1200&q=80',
+    imageAlt: 'SEO analytics and high-intent traffic growth strategies',
+    metaTitle: 'Proven SEO Strategies to Rank Higher in 2026 | WebSpide',
+    metaDescription: 'Learn actionable SEO strategies: entity search optimization, semantic topic clusters, and Core Web Vitals optimization to capture top search rankings.',
     excerpt: 'Technical SEO and high-intent semantic content are your strongest revenue drivers. Learn the exact playbook we use to rank our clients in top search positions.',
     content: `<h2>Why Generic SEO No Longer Works</h2>
 <p>Search engines now prioritize topical authority, deep user intent satisfaction, and Core Web Vitals over keyword density. Here is how modern businesses dominate competitive search landscapes.</p>
@@ -2056,12 +2102,18 @@ const DEFAULT_SEED_BLOGS = [
   {
     id: 'blog_4',
     title: 'UI/UX Design Systems That Boost Enterprise Conversion Rates',
+    slug: 'ui-ux-design-systems-boost-enterprise-conversion',
     category: 'UI/UX Design',
+    tags: ['UI/UX Design', 'Design Systems', 'Enterprise UX', 'Conversion Optimization'],
     author: 'Priya Sharma',
+    authorRole: 'Principal UX Designer',
     date: '2026-08-05',
     readTime: '4 min read',
     status: 'published',
     image: 'https://images.unsplash.com/photo-1581291518857-4e27b48ff24e?auto=format&fit=crop&w=1200&q=80',
+    imageAlt: 'Design system components and enterprise UI UX conversion workflow',
+    metaTitle: 'UI/UX Design Systems That Boost Enterprise Conversion Rates | WebSpide',
+    metaDescription: 'A design system is a shared language between design and engineering that eliminates friction and multiplies user engagement.',
     excerpt: 'A design system is more than a Figma component library; it is a shared language between design and engineering that eliminates friction and multiplies user engagement.',
     content: `<h2>The Value of Design Systems</h2>
 <p>Consistent typography, intuitive color hierarchy, and predictable interaction models reduce user cognitive load and accelerate purchase or lead generation conversions.</p>
@@ -2073,6 +2125,33 @@ const DEFAULT_SEED_BLOGS = [
 <p>Thoughtful feedback on button clicks, progress indicators during multi-step forms, and smooth state transitions build trust and user confidence.</p>`
   }
 ];
+
+function generateSlug(text) {
+  return (text || '')
+    .toString()
+    .toLowerCase()
+    .trim()
+    .replace(/[\s\W-]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+}
+
+const PHYSICAL_BLOG_SLUGS = [
+  'the-future-of-custom-web-development-in-2026',
+  'mastering-cross-platform-mobile-apps-flutter-vs-react-native',
+  'proven-seo-strategies-to-rank-higher',
+  'ui-ux-design-systems-boost-enterprise-conversion'
+];
+
+function getBlogDetailUrl(blog) {
+  if (!blog) return 'blog.html';
+  const slug = blog.slug || generateSlug(blog.title);
+  // Physical directory exists for seed blogs
+  if (PHYSICAL_BLOG_SLUGS.includes(slug)) {
+    return `blog/${encodeURIComponent(slug)}/`;
+  }
+  // Dynamic posts added via admin route to blog-detail.html with title & id
+  return `blog-detail.html?title=${encodeURIComponent(slug)}&id=${encodeURIComponent(blog.id || '')}`;
+}
 
 const CATEGORIES_KEY = 'webspide_categories';
 const DEFAULT_CATEGORIES = ['Web Development', 'App Development', 'Digital Marketing', 'SEO & Content', 'UI/UX Design', 'Technology'];
@@ -2096,7 +2175,23 @@ function getStoredBlogs() {
   }
   try {
     const parsed = JSON.parse(data);
-    return Array.isArray(parsed) ? parsed : [...DEFAULT_SEED_BLOGS];
+    if (!Array.isArray(parsed)) return [...DEFAULT_SEED_BLOGS];
+    // Back-fill missing slug fields from DEFAULT_SEED_BLOGS (handles old localStorage data)
+    let needsSave = false;
+    const merged = parsed.map(b => {
+      if (!b.slug) {
+        const seed = DEFAULT_SEED_BLOGS.find(s => s.id === b.id);
+        if (seed && seed.slug) {
+          needsSave = true;
+          return { ...b, slug: seed.slug };
+        }
+      }
+      return b;
+    });
+    if (needsSave) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(merged));
+    }
+    return merged;
   } catch (e) {
     return [...DEFAULT_SEED_BLOGS];
   }
@@ -2211,16 +2306,19 @@ function renderBlogs() {
       day: 'numeric',
       year: 'numeric'
     });
+    const detailUrl = getBlogDetailUrl(blog);
 
     return `
-      <article class="blog-card" data-id="${escapeHtml(blog.id)}">
-        <div class="blog-card-img-wrap" onclick="openBlogModal('${escapeHtml(blog.id)}', true)" style="cursor:pointer;">
-          <img src="${imgUrl}" alt="${escapeHtml(blog.imageAlt || blog.title)}" class="blog-card-img" onerror="this.src='${fallbackImg}'" loading="lazy" />
-          <span class="blog-card-category">${escapeHtml(blog.category || 'Technology')}</span>
-          <span class="blog-card-readtime">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-            ${escapeHtml(blog.readTime || '5 min read')}
-          </span>
+      <article class="blog-card" data-id="${escapeHtml(blog.id)}" onclick="window.open('${detailUrl}', '_blank')" style="cursor:pointer;">
+        <div class="blog-card-img-wrap">
+          <a href="${detailUrl}" target="_blank" onclick="event.stopPropagation();" style="display:block;width:100%;height:100%;text-decoration:none;">
+            <img src="${imgUrl}" alt="${escapeHtml(blog.imageAlt || blog.title)}" class="blog-card-img" onerror="this.src='${fallbackImg}'" loading="lazy" />
+            <span class="blog-card-category">${escapeHtml(blog.category || 'Technology')}</span>
+            <span class="blog-card-readtime">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              ${escapeHtml(blog.readTime || '5 min read')}
+            </span>
+          </a>
         </div>
         <div class="blog-card-body">
           <div class="blog-card-meta">
@@ -2229,8 +2327,8 @@ function renderBlogs() {
               <span>${formattedDate}</span>
             </div>
           </div>
-          <!-- Correction 3: Clicking title redirects/opens article -->
-          <a href="blog.html?id=${encodeURIComponent(blog.id)}" style="text-decoration:none;" onclick="event.preventDefault(); openBlogModal('${escapeHtml(blog.id)}', true);">
+          <!-- Correction 3: Clicking title redirects/opens article in separate browser page with title URL -->
+          <a href="${detailUrl}" target="_blank" onclick="event.stopPropagation();" style="text-decoration:none;">
             <h3 class="blog-card-title">${escapeHtml(blog.title)}</h3>
           </a>
           <p class="blog-card-excerpt">${escapeHtml(blog.excerpt || '')}</p>
@@ -2239,10 +2337,10 @@ function renderBlogs() {
               <div class="blog-author-avatar">${initial}</div>
               <span class="blog-author-name">${escapeHtml(blog.author || 'Webspide Team')}</span>
             </div>
-            <button class="blog-read-btn" onclick="openBlogModal('${escapeHtml(blog.id)}', true)">
+            <a href="${detailUrl}" target="_blank" class="blog-read-btn" onclick="event.stopPropagation();" style="text-decoration:none;">
               Read Article
               <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-            </button>
+            </a>
           </div>
         </div>
       </article>
@@ -2283,74 +2381,11 @@ function goToPage(page) {
 // Current open blog reference for navigation and sharing
 let currentOpenBlog = null;
 
-// Open Modal Reader (Corrections 1, 2, 4, 7, 8, 9)
+// Open Blog Article in Separate Page
 window.openBlogModal = function(idOrSlug, pushState = false) {
-  const blog = allBlogs.find(b => b.id === idOrSlug || b.slug === idOrSlug);
-  if (!blog) return;
-
-  currentOpenBlog = blog;
-
-  if (pushState) {
-    try {
-      history.pushState({ blogId: blog.id }, blog.title, `blog.html?id=${encodeURIComponent(blog.id)}`);
-    } catch(e) {}
-  }
-
-  const backdrop = document.getElementById('blogModalBackdrop');
-  const modal = document.getElementById('blogModal');
-  const fallbackImg = 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1200&q=80';
-  
-  document.getElementById('modalHeroImg').src = blog.image || fallbackImg;
-  document.getElementById('modalHeroImg').alt = blog.imageAlt || blog.title;
-  
-  // Breadcrumbs
-  document.getElementById('modalBreadcrumbCategory').textContent = blog.category || 'Technology';
-
-  // Render tags if present
-  const tagsRow = document.getElementById('modalTagsRow');
-  const tagsList = document.getElementById('modalTagsList');
-  if (tagsRow && tagsList) {
-    if (blog.tags && Array.isArray(blog.tags) && blog.tags.length > 0) {
-      tagsList.innerHTML = blog.tags.map(t => `<span class="modal-tag-chip">#${escapeHtml(t)}</span>`).join('');
-      tagsRow.style.display = 'flex';
-    } else {
-      tagsRow.style.display = 'none';
-    }
-  }
-
-  document.getElementById('modalCategoryBadge').textContent = blog.category || 'Technology';
-  document.getElementById('modalTitle').textContent = blog.title;
-  document.getElementById('modalAuthorName').textContent = blog.author || 'Webspide Tech Team';
-  document.getElementById('modalAuthorRole').textContent = blog.authorRole || 'Contributor';
-  document.getElementById('modalAuthorAvatar').textContent = blog.author ? blog.author.charAt(0).toUpperCase() : 'W';
-  document.getElementById('modalReadTime').textContent = blog.readTime || '5 min read';
-  
-  const formattedDate = new Date(blog.date || Date.now()).toLocaleDateString('en-US', {
-    month: 'long',
-    day: 'numeric',
-    year: 'numeric'
-  });
-  document.getElementById('modalDate').textContent = formattedDate;
-
-  // Format body HTML and inject into body text
-  let contentHtml = blog.content || '';
-  // Only wrap in paragraphs if content is raw plain text without any HTML tags
-  if (!/<[a-z][\s\S]*>/i.test(contentHtml)) {
-    contentHtml = contentHtml.split(/\r?\n\r?\n/).map(para => `<p>${escapeHtml(para).replace(/\r?\n/g, '<br>')}</p>`).join('');
-  }
-  
-  const bodyTextEl = document.getElementById('modalBodyText');
-  bodyTextEl.innerHTML = contentHtml;
-
-  // Correction 7: Generate Table of Contents from <h2> and <h3> tags
-  generateTableOfContents(bodyTextEl);
-
-  // Correction 8: Generate Previous & Next Blog Navigation
-  generatePrevNextNavigation(blog);
-
-  modal.scrollTop = 0;
-  backdrop.classList.add('open');
-  document.body.style.overflow = 'hidden';
+  const blog = allBlogs.find(b => b.id === idOrSlug || b.slug === idOrSlug || generateSlug(b.title) === idOrSlug);
+  const detailUrl = blog ? getBlogDetailUrl(blog) : `blog-detail.html?title=${encodeURIComponent(idOrSlug)}`;
+  window.open(detailUrl, '_blank');
 };
 
 // Generate Table of Contents (Correction 7)
@@ -2568,11 +2603,13 @@ document.addEventListener('DOMContentLoaded', function() {
     renderBlogs();
   }, 30000);
 
-  // Check URL query parameters for auto-opening an article (e.g. ?id=blog_1)
+  // Check URL query parameters for auto-opening an article (e.g. ?title=... or ?id=...)
   const urlParams = new URLSearchParams(window.location.search);
-  const articleId = urlParams.get('id');
-  if (articleId) {
-    openBlogModal(articleId, false);
+  const articleParam = urlParams.get('title') || urlParams.get('slug') || urlParams.get('id');
+  if (articleParam) {
+    const blog = allBlogs.find(b => b.id === articleParam || b.slug === articleParam || generateSlug(b.title) === articleParam);
+    const detailUrl = blog ? getBlogDetailUrl(blog) : `blog-detail.html?title=${encodeURIComponent(articleParam)}`;
+    window.location.href = detailUrl;
   }
 });
 </script>

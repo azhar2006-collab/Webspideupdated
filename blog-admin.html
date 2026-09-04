@@ -2395,7 +2395,7 @@ function renderPostsTable() {
             <a href="javascript:void(0)" onclick="switchView('new-post', '${b.id}')">Edit</a> |
             <a href="javascript:void(0)" onclick="quickPreviewPost('${b.id}')">Preview</a> |
             <a href="javascript:void(0)" class="trash-action" onclick="deletePost('${b.id}')">Trash</a> |
-            <a href="blog.html?id=${b.id}" target="_blank">View Post ↗</a>
+            <a href="${getBlogDetailUrl(b)}" target="_blank">View Post ↗</a>
           </div>
         </td>
         <td><strong>${escapeHtml(b.author || 'Webspide')}</strong></td>
@@ -2884,6 +2884,22 @@ function generateSlug(text) {
     .trim()
     .replace(/[\s\W-]+/g, '-')
     .replace(/^-+|-+$/g, '');
+}
+
+const PHYSICAL_BLOG_SLUGS = [
+  'the-future-of-custom-web-development-in-2026',
+  'mastering-cross-platform-mobile-apps-flutter-vs-react-native',
+  'proven-seo-strategies-to-rank-higher',
+  'ui-ux-design-systems-boost-enterprise-conversion'
+];
+
+function getBlogDetailUrl(blog) {
+  if (!blog) return 'blog.html';
+  const slug = blog.slug || generateSlug(blog.title);
+  if (PHYSICAL_BLOG_SLUGS.includes(slug)) {
+    return `blog/${encodeURIComponent(slug)}/`;
+  }
+  return `blog-detail.html?title=${encodeURIComponent(slug)}&id=${encodeURIComponent(blog.id || '')}`;
 }
 
 function handleTitleInput(title) {
@@ -3391,10 +3407,10 @@ function saveCurrentPost() {
         showNotice(`Post scheduled for <strong>${targetDate.toLocaleString()}</strong>.`);
       } else if (status === 'draft') {
         showToast('Draft saved successfully.');
-        showNotice(`Draft saved. <a href="blog.html?id=${id}" target="_blank" style="margin-left:8px;font-weight:700;">Preview post ↗</a>`);
+        showNotice(`Draft saved. <a href="${getBlogDetailUrl({id, slug, title})}" target="_blank" style="margin-left:8px;font-weight:700;">Preview post ↗</a>`);
       } else {
         showToast('Post updated successfully.');
-        showNotice(`Post updated. <a href="blog.html?id=${id}" target="_blank" style="margin-left:8px;font-weight:700;">View post ↗</a>`);
+        showNotice(`Post updated. <a href="${getBlogDetailUrl({id, slug, title})}" target="_blank" style="margin-left:8px;font-weight:700;">View post ↗</a>`);
       }
     }
   } else {
@@ -3417,10 +3433,10 @@ function saveCurrentPost() {
       showNotice(`Post scheduled to go live on <strong>${targetDate.toLocaleString()}</strong>.`);
     } else if (status === 'draft') {
       showToast('Draft saved successfully.');
-      showNotice(`Draft created. <a href="blog.html?id=${newId}" target="_blank" style="margin-left:8px;font-weight:700;">Preview post ↗</a>`);
+      showNotice(`Draft created. <a href="${getBlogDetailUrl({id: newId, slug, title})}" target="_blank" style="margin-left:8px;font-weight:700;">Preview post ↗</a>`);
     } else {
       showToast('Post published successfully.');
-      showNotice(`Post published. <a href="blog.html?id=${newId}" target="_blank" style="margin-left:8px;font-weight:700;">View post ↗</a>`);
+      showNotice(`Post published. <a href="${getBlogDetailUrl({id: newId, slug, title})}" target="_blank" style="margin-left:8px;font-weight:700;">View post ↗</a>`);
     }
   }
 

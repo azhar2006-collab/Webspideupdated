@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Page Not Found | Webspide Technologies</title>
+  <script>
+    // GitHub Pages SPA router for /blog/<slug>/
+    (function() {
+      var path = window.location.pathname;
+      var blogMatch = path.match(/\/blog\/([^\/]+)\/?$/i);
+      if (blogMatch && blogMatch[1]) {
+        var slug = decodeURIComponent(blogMatch[1]);
+        var repoPrefix = path.substring(0, path.indexOf('/blog/'));
+        window.location.replace(repoPrefix + '/blog-detail.html?title=' + encodeURIComponent(slug));
+        return;
+      }
+    })();
+  </script>
+  <meta http-equiv="refresh" content="4; url=blog.html">
+  <style>
+    body {
+      font-family: 'Exo 2', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      text-align: center;
+      padding: 80px 20px;
+      background: #F7F9FF;
+      color: #07164F;
+      margin: 0;
+    }
+    .box {
+      max-width: 500px;
+      margin: 0 auto;
+      background: white;
+      padding: 40px;
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(7, 22, 79, 0.08);
+    }
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 12px;
+      background: linear-gradient(90deg, #1F4FB2, #8B5CF6, #C026B8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    p {
+      color: #475467;
+      font-size: 1.05rem;
+      line-height: 1.6;
+      margin-bottom: 28px;
+    }
+    a.btn {
+      display: inline-block;
+      background: linear-gradient(90deg, #1F4FB2 0%, #8B5CF6 50%, #C026B8 100%);
+      color: white;
+      padding: 12px 28px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+      box-shadow: 0 4px 15px rgba(139, 92, 246, 0.35);
+    }
+  </style>
+</head>
+<body>
+  <div class="box">
+    <h1>404</h1>
+    <p>The requested page could not be found or may have moved. Redirecting you to the blog section...</p>
+    <a href="blog.html" class="btn">← Return to Blog</a>
+  </div>
+</body>
+</html>

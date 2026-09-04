@@ -1,0 +1,16 @@
+# Binaries, installers and shortcuts
+*.exe
+*.zip
+*.lnk
+Antigravity-x64.exe
+
+# Personal documents, resumes, and notes
+*.docx
+*.pdf
+
+# Operating system files
+Thumbs.db
+.DS_Store
+
+# Temporary scratch scripts / node
+node_modules/

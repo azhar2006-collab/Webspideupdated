@@ -1,0 +1,1797 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<base href="../../">
+<script>window.__PRELOADED_BLOG_SLUG = "mastering-cross-platform-mobile-apps-flutter-vs-react-native";</script>
+<meta charset="UTF-8" />
+<title>Mastering Cross-Platform Mobile Apps: Flutter vs React Native in Depth | Webspide Technologies</title>
+<meta name="description" content="Read expert tech articles, software engineering insights, and digital strategies from Webspide Technologies." />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta id="ogTitle" property="og:title" content="Webspide Blog" />
+<meta id="ogDesc" property="og:description" content="Explore tech insights and software development strategies from Webspide Technologies." />
+<meta id="ogImage" property="og:image" content="https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1200&q=80" />
+<meta id="ogUrl" property="og:url" content="" />
+
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Exo+2:wght@300;400;500;600;700;800;900&family=Poppins:wght@400;500;600;700;800&family=Rajdhani:wght@500;600;700&family=Nunito+Sans:wght@300;400;600;700&display=swap" rel="stylesheet" />
+
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ws-navy:#07164F;
+  --ws-dark-blue:#102A7A;
+  --ws-royal-blue:#1F4FB2;
+  --ws-sky-blue:#75A8F7;
+  --ws-indigo:#38216E;
+  --ws-violet:#8B5CF6;
+  --ws-purple:#A855F7;
+  --ws-magenta:#C026B8;
+  --ws-dark-magenta:#7A0D78;
+  --ws-light-bg:#F7F9FF;
+  --ws-lavender-bg:#F3E8FF;
+  --ws-text-dark:#101828;
+  --ws-text-muted:#475467;
+  --ws-main-gradient:linear-gradient(135deg,#07164F 0%,#1F4FB2 32%,#8B5CF6 65%,#C026B8 100%);
+  --ws-btn-gradient:linear-gradient(90deg,#1F4FB2 0%,#8B5CF6 50%,#C026B8 100%);
+  --ws-heading-gradient:linear-gradient(90deg,#1F4FB2,#8B5CF6,#C026B8);
+  --ws-footer-gradient:linear-gradient(135deg,#07164F 0%,#26155F 55%,#7A0D78 100%);
+  --nav-h:70px;
+  --grad-logo:linear-gradient(90deg,#1F4FB2,#8B5CF6,#C026B8);
+  --grad-logo-btn:linear-gradient(90deg,#1F4FB2 0%,#8B5CF6 50%,#C026B8 100%);
+}
+
+html{scroll-behavior:smooth;font-size:112%}
+body{background:var(--ws-light-bg);color:#101828;font-family:'Exo 2',sans-serif;overflow-x:hidden;min-height:100vh}
+p{font-family:Arial,Helvetica,sans-serif;font-size:1.05rem;line-height:1.85;}
+h1{font-weight:900!important}
+h2{font-weight:800!important;color:#07164F!important}
+h3{font-weight:800!important;color:#101828!important}
+h4{font-weight:800!important;color:#38216E!important}
+h5{font-weight:800!important;color:#8B5CF6!important}
+
+/* ════════════════════════════════════════
+   SITE HEADER & NAVIGATION
+   ════════════════════════════════════════ */
+.site-header {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 999;
+  background: #ffffff;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(7, 22, 79, 0.08);
+  box-shadow: 0 4px 24px rgba(7, 22, 79, 0.06);
+}
+.site-header::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--ws-btn-gradient);
+}
+.nav-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+  height: var(--nav-h);
+  max-width: 1600px;
+  margin: 0 auto;
+  gap: 12px;
+}
+.logo-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  text-decoration: none;
+  flex-shrink: 0;
+}
+.logo-text-block { display: flex; flex-direction: column; }
+.logo-name {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.15rem;
+  font-weight: 900;
+  background: var(--grad-logo);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: 2px;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+}
+.logo-name .w-logo {
+  height: 1.95rem;
+  width: auto;
+  margin-right: -1px;
+  vertical-align: middle;
+  object-fit: contain;
+  display: inline-block;
+}
+.logo-sub {
+  font-size: 0.55rem;
+  font-weight: 600;
+  letter-spacing: 2.5px;
+  color: var(--ws-text-muted);
+  text-transform: uppercase;
+  display: block;
+  margin-top: 1px;
+}
+
+.nav-links-new {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  list-style: none;
+  flex: 1;
+  justify-content: center;
+  margin: 0; padding: 0;
+}
+.nav-links-new li { position: relative; }
+.nav-links-new a,
+.nav-links-new > li > button {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  text-decoration: none;
+  color: var(--ws-navy);
+  font-size: 0.94rem;
+  font-weight: 600;
+  letter-spacing: 0.4px;
+  padding: 7px 12px;
+  border-radius: 8px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: 'Exo 2', sans-serif;
+  transition: color 0.2s, background 0.2s;
+}
+.nav-links-new a:hover,
+.nav-links-new > li > button:hover {
+  color: var(--ws-royal-blue);
+  background: rgba(31, 79, 178, 0.06);
+}
+.nav-links-new a.active {
+  color: var(--ws-royal-blue);
+  background: rgba(31, 79, 178, 0.08);
+}
+.nav-chevron {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  transition: transform 0.25s ease;
+  flex-shrink: 0;
+}
+.has-dropdown.open > button .nav-chevron,
+.has-dropdown:hover > button .nav-chevron {
+  transform: rotate(180deg);
+}
+
+/* Mega Dropdown */
+.mega-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%) translateY(8px);
+  width: 620px;
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 16px 48px rgba(7, 22, 79, 0.16);
+  border: 1px solid rgba(139, 92, 246, 0.18);
+  padding: 24px;
+  display: none;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease, transform 0.25s ease;
+  z-index: 1000;
+}
+.has-dropdown.open .mega-dropdown,
+.has-dropdown:hover .mega-dropdown {
+  display: block;
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateX(-50%) translateY(0);
+}
+.mega-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+.mega-col h4 {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--ws-royal-blue);
+  margin-bottom: 8px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid rgba(31, 79, 178, 0.12);
+}
+.mega-col a {
+  display: flex !important;
+  flex-direction: column;
+  padding: 8px 10px !important;
+  border-radius: 8px;
+  text-decoration: none;
+}
+.mega-col a:hover {
+  background: rgba(139, 92, 246, 0.08) !important;
+}
+.mega-link-title {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--ws-navy);
+}
+.mega-link-desc {
+  font-size: 0.74rem;
+  color: var(--ws-text-muted);
+  font-weight: 400;
+  margin-top: 1px;
+  line-height: 1.3;
+}
+
+.nav-cta-new {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--ws-btn-gradient);
+  color: #fff !important;
+  font-family: 'Exo 2', sans-serif;
+  font-size: 0.88rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  padding: 9px 20px;
+  border-radius: 50px;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(139, 92, 246, 0.35);
+  transition: transform 0.2s, box-shadow 0.2s;
+  flex-shrink: 0;
+}
+.nav-cta-new:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(139, 92, 246, 0.5);
+}
+
+/* Hamburger */
+.hamburger {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  width: 38px;
+  height: 38px;
+  background: none;
+  border: 1px solid rgba(7, 22, 79, 0.15);
+  border-radius: 8px;
+  cursor: pointer;
+  padding: 7px;
+  z-index: 1001;
+}
+.hamburger span {
+  display: block;
+  height: 2px;
+  width: 100%;
+  background: var(--ws-navy);
+  border-radius: 2px;
+  transition: all 0.3s ease;
+}
+.hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.hamburger.open span:nth-child(2) { opacity: 0; }
+.hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+/* Mobile Menu */
+.mobile-menu {
+  display: none;
+  position: fixed;
+  top: var(--nav-h);
+  left: 0; right: 0; bottom: 0;
+  background: #ffffff;
+  padding: 24px;
+  overflow-y: auto;
+  z-index: 998;
+  border-top: 1px solid rgba(7, 22, 79, 0.08);
+}
+.mobile-menu.open { display: block; }
+.mobile-menu a {
+  display: block;
+  padding: 12px 0;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--ws-navy);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(7, 22, 79, 0.06);
+}
+
+/* ════════════════════════════════════════
+   MAIN BLOG DETAIL ARTICLE SECTION
+   ════════════════════════════════════════ */
+.blog-detail-wrapper {
+  padding-top: calc(var(--nav-h) + 30px);
+  padding-bottom: 80px;
+  min-height: 85vh;
+}
+.blog-detail-container {
+  max-width: 1540px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+.blog-article-header {
+  max-width: 1200px;
+  margin: 0 auto 36px;
+}
+
+/* Breadcrumbs */
+.blog-breadcrumbs {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #64748b;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+.blog-breadcrumbs a {
+  color: var(--ws-royal-blue);
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+.blog-breadcrumbs a:hover {
+  color: var(--ws-violet);
+  text-decoration: underline;
+}
+.blog-breadcrumbs .sep {
+  color: #94a3b8;
+}
+.blog-breadcrumbs .current {
+  color: var(--ws-violet);
+  font-weight: 700;
+  max-width: 400px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Hero Box */
+.detail-hero-box {
+  position: relative;
+  width: 100%;
+  height: 480px;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 16px 40px rgba(7, 22, 79, 0.1);
+  margin-bottom: 32px;
+  background: #f1f5f9;
+}
+.detail-hero-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.detail-category-badge {
+  position: absolute;
+  bottom: 24px;
+  left: 28px;
+  background: var(--ws-btn-gradient);
+  color: #ffffff;
+  padding: 7px 22px;
+  border-radius: 30px;
+  font-size: 0.85rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  box-shadow: 0 4px 18px rgba(0,0,0,0.25);
+}
+
+/* Meta Row */
+.detail-meta-row {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  color: #64748b;
+  font-size: 0.94rem;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+.detail-meta-item {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.detail-meta-item svg {
+  width: 18px;
+  height: 18px;
+  stroke: var(--ws-violet);
+  fill: none;
+  stroke-width: 2;
+}
+
+/* ONLY ONE H1 PER PAGE */
+.detail-title {
+  font-family: 'Exo 2', sans-serif;
+  font-size: clamp(1.85rem, 3.8vw, 2.75rem);
+  font-weight: 900;
+  color: var(--ws-navy);
+  line-height: 1.25;
+  letter-spacing: -0.5px;
+  margin-bottom: 24px;
+}
+
+/* Author Box */
+.detail-author-box {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 22px;
+  background: #ffffff;
+  border-left: 4px solid var(--ws-violet);
+  border-radius: 12px;
+  box-shadow: 0 4px 18px rgba(7, 22, 79, 0.04);
+  margin-bottom: 34px;
+}
+.detail-author-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #1F4FB2, #C026B8);
+  color: #fff;
+  font-weight: 800;
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+}
+.detail-author-info h5 {
+  font-size: 1.02rem;
+  font-weight: 800;
+  color: var(--ws-navy);
+  margin-bottom: 2px;
+}
+.detail-author-info span {
+  font-size: 0.82rem;
+  color: #64748b;
+  font-weight: 500;
+}
+
+/* ════════════════════════════════════════
+   ARTICLE 3-COLUMN LAYOUT (TOC Left, Article Centered)
+   ════════════════════════════════════════ */
+.blog-article-layout {
+  display: grid;
+  grid-template-columns: 280px minmax(0, 920px) 280px;
+  gap: 52px;
+  justify-content: center;
+  align-items: start;
+  margin-top: 16px;
+}
+.blog-article-layout.no-toc {
+  display: block;
+  max-width: 920px;
+  margin: 16px auto 0;
+}
+.blog-toc-sidebar {
+  position: -webkit-sticky;
+  position: sticky;
+  top: calc(var(--nav-h, 76px) + 24px);
+  align-self: start;
+  width: 100%;
+}
+.blog-toc-box {
+  background: #f1f3f5;
+  border-radius: 12px;
+  padding: 22px 16px 22px 18px;
+  border: 1px solid rgba(0, 0, 0, 0.04);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+}
+.blog-toc-title {
+  font-family: 'Exo 2', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0 0 16px 0;
+  padding: 0;
+  letter-spacing: -0.2px;
+}
+.blog-toc-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 13px;
+  max-height: 460px;
+  overflow-y: auto;
+  padding-right: 6px;
+}
+/* Scrollbar styling matching the user screenshot */
+.blog-toc-list::-webkit-scrollbar {
+  width: 6px;
+}
+.blog-toc-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+.blog-toc-list::-webkit-scrollbar-thumb {
+  background: #9ca3af;
+  border-radius: 4px;
+}
+.blog-toc-list::-webkit-scrollbar-thumb:hover {
+  background: #6b7280;
+}
+.blog-toc-item {
+  position: relative;
+}
+.blog-toc-item.h3 {
+  padding-left: 14px;
+}
+.blog-toc-link {
+  color: #4b5563;
+  text-decoration: none;
+  font-size: 0.92rem;
+  font-weight: 500;
+  line-height: 1.45;
+  display: block;
+  transition: color 0.15s ease, font-weight 0.15s ease;
+}
+.blog-toc-link:hover {
+  color: #07164F;
+}
+.blog-toc-link.active {
+  color: var(--ws-royal-blue, #1F4FB2);
+  font-weight: 700;
+}
+.blog-toc-item.h3 .blog-toc-link {
+  font-size: 0.88rem;
+  color: #64748b;
+}
+.blog-article-main {
+  min-width: 0;
+  max-width: 920px;
+}
+.blog-right-sidebar {
+  width: 100%;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+@media(min-width: 992px) and (max-width: 1399px) {
+  .blog-article-layout {
+    grid-template-columns: 260px minmax(0, 1fr);
+    gap: 40px;
+    max-width: 1200px;
+    margin: 16px auto 0;
+  }
+  .blog-right-sidebar {
+    display: none;
+  }
+}
+
+/* Article Body Typography */
+.blog-article-body {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 1.08rem;
+  line-height: 1.95;
+  color: #1e293b;
+  margin-bottom: 40px;
+}
+.blog-article-body p {
+  margin-bottom: 22px;
+  font-size: 1.08rem;
+  line-height: 1.95;
+}
+.blog-article-body h2 {
+  font-family: 'Exo 2', sans-serif;
+  font-size: 1.85rem; /* 28-32px */
+  font-weight: 800;
+  color: #07164F !important;
+  margin: 38px 0 16px;
+  line-height: 1.35;
+  scroll-margin-top: 100px;
+}
+.blog-article-body h3 {
+  font-family: 'Exo 2', sans-serif;
+  font-size: 1.45rem; /* 22-26px */
+  font-weight: 700;
+  color: #101828 !important; /* Black/dark color per requirement */
+  margin: 28px 0 12px;
+  line-height: 1.4;
+  scroll-margin-top: 100px;
+}
+.blog-article-body h4 {
+  font-family: 'Exo 2', sans-serif;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #38216E !important;
+  margin: 20px 0 10px;
+}
+.blog-article-body ul, .blog-article-body ol {
+  margin: 0 0 24px 28px;
+}
+.blog-article-body li {
+  margin-bottom: 10px;
+  line-height: 1.75;
+}
+.blog-article-body blockquote {
+  border-left: 4px solid var(--ws-violet);
+  padding: 16px 24px;
+  background: rgba(139, 92, 246, 0.08);
+  border-radius: 0 10px 10px 0;
+  margin: 28px 0;
+  font-style: italic;
+  color: var(--ws-navy);
+  font-size: 1.08rem;
+}
+.blog-article-body strong {
+  color: #07164F;
+}
+.table-responsive-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin: 28px 0;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+}
+.blog-article-body table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.96rem;
+  min-width: 520px;
+  background: #ffffff;
+}
+.blog-article-body th {
+  background: #f1f5f9;
+  color: #07164F;
+  font-weight: 700;
+  padding: 13px 16px;
+  border: 1px solid #cbd5e1;
+  text-align: left;
+}
+.blog-article-body td {
+  padding: 11px 16px;
+  border: 1px solid #e2e8f0;
+  color: #334155;
+}
+.blog-article-body tr:nth-child(even) td {
+  background: #f8fafc;
+}
+
+/* Tags Row */
+.detail-tags-row {
+  margin-top: 32px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(139, 92, 246, 0.18);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.detail-tag-chip {
+  padding: 5px 14px;
+  background: #eef2ff;
+  border: 1px solid #c7d2fe;
+  border-radius: 16px;
+  color: #1e3a8a;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+/* Social Share Bar */
+.blog-share-section {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #ffffff;
+  border: 1.5px solid rgba(139, 92, 246, 0.2);
+  border-radius: 14px;
+  padding: 16px 24px;
+  margin: 36px 0 24px;
+  flex-wrap: wrap;
+  gap: 14px;
+  box-shadow: 0 4px 18px rgba(7, 22, 79, 0.04);
+}
+.blog-share-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.96rem;
+  font-weight: 800;
+  color: var(--ws-navy);
+  font-family: 'Exo 2', sans-serif;
+}
+.blog-share-btns {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.share-icon-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  border: 1.5px solid rgba(139, 92, 246, 0.25);
+  background: #ffffff;
+  color: var(--ws-navy);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+}
+.share-icon-btn svg {
+  width: 18px;
+  height: 18px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2;
+}
+.share-icon-btn:hover {
+  transform: translateY(-2px);
+  color: #ffffff;
+  border-color: transparent;
+}
+.share-icon-btn.in:hover { background: #0077b5; }
+.share-icon-btn.tw:hover { background: #0f1419; }
+.share-icon-btn.fb:hover { background: #1877f2; }
+.share-icon-btn.wa:hover { background: #25d366; }
+.share-icon-btn.copy:hover { background: var(--ws-royal-blue); }
+
+/* Prev & Next Navigation */
+.blog-prev-next-nav {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  margin: 36px 0;
+}
+.blog-nav-card {
+  background: #ffffff;
+  border: 1.5px solid rgba(139, 92, 246, 0.2);
+  border-radius: 14px;
+  padding: 18px 22px;
+  text-decoration: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  transition: all 0.25s ease;
+  cursor: pointer;
+}
+.blog-nav-card:hover {
+  border-color: var(--ws-violet);
+  box-shadow: 0 8px 26px rgba(139, 92, 246, 0.18);
+  transform: translateY(-3px);
+}
+.blog-nav-card.next {
+  text-align: right;
+  align-items: flex-end;
+}
+.blog-nav-card-label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: var(--ws-violet);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.blog-nav-card-title {
+  font-family: 'Exo 2', sans-serif;
+  font-size: 1.02rem;
+  font-weight: 800;
+  color: var(--ws-navy);
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Contact Us Form Card */
+.blog-contact-card {
+  background: linear-gradient(135deg, rgba(7, 22, 79, 0.04) 0%, rgba(139, 92, 246, 0.09) 100%);
+  border: 1.5px solid rgba(139, 92, 246, 0.28);
+  border-radius: 18px;
+  padding: 34px 38px;
+  margin: 48px 0 24px;
+}
+.blog-contact-card h3 {
+  font-size: 1.55rem;
+  font-weight: 800;
+  color: var(--ws-navy);
+  margin-bottom: 8px;
+}
+.blog-contact-card p {
+  color: #475467;
+  font-size: 0.98rem;
+  margin-bottom: 24px;
+}
+.blog-contact-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+.blog-contact-input {
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: 9px;
+  border: 1.5px solid rgba(139, 92, 246, 0.22);
+  background: #ffffff;
+  font-size: 0.94rem;
+  font-family: 'Exo 2', sans-serif;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.blog-contact-input:focus {
+  border-color: var(--ws-violet);
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.15);
+}
+.blog-contact-submit {
+  background: var(--ws-btn-gradient);
+  color: #ffffff;
+  border: none;
+  padding: 12px 28px;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 0.96rem;
+  font-family: 'Exo 2', sans-serif;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 4px 14px rgba(139, 92, 246, 0.3);
+}
+.blog-contact-submit:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(139, 92, 246, 0.45);
+}
+
+/* Empty / Error state */
+.detail-not-found {
+  text-align: center;
+  padding: 80px 24px;
+  background: #ffffff;
+  border-radius: 18px;
+  border: 1.5px solid rgba(139, 92, 246, 0.2);
+  margin: 40px auto;
+  max-width: 600px;
+}
+.detail-not-found h2 {
+  font-size: 2rem;
+  margin-bottom: 12px;
+  color: var(--ws-navy) !important;
+}
+.detail-not-found p {
+  color: #64748b;
+  margin-bottom: 24px;
+}
+
+/* Back link btn */
+.back-to-blogs-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--ws-royal-blue);
+  font-weight: 700;
+  font-size: 0.92rem;
+  text-decoration: none;
+  margin-bottom: 20px;
+  transition: all 0.2s ease;
+}
+.back-to-blogs-btn:hover {
+  color: var(--ws-violet);
+  transform: translateX(-4px);
+}
+
+/* ════════════════════════════════════════
+   SITE FOOTER
+   ════════════════════════════════════════ */
+.site-footer{background:var(--ws-footer-gradient);color:#fff;padding:60px 24px 24px}
+.footer-top{max-width:1400px;margin:0 auto;display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;padding-bottom:40px;border-bottom:1px solid rgba(255,255,255,.1)}
+.ft-brand .logo-name{color:#fff;-webkit-text-fill-color:#fff;margin-bottom:12px}
+.ft-desc{font-size:.875rem;color:rgba(255,255,255,.7);line-height:1.7;margin-bottom:16px}
+.ft-contact{display:flex;flex-direction:column;gap:8px;margin-bottom:16px}
+.ft-contact-item{display:flex;align-items:flex-start;gap:8px;font-size:.825rem;color:rgba(255,255,255,.8)}
+.ft-contact-item svg{width:16px;height:16px;flex-shrink:0;margin-top:2px}
+.ft-contact-item a{color:rgba(255,255,255,.8);text-decoration:none}
+.ft-contact-item a:hover{color:#fff}
+.ft-social-row{display:flex;gap:8px}
+.ft-soc{width:36px;height:36px;border-radius:8px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;color:#fff;text-decoration:none;transition:background .2s}
+.ft-soc:hover{background:rgba(255,255,255,.2)}
+.ft-soc svg{width:16px;height:16px;stroke:#fff}
+.ft-col h4{font-size:.9rem;font-weight:700;color:#fff!important;text-transform:uppercase;letter-spacing:1px;margin-bottom:16px}
+.ft-links{display:flex;flex-direction:column;gap:8px}
+.ft-links a{color:rgba(255,255,255,.7);text-decoration:none;font-size:.85rem;transition:color .2s}
+.ft-links a:hover{color:#fff}
+.footer-bottom{max-width:1400px;margin:24px auto 0;display:flex;align-items:center;justify-content:space-between;font-size:.8rem;color:rgba(255,255,255,.5);flex-wrap:wrap;gap:12px}
+.fb-copy span{color:rgba(255,255,255,.85)}
+.fb-legal{display:flex;gap:16px}
+.fb-legal a{color:rgba(255,255,255,.5);text-decoration:none}
+.fb-legal a:hover{color:#fff}
+
+@media(max-width:992px){
+  .blog-article-header{max-width:100%}
+  .blog-article-layout{grid-template-columns:1fr;gap:28px}
+  .blog-toc-sidebar{position:static;width:100%}
+  .blog-toc-list{max-height:300px}
+  .blog-right-sidebar{display:none}
+  .nav-links-new{display:none}
+  .hamburger{display:flex}
+  .footer-top{grid-template-columns:1fr 1fr;gap:30px}
+  .blog-prev-next-nav{grid-template-columns:1fr}
+  .detail-hero-box{height:320px}
+}
+@media(max-width:600px){
+  .footer-top{grid-template-columns:1fr;gap:24px}
+  .blog-contact-grid{grid-template-columns:1fr}
+  .blog-contact-card{padding:22px 18px}
+  .detail-hero-box{height:220px}
+  .blog-detail-container{padding:0 16px}
+}
+</style>
+</head>
+<body>
+
+<!-- SITE HEADER -->
+<header class="site-header">
+  <div class="nav-bar">
+    <a href="index.html" class="logo-wrap">
+      <div class="logo-text-block">
+        <span class="logo-name"><img src="w-logo.png" alt="W" class="w-logo">EBSPIDE</span>
+        <span class="logo-sub">Technology</span>
+      </div>
+    </a>
+
+    <ul class="nav-links-new" id="navLinksNew">
+      <li><a href="index.html">Home</a></li>
+      <li class="has-dropdown" id="navServices">
+        <button type="button">Services <svg class="nav-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg></button>
+        <div class="mega-dropdown">
+          <div class="mega-grid">
+            <div class="mega-col">
+              <h4>Web & Software</h4>
+              <a href="index.html#services"><span class="mega-link-title">Custom Web Apps</span><span class="mega-link-desc">Scalable modern enterprise platforms</span></a>
+              <a href="indexword1.html"><span class="mega-link-title">WordPress Development</span><span class="mega-link-desc">High-performance CMS solutions</span></a>
+              <a href="indexfront1.html"><span class="mega-link-title">Front-End Development</span><span class="mega-link-desc">Modern UI architectures & frameworks</span></a>
+              <a href="indexcustom.html"><span class="mega-link-title">Backend Systems</span><span class="mega-link-desc">APIs, microservices & cloud security</span></a>
+              <a href="indexecom1.html"><span class="mega-link-title">E-Commerce Platforms</span><span class="mega-link-desc">Online store architectures & integrations</span></a>
+            </div>
+            <div class="mega-col">
+              <h4>Mobile & Growth</h4>
+              <a href="indexandroid1.html"><span class="mega-link-title">Android Development</span><span class="mega-link-desc">Kotlin & Jetpack high-tier applications</span></a>
+              <a href="indexios1.html"><span class="mega-link-title">iOS Applications</span><span class="mega-link-desc">Swift & SwiftUI native iOS engineering</span></a>
+              <a href="indexflutter1.html"><span class="mega-link-title">Flutter Apps</span><span class="mega-link-desc">Cross-platform iOS and Android solutions</span></a>
+              <a href="indexreact1.html"><span class="mega-link-title">React Native Apps</span><span class="mega-link-desc">Single codebase multi-platform agility</span></a>
+              <a href="indexseo1.html"><span class="mega-link-title">SEO & Digital Growth</span><span class="mega-link-desc">High-intent search engine domination</span></a>
+            </div>
+          </div>
+        </div>
+      </li>
+      <li><a href="aboutus.html">About Us</a></li>
+      <li><a href="blog.html" class="active">Blog</a></li>
+      <li><a href="index.html#contact">Contact</a></li>
+    </ul>
+
+    <div style="display:flex;align-items:center;gap:12px;">
+      <a href="index.html#contact" class="nav-cta-new">Get in Touch</a>
+      <button class="hamburger" id="hamburger" aria-label="Toggle navigation">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- Mobile Navigation Drawer -->
+<div class="mobile-menu" id="mobileMenu">
+  <a href="index.html">Home</a>
+  <a href="index.html#services">Services</a>
+  <a href="aboutus.html">About Us</a>
+  <a href="blog.html">Blog</a>
+  <a href="index.html#contact">Contact Us</a>
+</div>
+
+<!-- MAIN BLOG ARTICLE -->
+<main class="blog-detail-wrapper">
+  <div class="blog-detail-container" id="detailContainer">
+
+    <!-- Centered Header Section (Matches centered article column) -->
+    <header class="blog-article-header">
+      <a href="blog.html" class="back-to-blogs-btn" onclick="handleBackToBlogs(event)">
+        ← Back to All Articles
+      </a>
+
+      <!-- Breadcrumbs -->
+      <nav class="blog-breadcrumbs" id="detailBreadcrumbs">
+        <a href="index.html" id="breadcrumbHomeLink" onclick="handleGoHome(event)">Home</a>
+        <span class="sep">›</span>
+        <a href="blog.html" id="breadcrumbBlogLink" onclick="handleBackToBlogs(event)">Blog</a>
+        <span class="sep">›</span>
+        <span id="breadcrumbCategory" style="color:#8B5CF6;">Category</span>
+        <span class="sep">›</span>
+        <span class="current" id="breadcrumbTitle">Article Title</span>
+      </nav>
+
+      <!-- Hero Image Box -->
+      <div class="detail-hero-box" id="detailHeroBox">
+        <img src="" alt="" class="detail-hero-img" id="detailHeroImg" />
+        <span class="detail-category-badge" id="detailCategoryBadge">Technology</span>
+      </div>
+
+      <!-- Meta Details Row -->
+      <div class="detail-meta-row">
+        <div class="detail-meta-item">
+          <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          <span id="detailDate">August 18, 2026</span>
+        </div>
+        <div class="detail-meta-item">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          <span id="detailReadTime">6 min read</span>
+        </div>
+      </div>
+
+      <!-- MAIN H1 TITLE: Exactly 1 H1 per page -->
+      <h1 class="detail-title" id="detailTitle">Article Title</h1>
+
+      <!-- Author Box -->
+      <div class="detail-author-box">
+        <div class="detail-author-avatar" id="detailAuthorAvatar">W</div>
+        <div class="detail-author-info">
+          <h5 id="detailAuthorName">Author Name</h5>
+          <span id="detailAuthorRole">Webspide Engineering Team</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Article Two-Column Layout (Left: Table of Contents, Right: Content) -->
+    <div class="blog-article-layout" id="blogArticleLayout">
+      <!-- Left Sticky Sidebar: Table of Contents -->
+      <aside class="blog-toc-sidebar" id="detailTocSidebar">
+        <div class="blog-toc-box" id="detailTocBox" style="display:none;">
+          <h3 class="blog-toc-title">Table of Contents</h3>
+          <ul class="blog-toc-list" id="detailTocList"></ul>
+        </div>
+      </aside>
+
+      <!-- Right Main Column -->
+      <div class="blog-article-main">
+        <!-- Article Content Body -->
+        <article class="blog-article-body" id="detailBodyText">
+          <!-- Injected dynamically -->
+        </article>
+
+        <!-- Tags Row -->
+        <div class="detail-tags-row" id="detailTagsRow" style="display:none;">
+          <strong style="font-size:0.9rem;color:#07164F;">Tags:</strong>
+          <div id="detailTagsList" style="display:flex;flex-wrap:wrap;gap:8px;"></div>
+        </div>
+
+        <!-- Social Share Bar -->
+        <div class="blog-share-section" id="detailShareSection">
+          <div class="blog-share-label">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1F4FB2" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+            Share this article:
+          </div>
+          <div class="blog-share-btns">
+            <button type="button" class="share-icon-btn in" onclick="shareArticle('linkedin')" title="Share on LinkedIn"><svg viewBox="0 0 24 24"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></button>
+            <button type="button" class="share-icon-btn tw" onclick="shareArticle('twitter')" title="Share on X (Twitter)"><svg viewBox="0 0 24 24"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/></svg></button>
+            <button type="button" class="share-icon-btn fb" onclick="shareArticle('facebook')" title="Share on Facebook"><svg viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></button>
+            <button type="button" class="share-icon-btn wa" onclick="shareArticle('whatsapp')" title="Share on WhatsApp"><svg viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg></button>
+            <button type="button" class="share-icon-btn copy" onclick="copyArticleLink()" title="Copy Article Link"><svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+          </div>
+        </div>
+
+        <!-- Previous & Next Navigation -->
+        <div class="blog-prev-next-nav" id="detailPrevNextNav">
+          <!-- Dynamic prev/next buttons -->
+        </div>
+
+        <!-- Consultation Request Form -->
+        <div class="blog-contact-card" id="detailContactSection">
+          <h3>Have a Project in Mind?</h3>
+          <p>Let's collaborate! Our technology team builds custom web apps, mobile solutions, and high-impact digital marketing campaigns.</p>
+          <form onsubmit="handleInBlogContact(event)" style="display:flex;flex-direction:column;gap:14px;">
+            <div class="blog-contact-grid">
+              <input type="text" id="blogContactName" class="blog-contact-input" placeholder="Your Name *" required />
+              <input type="email" id="blogContactEmail" class="blog-contact-input" placeholder="Your Business Email *" required />
+            </div>
+            <div class="blog-contact-grid">
+              <input type="tel" id="blogContactPhone" class="blog-contact-input" placeholder="Phone Number" />
+              <select id="blogContactService" class="blog-contact-input" style="cursor:pointer;">
+                <option value="Web Development">Web Development</option>
+                <option value="App Development">Mobile App Development</option>
+                <option value="Digital Marketing">Digital Marketing & SEO</option>
+                <option value="UI/UX Design">UI/UX Design</option>
+              </select>
+            </div>
+            <textarea id="blogContactMessage" class="blog-contact-input" rows="3" placeholder="Tell us about your project requirements or timeline..." required></textarea>
+            <div style="text-align:right;">
+              <button type="submit" class="blog-contact-submit">Send Consultation Request &rarr;</button>
+            </div>
+          </form>
+        </div>
+      </div>
+      <!-- Right Balancing Rail: Keeps center column exactly in the middle of viewport -->
+      <aside class="blog-right-sidebar" id="detailRightSidebar" aria-hidden="true"></aside>
+    </div>
+
+  </div>
+</main>
+
+<!-- FOOTER -->
+<footer class="site-footer">
+  <div class="footer-top">
+    <div class="ft-brand">
+      <div class="logo-text-block">
+        <span class="logo-name"><img src="w-logo.png" alt="W" class="w-logo">EBSPIDE</span>
+        <span class="logo-sub">Technology</span>
+      </div>
+      <p class="ft-desc">A global digital transformation company helping businesses scale through innovative web, mobile, and marketing solutions.</p>
+      <div class="ft-contact">
+        <div class="ft-contact-item"><svg viewBox="0 0 24 24" fill="none" stroke="#c084fc" stroke-width="1.5"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg><span>69A/47, Thomas Colony, S S Colony Road, Madurai – 625016, Tamil Nadu, India.</span></div>
+        <div class="ft-contact-item"><svg viewBox="0 0 24 24" fill="none" stroke="#7ba4d4" stroke-width="1.5"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.15 11.84a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.07 1h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 8.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg><a href="tel:+919943391296">+91 99433 91296</a></div>
+        <div class="ft-contact-item"><svg viewBox="0 0 24 24" fill="none" stroke="#e879f9" stroke-width="1.5"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg><a href="mailto:info@webspide.com">info@webspide.com</a></div>
+      </div>
+      <div class="ft-social-row">
+        <a class="ft-soc" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="#a78bca" stroke-width="1.5"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></a>
+        <a class="ft-soc" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="#a78bca" stroke-width="1.5"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/></svg></a>
+        <a class="ft-soc" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="#a78bca" stroke-width="1.5"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a>
+        <a class="ft-soc" href="#"><svg viewBox="0 0 24 24" fill="none" stroke="#a78bca" stroke-width="1.5"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a>
+      </div>
+    </div>
+    <div class="ft-col"><h4>Services</h4><div class="ft-links"><a href="index.html#services">Web Development</a><a href="indexandroid1.html">App Development</a><a href="indexseo1.html">Digital Marketing</a><a href="indexecom1.html">Ecommerce Development</a><a href="indexseo1.html">SEO Services</a></div></div>
+    <div class="ft-col"><h4>Company</h4><div class="ft-links"><a href="aboutus.html">About Us</a><a href="blog.html">Blog & Insights</a><a href="index.html#contact">Contact Us</a></div></div>
+    <div class="ft-col"><h4>Legal</h4><div class="ft-links"><a href="disclaimer.html">Disclaimer</a><a href="privacy-policy.html">Privacy Policy</a><a href="terms-and-conditions.html">Terms &amp; Conditions</a><a href="refund-cancellation-policy.html">Refund &amp; Cancellation</a><a href="end-user-license-agreement.html">End User License Agreement</a><a href="service-level-agreement.html">Service Level Agreement</a></div></div>
+  </div>
+  <div class="footer-bottom">
+    <div class="fb-copy">© 2026 <span>WebSpide Technologies</span>. All rights reserved.</div>
+    <div class="fb-legal"><a href="#">Privacy</a><a href="#">Terms</a><a href="#">Sitemap</a><a href="index.html#contact">Contact</a></div>
+  </div>
+</footer>
+
+<script>
+/* ── Dropdown Handlers & Mobile Menu ── */
+(function(){
+  function setupDropdown(liId){
+    const li=document.getElementById(liId);if(!li)return;
+    let closeTimer=null;
+    function open(){if(closeTimer){clearTimeout(closeTimer);closeTimer=null;}li.classList.add('open');}
+    function scheduleClose(){closeTimer=setTimeout(function(){li.classList.remove('open');},200);}
+    function cancelClose(){if(closeTimer){clearTimeout(closeTimer);closeTimer=null;}}
+    li.addEventListener('mouseenter',open);li.addEventListener('mouseleave',scheduleClose);
+    const dropdown=li.querySelector('.mega-dropdown,.simple-dropdown');
+    if(dropdown){
+      dropdown.addEventListener('mouseenter',cancelClose);
+      dropdown.addEventListener('mouseleave',scheduleClose);
+      dropdown.querySelectorAll('a').forEach(function(a){a.addEventListener('click',function(){li.classList.remove('open');});});
+    }
+  }
+  setupDropdown('navServices');
+  document.addEventListener('click',function(e){
+    var li=document.getElementById('navServices');if(li&&!li.contains(e.target))li.classList.remove('open');
+  });
+})();
+
+(function(){
+  var hamburger=document.getElementById('hamburger');
+  var mobileMenu=document.getElementById('mobileMenu');
+  function closeMobile(){
+    if(hamburger)hamburger.classList.remove('open');
+    if(mobileMenu)mobileMenu.classList.remove('open');
+    document.body.style.overflow='';
+  }
+  if(hamburger&&mobileMenu){
+    hamburger.addEventListener('click',function(){
+      var isOpen=hamburger.classList.toggle('open');
+      mobileMenu.classList.toggle('open',isOpen);
+      document.body.style.overflow=isOpen?'hidden':'';
+    });
+  }
+  document.querySelectorAll('#mobileMenu a').forEach(function(el){el.addEventListener('click',closeMobile);});
+})();
+
+/* ════════════════════════════════════════
+   BLOG DATA & SINGLE POST RENDERER
+   ════════════════════════════════════════ */
+const STORAGE_KEY = 'webspide_blogs';
+
+const DEFAULT_SEED_BLOGS = [
+  {
+    id: 'blog_1',
+    title: 'The Future of Custom Web Development in 2026: AI, Speed & Micro-Frontends',
+    slug: 'the-future-of-custom-web-development-in-2026',
+    category: 'Web Development',
+    tags: ['Custom Website Development', 'Web Development', 'Micro-Frontends', 'AI Integration'],
+    author: 'Azhar Hussain',
+    authorRole: 'Chief Technology Officer',
+    date: '2026-08-18',
+    readTime: '6 min read',
+    status: 'published',
+    image: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1200&q=80',
+    imageAlt: 'Custom Web Development and modern cloud architecture coding in 2026',
+    metaTitle: 'The Future of Custom Web Development in 2026 | WebSpide',
+    metaDescription: 'Discover how micro-frontends, edge computing, and client-side AI streaming are transforming enterprise web development standards in 2026.',
+    excerpt: 'Modern web architectures have evolved radically. Explore how edge computing, AI integrations, and micro-frontend architectures are setting new benchmarks for enterprise applications.',
+    content: `<h2>The Paradigm Shift in Web Architecture</h2>
+<p>Modern enterprises no longer build monolithic web platforms that take minutes to deploy and hours to scale. In 2026, building scalable web products requires lightning-fast load times, localized edge computing, and modular micro-frontends.</p>
+
+<h3>1. Micro-Frontends for Large-Scale Agility</h3>
+<p>By decomposing monolithic frontends into independent, domain-driven micro-apps, distributed engineering teams can build, test, and deploy features in isolation without stepping on each other's toes.</p>
+<blockquote>"Micro-frontends allow continuous deployment with zero downtime, giving high-growth companies an unmatched competitive advantage."</blockquote>
+
+<h3>2. Edge-Rendered Dynamic Content</h3>
+<p>Deploying application logic directly to CDN edge workers reduces latency to under 20ms across global markets. Whether handling personalized user dashboards or dynamic inventory updates, edge computing is now essential.</p>
+
+<div class="table-responsive-wrapper">
+  <table>
+    <thead>
+      <tr>
+        <th>Service</th>
+        <th>Technology</th>
+        <th>Development Type</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Website</td>
+        <td>WordPress</td>
+        <td>CMS Platform</td>
+      </tr>
+      <tr>
+        <td>Web Application</td>
+        <td>React / Next.js</td>
+        <td>Custom Architecture</td>
+      </tr>
+      <tr>
+        <td>E-commerce</td>
+        <td>WooCommerce / Shopify</td>
+        <td>Online Store</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<h3>3. Seamless AI Assistant Integrations</h3>
+<p>From predictive search autocomplete to conversational customer care agents built directly into the UI, modern web apps leverage client-side AI streaming to deliver intuitive user experiences.</p>
+
+<h2>Conclusion</h2>
+<p>Investing in clean, scalable web architecture today guarantees lower maintenance costs, higher conversion rates, and the resilience needed for future digital expansion.</p>`
+  },
+  {
+    id: 'blog_2',
+    title: 'Mastering Cross-Platform Mobile Apps: Flutter vs React Native in Depth',
+    slug: 'mastering-cross-platform-mobile-apps-flutter-vs-react-native',
+    category: 'App Development',
+    tags: ['Flutter Apps', 'React Native', 'Mobile Development', 'App Performance'],
+    author: 'Luiza Mary',
+    authorRole: 'Lead Mobile Architect',
+    date: '2026-08-15',
+    readTime: '5 min read',
+    status: 'published',
+    image: 'https://images.unsplash.com/photo-1551650975-87deedd944c3?auto=format&fit=crop&w=1200&q=80',
+    imageAlt: 'Flutter vs React Native cross-platform mobile development comparison',
+    metaTitle: 'Mastering Cross-Platform Mobile Apps: Flutter vs React Native | WebSpide',
+    metaDescription: 'In-depth benchmark between Flutter and React Native in 2026: performance, native bridge overhead, rendering engines, and team velocity.',
+    excerpt: 'Choosing between Flutter and React Native can make or break your mobile startup. We benchmark performance, native bridge overhead, rendering engines, and team velocity.',
+    content: `<h2>The Dilemma: Choosing the Right Framework</h2>
+<p>Building separate native apps for iOS and Android often doubles development costs and timelines. Cross-platform engineering has reached native parity, with Flutter and React Native dominating the market.</p>
+
+<h3>Flutter's Impeller Rendering Engine</h3>
+<p>Flutter compiles directly to native ARM machine code with its high-performance Impeller engine, ensuring smooth 120 FPS animations, complete widget customizability, and pixel perfection across all devices.</p>
+
+<h3>React Native with New Architecture & TurboModules</h3>
+<p>React Native's latest architecture eliminates the legacy asynchronous bridge, enabling direct C++ JSI communication and instant rendering speeds with the vast JavaScript and React ecosystem.</p>
+
+<h2>Key Evaluation Criteria</h2>
+<ul>
+  <li><strong>Development Speed:</strong> React Native wins if your team already excels in React & TypeScript.</li>
+  <li><strong>Visual Customization:</strong> Flutter excels when custom 2D canvas graphics and intricate transitions are paramount.</li>
+  <li><strong>Ecosystem & Libraries:</strong> Both offer battle-tested enterprise modules and robust community support.</li>
+</ul>`
+  },
+  {
+    id: 'blog_3',
+    title: 'Proven SEO Strategies to Rank Higher and Capture High-Intent Traffic',
+    slug: 'proven-seo-strategies-to-rank-higher',
+    category: 'SEO & Content',
+    tags: ['SEO Strategies', 'Search Engine Optimization', 'Core Web Vitals', 'Organic Growth'],
+    author: 'Rishi Kumar',
+    authorRole: 'Head of Growth Marketing',
+    date: '2026-08-10',
+    readTime: '7 min read',
+    status: 'published',
+    image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=1200&q=80',
+    imageAlt: 'SEO analytics and high-intent traffic growth strategies',
+    metaTitle: 'Proven SEO Strategies to Rank Higher in 2026 | WebSpide',
+    metaDescription: 'Learn actionable SEO strategies: entity search optimization, semantic topic clusters, and Core Web Vitals optimization to capture top search rankings.',
+    excerpt: 'Technical SEO and high-intent semantic content are your strongest revenue drivers. Learn the exact playbook we use to rank our clients in top search positions.',
+    content: `<h2>Why Generic SEO No Longer Works</h2>
+<p>Search engines now prioritize topical authority, deep user intent satisfaction, and Core Web Vitals over keyword density. Here is how modern businesses dominate competitive search landscapes.</p>
+
+<h3>1. Semantic Topic Clusters</h3>
+<p>Rather than ranking individual pages for isolated keywords, structure your website around comprehensive pillar topics supported by linked sub-articles that thoroughly address user queries.</p>
+
+<h3>2. Core Web Vitals & Technical Speed</h3>
+<p>A fast website directly improves ranking performance and conversion rates. Key metrics to monitor:</p>
+<ul>
+  <li><strong>Largest Contentful Paint (LCP):</strong> Keep under 1.8 seconds.</li>
+  <li><strong>Interaction to Next Paint (INP):</strong> Respond to user interactions in under 150ms.</li>
+  <li><strong>Cumulative Layout Shift (CLS):</strong> Maintain near zero shift.</li>
+</ul>
+
+<h3>3. Schema Markup & Entity Search</h3>
+<p>Structured JSON-LD schema helps search engine crawlers understand your services, customer reviews, FAQs, and organization credentials for prominent rich snippet placements.</p>`
+  },
+  {
+    id: 'blog_4',
+    title: 'UI/UX Design Systems That Boost Enterprise Conversion Rates',
+    slug: 'ui-ux-design-systems-boost-enterprise-conversion',
+    category: 'UI/UX Design',
+    tags: ['UI/UX Design', 'Design Systems', 'Enterprise UX', 'Conversion Optimization'],
+    author: 'Priya Sharma',
+    authorRole: 'Principal UX Designer',
+    date: '2026-08-05',
+    readTime: '4 min read',
+    status: 'published',
+    image: 'https://images.unsplash.com/photo-1581291518857-4e27b48ff24e?auto=format&fit=crop&w=1200&q=80',
+    imageAlt: 'Design system components and enterprise UI UX conversion workflow',
+    metaTitle: 'UI/UX Design Systems That Boost Enterprise Conversion Rates | WebSpide',
+    metaDescription: 'A design system is a shared language between design and engineering that eliminates friction and multiplies user engagement.',
+    excerpt: 'A design system is more than a Figma component library; it is a shared language between design and engineering that eliminates friction and multiplies user engagement.',
+    content: `<h2>The Value of Design Systems</h2>
+<p>Consistent typography, intuitive color hierarchy, and predictable interaction models reduce user cognitive load and accelerate purchase or lead generation conversions.</p>
+
+<h3>Designing for Clarity & Accessibility</h3>
+<p>High-converting interfaces prioritize high-contrast typography, clear visual affordances, and accessible WCAG AAA standards across both desktop and mobile viewports.</p>
+
+<h3>Micro-Interactions That Delight</h3>
+<p>Thoughtful feedback on button clicks, progress indicators during multi-step forms, and smooth state transitions build trust and user confidence.</p>`
+  }
+];
+
+function generateSlug(text) {
+  return (text || '')
+    .toString()
+    .toLowerCase()
+    .trim()
+    .replace(/[\s\W-]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+}
+
+const PHYSICAL_BLOG_SLUGS = [
+  'the-future-of-custom-web-development-in-2026',
+  'mastering-cross-platform-mobile-apps-flutter-vs-react-native',
+  'proven-seo-strategies-to-rank-higher',
+  'ui-ux-design-systems-boost-enterprise-conversion'
+];
+
+function getProjectRoot() {
+  const path = (window.location.pathname || '').replace(/\\/g, '/');
+  const blogIdx = path.indexOf('/blog/');
+  if (blogIdx !== -1) {
+    return path.substring(0, blogIdx + 1);
+  }
+  const lastSlash = path.lastIndexOf('/');
+  if (lastSlash !== -1) {
+    return path.substring(0, lastSlash + 1);
+  }
+  return '';
+}
+
+function handleBackToBlogs(e) {
+  if (e) {
+    e.preventDefault();
+  }
+  const root = getProjectRoot();
+  const target = root + 'blog.html';
+
+  if (document.referrer) {
+    try {
+      const refUrl = new URL(document.referrer);
+      const isSameHost = refUrl.host === window.location.host;
+      const isBlogListing = refUrl.pathname.endsWith('blog.html') || refUrl.pathname.endsWith('/blog') || refUrl.pathname.endsWith('/blog/');
+      if (isSameHost && isBlogListing && window.history.length > 1) {
+        window.history.back();
+        return;
+      }
+    } catch(err) {}
+  }
+
+  window.location.href = target;
+}
+
+function handleGoHome(e) {
+  if (e) {
+    e.preventDefault();
+  }
+  const root = getProjectRoot();
+  window.location.href = root + 'index.html';
+}
+
+function getBlogDetailUrl(blog) {
+  const root = getProjectRoot();
+  if (!blog) return root + 'blog.html';
+  const slug = blog.slug || generateSlug(blog.title);
+  if (PHYSICAL_BLOG_SLUGS.includes(slug)) {
+    return `${root}blog/${encodeURIComponent(slug)}/`;
+  }
+  return `${root}blog-detail.html?title=${encodeURIComponent(slug)}&id=${encodeURIComponent(blog.id || '')}`;
+}
+
+function getStoredBlogs() {
+  const data = localStorage.getItem(STORAGE_KEY);
+  if (!data) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(DEFAULT_SEED_BLOGS));
+    return [...DEFAULT_SEED_BLOGS];
+  }
+  try {
+    const parsed = JSON.parse(data);
+    return Array.isArray(parsed) && parsed.length > 0 ? parsed : [...DEFAULT_SEED_BLOGS];
+  } catch(e) {
+    return [...DEFAULT_SEED_BLOGS];
+  }
+}
+
+function isPostLive(b) {
+  if (!b) return false;
+  if (b.status === 'draft') return false;
+  if (b.status === 'published') {
+    if (b.publishDateTime && new Date(b.publishDateTime) > new Date()) return false;
+    return true;
+  }
+  if (b.status === 'scheduled') {
+    const targetDt = new Date(b.publishDateTime || b.date);
+    return targetDt <= new Date();
+  }
+  return false;
+}
+
+let currentArticle = null;
+let allBlogs = getStoredBlogs();
+
+function escapeHtml(str) {
+  if (!str) return '';
+  return str.toString().replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+}
+
+function loadArticle() {
+  allBlogs = getStoredBlogs();
+  const urlParams = new URLSearchParams(window.location.search);
+  
+  // Accept ?title=..., ?slug=..., ?id=..., pathname (/blog/<slug>/), or preloaded slug
+  let identifier = urlParams.get('title') || urlParams.get('slug') || urlParams.get('id');
+  if (!identifier && window.__PRELOADED_BLOG_SLUG) {
+    identifier = window.__PRELOADED_BLOG_SLUG;
+  }
+  if (!identifier) {
+    const rawPath = window.location.pathname.replace(/\\/g, '/').replace(/\/index\.html$/i, '');
+    const segments = rawPath.split('/').filter(Boolean);
+    const blogIdx = segments.findIndex(s => s.toLowerCase() === 'blog' || s.toLowerCase() === 'resources');
+    if (blogIdx !== -1 && segments[blogIdx + 1]) {
+      identifier = decodeURIComponent(segments[blogIdx + 1]);
+    }
+  }
+  if (!identifier && window.location.search.length > 1) {
+    const raw = window.location.search.substring(1);
+    if (!raw.includes('=')) {
+      identifier = decodeURIComponent(raw);
+    }
+  }
+
+  if (!identifier) {
+    // If no parameter is provided, load the latest live blog article
+    const liveBlogs = allBlogs.filter(isPostLive);
+    if (liveBlogs.length > 0) {
+      currentArticle = liveBlogs[0];
+    }
+  } else {
+    const idParam = (urlParams.get('id') || '').trim().toLowerCase();
+    const normalized = decodeURIComponent(identifier).trim().toLowerCase();
+    currentArticle = allBlogs.find(b => {
+      const bSlug = (b.slug || generateSlug(b.title)).toLowerCase();
+      const bTitleSlug = generateSlug(b.title).toLowerCase();
+      const bId = (b.id || '').toLowerCase();
+      const bTitle = (b.title || '').toLowerCase();
+
+      if (idParam && bId === idParam) return true;
+      return bSlug === normalized ||
+             bTitleSlug === normalized ||
+             bId === normalized ||
+             bTitle === normalized;
+    });
+  }
+
+  const container = document.getElementById('detailContainer');
+
+  if (!currentArticle) {
+    const root = getProjectRoot();
+    container.innerHTML = `
+      <div class="detail-not-found">
+        <h2>Article Not Found</h2>
+        <p>The requested blog article could not be located or may have been updated. Please browse our latest insights.</p>
+        <a href="${root}blog.html" class="nav-cta-new" onclick="handleBackToBlogs(event)">← Return to All Articles</a>
+      </div>
+    `;
+    document.title = 'Article Not Found | Webspide Technologies';
+    return;
+  }
+
+  renderArticle(currentArticle);
+}
+
+function renderArticle(blog) {
+  const slug = blog.slug || generateSlug(blog.title);
+  const root = getProjectRoot();
+
+  // Update address bar to clean directory URL: /blog/<slug>/ matching user reference
+  try {
+    if (window.location.protocol.startsWith('http')) {
+      const cleanPath = `${root}blog/${encodeURIComponent(slug)}/`;
+      const currentNorm = window.location.pathname.replace(/\/index\.html$/i, '/');
+      if (currentNorm !== cleanPath && window.location.pathname !== `${root}blog/${encodeURIComponent(slug)}`) {
+        history.replaceState({ blogId: blog.id }, blog.title, cleanPath);
+      }
+    }
+  } catch (e) {}
+
+  // Ensure all back / home / breadcrumb links point to correct root paths
+  document.querySelectorAll('.back-to-blogs-btn').forEach(btn => {
+    btn.href = root + 'blog.html';
+  });
+  const bBlog = document.getElementById('breadcrumbBlogLink');
+  if (bBlog) bBlog.href = root + 'blog.html';
+  const bHome = document.getElementById('breadcrumbHomeLink');
+  if (bHome) bHome.href = root + 'index.html';
+
+  // Fix header / mobile links if rendered under rewritten subpath
+  document.querySelectorAll('.site-header a, .mobile-menu a, .site-footer a').forEach(a => {
+    const rawHref = a.getAttribute('href');
+    if (rawHref && !rawHref.startsWith('http') && !rawHref.startsWith('#') && !rawHref.startsWith('mailto:') && !rawHref.startsWith('tel:')) {
+      if (!rawHref.startsWith(root)) {
+        a.href = root + rawHref.replace(/^\/+/, '');
+      }
+    }
+  });
+
+  // Update document title and SEO tags
+  const pageTitle = (blog.metaTitle || blog.title) + ' | Webspide Technologies';
+  document.title = pageTitle;
+
+  const metaDesc = document.querySelector('meta[name="description"]');
+  if (metaDesc) metaDesc.content = blog.metaDescription || blog.excerpt || blog.title;
+
+  const ogTitle = document.getElementById('ogTitle');
+  if (ogTitle) ogTitle.content = blog.metaTitle || blog.title;
+
+  const ogDesc = document.getElementById('ogDesc');
+  if (ogDesc) ogDesc.content = blog.metaDescription || blog.excerpt || blog.title;
+
+  const ogImage = document.getElementById('ogImage');
+  if (ogImage && blog.image) ogImage.content = blog.image;
+
+  const ogUrl = document.getElementById('ogUrl');
+  if (ogUrl) ogUrl.content = window.location.href;
+
+  // Breadcrumbs
+  document.getElementById('breadcrumbCategory').textContent = blog.category || 'Technology';
+  document.getElementById('breadcrumbTitle').textContent = blog.title;
+
+  // Hero Image
+  const fallbackImg = 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1200&q=80';
+  const heroImg = document.getElementById('detailHeroImg');
+  heroImg.src = blog.image || fallbackImg;
+  heroImg.alt = blog.imageAlt || blog.title;
+  heroImg.onerror = function() { this.src = fallbackImg; };
+  document.getElementById('detailCategoryBadge').textContent = blog.category || 'Technology';
+
+  // Meta Info
+  const formattedDate = new Date(blog.date || Date.now()).toLocaleDateString('en-US', {
+    month: 'long',
+    day: 'numeric',
+    year: 'numeric'
+  });
+  document.getElementById('detailDate').textContent = formattedDate;
+  document.getElementById('detailReadTime').textContent = blog.readTime || '5 min read';
+
+  // ONLY 1 H1
+  document.getElementById('detailTitle').textContent = blog.title;
+
+  // Author Box
+  const authorInitial = blog.author ? blog.author.charAt(0).toUpperCase() : 'W';
+  document.getElementById('detailAuthorAvatar').textContent = authorInitial;
+  document.getElementById('detailAuthorName').textContent = blog.author || 'Webspide Tech Team';
+  document.getElementById('detailAuthorRole').textContent = blog.authorRole || 'Engineering Team';
+
+  // Article Body Content
+  let contentHtml = blog.content || '';
+  if (!/<[a-z][\s\S]*>/i.test(contentHtml)) {
+    contentHtml = contentHtml.split(/\r?\n\r?\n/).map(p => `<p>${escapeHtml(p).replace(/\r?\n/g, '<br>')}</p>`).join('');
+  }
+  const bodyTextEl = document.getElementById('detailBodyText');
+  bodyTextEl.innerHTML = contentHtml;
+
+  // Table of Contents
+  generateTableOfContents(bodyTextEl);
+
+  // Tags
+  const tagsRow = document.getElementById('detailTagsRow');
+  const tagsList = document.getElementById('detailTagsList');
+  if (blog.tags && Array.isArray(blog.tags) && blog.tags.length > 0) {
+    tagsList.innerHTML = blog.tags.map(t => `<span class="detail-tag-chip">#${escapeHtml(t)}</span>`).join('');
+    tagsRow.style.display = 'flex';
+  } else {
+    tagsRow.style.display = 'none';
+  }
+
+  // Prev & Next Navigation
+  generatePrevNextNavigation(blog);
+}
+
+/* Table of Contents */
+let tocScrollSpyActive = false;
+
+function generateTableOfContents(containerEl) {
+  const tocBox = document.getElementById('detailTocBox');
+  const tocList = document.getElementById('detailTocList');
+  const layout = document.getElementById('blogArticleLayout');
+  if (!tocBox || !tocList) return;
+
+  const headings = containerEl.querySelectorAll('h2, h3');
+  if (headings.length < 2) {
+    tocBox.style.display = 'none';
+    if (layout) layout.classList.add('no-toc');
+    return;
+  }
+
+  if (layout) layout.classList.remove('no-toc');
+
+  let tocHtml = '';
+  headings.forEach((heading, idx) => {
+    const headingId = `article-heading-${idx + 1}`;
+    heading.id = headingId;
+    const tag = heading.tagName.toLowerCase();
+    const title = heading.textContent.trim();
+
+    tocHtml += `
+      <li class="blog-toc-item ${tag}">
+        <a href="#${headingId}" data-target="${headingId}" class="blog-toc-link" onclick="event.preventDefault(); scrollToHeading('${headingId}');">
+          ${escapeHtml(title)}
+        </a>
+      </li>
+    `;
+  });
+
+  tocList.innerHTML = tocHtml;
+  tocBox.style.display = 'block';
+
+  // Scroll-spy: highlight active TOC item as reader scrolls down
+  if (!tocScrollSpyActive) {
+    window.addEventListener('scroll', () => {
+      const scrollPos = window.scrollY + 120;
+      let currentId = '';
+      headings.forEach(h => {
+        if (h.offsetTop <= scrollPos) {
+          currentId = h.id;
+        }
+      });
+      const links = tocList.querySelectorAll('.blog-toc-link');
+      links.forEach(link => {
+        if (currentId && link.getAttribute('data-target') === currentId) {
+          link.classList.add('active');
+        } else {
+          link.classList.remove('active');
+        }
+      });
+    }, { passive: true });
+    tocScrollSpyActive = true;
+  }
+}
+
+function scrollToHeading(headingId) {
+  const headingEl = document.getElementById(headingId);
+  if (headingEl) {
+    const navHeight = 90;
+    const elementPosition = headingEl.getBoundingClientRect().top;
+    const offsetPosition = elementPosition + window.pageYOffset - navHeight;
+    window.scrollTo({
+      top: offsetPosition,
+      behavior: 'smooth'
+    });
+  }
+}
+
+function toggleToc() {
+  const list = document.getElementById('detailTocList');
+  if (!list) return;
+  list.style.display = list.style.display === 'none' ? 'flex' : 'none';
+}
+
+/* Previous & Next Article Navigation */
+function generatePrevNextNavigation(blog) {
+  const navEl = document.getElementById('detailPrevNextNav');
+  if (!navEl) return;
+
+  const liveBlogs = allBlogs.filter(isPostLive);
+  const idx = liveBlogs.findIndex(b => b.id === blog.id || (b.slug && b.slug === blog.slug));
+
+  const prevBlog = idx > 0 ? liveBlogs[idx - 1] : null;
+  const nextBlog = idx !== -1 && idx < liveBlogs.length - 1 ? liveBlogs[idx + 1] : null;
+
+  let html = '';
+  if (prevBlog) {
+    html += `
+      <a href="${getBlogDetailUrl(prevBlog)}" class="blog-nav-card">
+        <span class="blog-nav-card-label">← Previous Article</span>
+        <strong class="blog-nav-card-title">${escapeHtml(prevBlog.title)}</strong>
+      </a>
+    `;
+  } else {
+    html += `<div></div>`;
+  }
+
+  if (nextBlog) {
+    html += `
+      <a href="${getBlogDetailUrl(nextBlog)}" class="blog-nav-card next">
+        <span class="blog-nav-card-label">Next Article →</span>
+        <strong class="blog-nav-card-title">${escapeHtml(nextBlog.title)}</strong>
+      </a>
+    `;
+  } else {
+    html += `<div></div>`;
+  }
+
+  navEl.innerHTML = html;
+}
+
+/* Social Share */
+function shareArticle(platform) {
+  if (!currentArticle) return;
+  const articleUrl = encodeURIComponent(window.location.href);
+  const title = encodeURIComponent(currentArticle.title);
+
+  let shareUrl = '';
+  if (platform === 'linkedin') {
+    shareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${articleUrl}`;
+  } else if (platform === 'twitter') {
+    shareUrl = `https://twitter.com/intent/tweet?text=${title}&url=${articleUrl}&via=Webspide`;
+  } else if (platform === 'facebook') {
+    shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${articleUrl}`;
+  } else if (platform === 'whatsapp') {
+    shareUrl = `https://api.whatsapp.com/send?text=${title}%20${articleUrl}`;
+  }
+
+  if (shareUrl) {
+    window.open(shareUrl, '_blank', 'width=600,height=500,scrollbars=yes');
+  }
+}
+
+function copyArticleLink() {
+  const fullUrl = window.location.href;
+  navigator.clipboard.writeText(fullUrl).then(() => {
+    alert('Article link copied to clipboard!');
+  }).catch(() => {
+    prompt('Copy this article link:', fullUrl);
+  });
+}
+
+/* In-Article Contact Form */
+function handleInBlogContact(e) {
+  e.preventDefault();
+  const name = document.getElementById('blogContactName').value.trim();
+  const email = document.getElementById('blogContactEmail').value.trim();
+  const service = document.getElementById('blogContactService').value;
+
+  alert(`Thank you, ${name}! Your consultation request for "${service}" has been received. Our engineering team will contact you at ${email} within 24 hours.`);
+  e.target.reset();
+}
+
+/* Cross-tab real-time sync with Admin */
+window.addEventListener('storage', function(e) {
+  if (e.key === STORAGE_KEY) {
+    loadArticle();
+  }
+});
+
+// Load on DOM ready
+document.addEventListener('DOMContentLoaded', loadArticle);
+</script>
+</body>
+</html>

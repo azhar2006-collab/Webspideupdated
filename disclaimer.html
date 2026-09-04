@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Disclaimer | Webspide Technology</title>
+<meta name="description" content="Disclaimer policy for Webspide Technologies. Information regarding warranties, limitations of liability, and third-party links." />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Exo+2:wght@300;400;500;600;700;800;900&family=Poppins:wght@400;500;600;700;800&family=Rajdhani:wght@500;600;700&family=Nunito+Sans:wght@300;400;600;700&display=swap" rel="stylesheet" />
+
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --ws-navy: #07164F;
+  --ws-dark-blue: #102A7A;
+  --ws-royal-blue: #1F4FB2;
+  --ws-sky-blue: #75A8F7;
+  --ws-indigo: #38216E;
+  --ws-violet: #8B5CF6;
+  --ws-purple: #A855F7;
+  --ws-magenta: #C026B8;
+  --ws-dark-magenta: #7A0D78;
+  --ws-light-bg: #F7F9FF;
+  --ws-text-dark: #101828;
+  --ws-text-muted: #475467;
+  --ws-btn-gradient: linear-gradient(90deg, #1F4FB2 0%, #8B5CF6 50%, #C026B8 100%);
+  --ws-heading-gradient: linear-gradient(90deg, #1F4FB2, #8B5CF6, #C026B8);
+  --ws-footer-gradient: linear-gradient(135deg, #07164F 0%, #26155F 55%, #7A0D78 100%);
+  --nav-h: 74px;
+  --grad-logo: linear-gradient(90deg, #1F4FB2, #8B5CF6, #C026B8);
+}
+
+html { scroll-behavior: smooth; font-size: 16px; }
+body {
+  background: #ffffff;
+  color: var(--ws-text-dark);
+  font-family: 'Exo 2', sans-serif;
+  overflow-x: hidden;
+  min-height: 100vh;
+  line-height: 1.6;
+}
+
+/* ════════════════════════════════════════
+   SITE HEADER & NAVIGATION
+   ════════════════════════════════════════ */
+.site-header {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 999;
+  background: #ffffff;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(7, 22, 79, 0.08);
+  box-shadow: 0 4px 24px rgba(7, 22, 79, 0.06);
+}
+.site-header::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--ws-btn-gradient);
+}
+.nav-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+  height: var(--nav-h);
+  max-width: 1600px;
+  margin: 0 auto;
+  gap: 12px;
+}
+.logo-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  text-decoration: none;
+  flex-shrink: 0;
+}
+.logo-text-block { display: flex; flex-direction: column; }
+.logo-name {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 1.15rem;
+  font-weight: 900;
+  background: var(--grad-logo);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: 2px;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+}
+.logo-name .w-logo {
+  height: 1.95rem;
+  width: auto;
+  margin-right: -1px;
+  vertical-align: middle;
+  object-fit: contain;
+  display: inline-block;
+}
+.logo-sub {
+  font-size: 0.55rem;
+  font-weight: 600;
+  letter-spacing: 2.5px;
+  color: var(--ws-text-muted);
+  text-transform: uppercase;
+  display: block;
+  margin-top: 1px;
+}
+
+.nav-links-new {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  list-style: none;
+  flex: 1;
+  justify-content: center;
+  margin: 0; padding: 0;
+}
+.nav-links-new li { position: relative; }
+.nav-links-new a,
+.nav-links-new > li > button {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  text-decoration: none;
+  color: var(--ws-navy);
+  font-size: 0.94rem;
+  font-weight: 600;
+  letter-spacing: 0.4px;
+  padding: 7px 12px;
+  border-radius: 8px;
+  position: relative;
+  transition: color 0.2s, background 0.2s;
+  white-space: nowrap;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  font-family: 'Exo 2', sans-serif;
+}
+.nav-links-new a::after,
+.nav-links-new > li > button::after {
+  content: '';
+  position: absolute;
+  left: 10px; right: 10px; bottom: 1px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--ws-btn-gradient);
+  transform: scaleX(0);
+  transition: transform 0.25s;
+}
+.nav-links-new a:hover,
+.nav-links-new > li > button:hover {
+  color: var(--ws-royal-blue);
+  background: rgba(117, 168, 247, 0.08);
+}
+.nav-links-new a:hover::after,
+.nav-links-new > li > button:hover::after,
+.nav-item-services.open > button::after {
+  transform: scaleX(1);
+}
+.nav-icon {
+  width: 15px; height: 15px;
+  stroke: var(--ws-royal-blue);
+  fill: none;
+  stroke-width: 2.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: stroke 0.2s;
+  flex-shrink: 0;
+}
+.nav-links-new a:hover .nav-icon,
+.nav-links-new > li > button:hover .nav-icon { stroke: var(--ws-violet); }
+.nav-arrow {
+  width: 13px; height: 13px;
+  stroke: var(--ws-royal-blue);
+  fill: none;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: transform 0.3s, stroke 0.2s;
+  flex-shrink: 0;
+}
+.nav-item-services, .nav-item-products { position: relative; }
+.nav-item-services > button {
+  background: rgba(31, 79, 178, 0.08);
+  border: 1px solid rgba(31, 79, 178, 0.2);
+  color: var(--ws-navy);
+}
+.nav-item-services.open > button,
+.nav-item-services > button:hover {
+  background: rgba(139, 92, 246, 0.1);
+  color: var(--ws-royal-blue);
+}
+.nav-item-services.open > button .nav-arrow,
+.nav-item-products.open > button .nav-arrow { transform: rotate(180deg); }
+.nav-item-services > button .nav-icon,
+.nav-item-services > button .nav-arrow { stroke: var(--ws-royal-blue); }
+.nav-item-products > button { color: var(--ws-navy); }
+.nav-item-products.open > button,
+.nav-item-products > button:hover {
+  color: var(--ws-royal-blue);
+  background: rgba(117, 168, 247, 0.08);
+}
+
+.mega-dropdown {
+  position: absolute;
+  top: calc(100% + 12px);
+  left: 50%;
+  transform: translateX(-50%) translateY(-8px);
+  width: 820px;
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 20px 60px rgba(7, 22, 79, 0.18), 0 0 0 1px rgba(139, 92, 246, 0.15);
+  padding: 24px;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.25s, transform 0.25s, visibility 0.25s;
+  z-index: 1000;
+}
+.mega-dropdown::before {
+  content: '';
+  position: absolute;
+  top: -6px; left: 50%;
+  transform: translateX(-50%) rotate(45deg);
+  width: 12px; height: 12px;
+  background: #ffffff;
+  border-left: 1px solid rgba(139, 92, 246, 0.15);
+  border-top: 1px solid rgba(139, 92, 246, 0.15);
+}
+.nav-item-services.open .mega-dropdown {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translateX(-50%) translateY(0);
+}
+.mega-inner { display: grid; grid-template-columns: 1.1fr 1fr 1.3fr; gap: 20px; }
+.mega-col-header { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid rgba(7, 22, 79, 0.08); }
+.mega-col-icon { width: 28px; height: 28px; border-radius: 6px; background: rgba(139, 92, 246, 0.12); display: flex; align-items: center; justify-content: center; }
+.mega-col-icon svg { width: 15px; height: 15px; stroke: var(--ws-royal-blue); fill: none; stroke-width: 2; }
+.mega-col-title { font-size: 0.85rem; font-weight: 800; color: var(--ws-navy); letter-spacing: 0.5px; text-transform: uppercase; }
+.mega-links { display: flex; flex-direction: column; gap: 2px; }
+.mega-link { display: block; padding: 6px 8px; font-size: 0.82rem; font-weight: 600; color: var(--ws-text-muted); text-decoration: none; border-radius: 6px; transition: color 0.15s, background 0.15s; }
+.mega-link:hover { color: var(--ws-royal-blue); background: rgba(117, 168, 247, 0.1); }
+
+.simple-dropdown {
+  position: absolute;
+  top: calc(100% + 12px);
+  left: 0;
+  width: 210px;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 16px 45px rgba(7, 22, 79, 0.14), 0 0 0 1px rgba(139, 92, 246, 0.12);
+  padding: 10px;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.25s, transform 0.25s, visibility 0.25s;
+  z-index: 1000;
+  transform: translateY(-6px);
+}
+.nav-item-products.open .simple-dropdown {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+.simple-dropdown a { display: block; padding: 8px 12px; font-size: 0.84rem; font-weight: 600; color: var(--ws-text-muted); text-decoration: none; border-radius: 6px; transition: color 0.15s, background 0.15s; }
+.simple-dropdown a:hover { color: var(--ws-royal-blue); background: rgba(117, 168, 247, 0.1); }
+
+.nav-cta-new {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 9px 20px;
+  border-radius: 50px !important;
+  background: var(--ws-btn-gradient) !important;
+  color: #ffffff !important;
+  font-weight: 600 !important;
+  font-size: 0.82rem;
+  letter-spacing: 0.5px;
+  text-decoration: none;
+  cursor: pointer;
+  border: none;
+  font-family: 'Exo 2', sans-serif;
+  white-space: nowrap;
+  flex-shrink: 0;
+  box-shadow: 0 12px 30px rgba(139, 92, 246, 0.35) !important;
+  transition: all 0.3s ease !important;
+}
+.nav-cta-new:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 16px 38px rgba(192, 38, 184, 0.35) !important;
+}
+.nav-cta-new svg {
+  width: 14px; height: 14px;
+  stroke: #ffffff; fill: none;
+  stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round;
+  transition: transform 0.2s;
+}
+.nav-cta-new:hover svg { transform: translateX(3px); }
+
+.hamburger {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  width: 40px; height: 40px;
+  border: 1px solid rgba(31, 79, 178, 0.25);
+  border-radius: 8px;
+  background: rgba(117, 168, 247, 0.08);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.hamburger span {
+  display: block;
+  width: 20px; height: 2px;
+  background: var(--ws-royal-blue);
+  border-radius: 2px;
+  transition: transform 0.3s, opacity 0.3s;
+}
+.hamburger.active span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.hamburger.active span:nth-child(2) { opacity: 0; }
+.hamburger.active span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+.mobile-menu {
+  display: none;
+  position: fixed;
+  top: var(--nav-h);
+  left: 0; right: 0; bottom: 0;
+  background: #ffffff;
+  z-index: 998;
+  overflow-y: auto;
+  padding: 24px;
+}
+.mobile-menu.open { display: block; }
+.mobile-menu-inner { display: flex; flex-direction: column; gap: 8px; }
+.mob-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--ws-navy);
+  text-decoration: none;
+  border-radius: 8px;
+}
+.mob-link svg { width: 18px; height: 18px; stroke: var(--ws-royal-blue); fill: none; stroke-width: 2; }
+.mob-section-title {
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--ws-violet);
+  padding: 14px 14px 4px;
+}
+.mob-sub-link {
+  display: block;
+  padding: 8px 14px 8px 28px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--ws-text-muted);
+  text-decoration: none;
+}
+
+/* ════════════════════════════════════════
+   PAGE CONTENT WRAPPER (CLEAN DOCUMENT STYLE)
+   ════════════════════════════════════════ */
+.page-container {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 110px 24px 80px;
+}
+
+.doc-header {
+  margin-bottom: 32px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.doc-title {
+  font-family: 'Exo 2', sans-serif;
+  font-size: clamp(1.8rem, 3.5vw, 2.3rem);
+  font-weight: 900;
+  color: #07164F;
+  line-height: 1.25;
+  margin-bottom: 12px;
+}
+
+.doc-meta {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 0.92rem;
+  color: #64748b;
+  font-weight: 600;
+}
+
+.doc-content {
+  font-family: Arial, Helvetica, sans-serif;
+  color: #1e293b;
+  font-size: 1rem;
+  line-height: 1.85;
+}
+
+.doc-content h2 {
+  font-family: 'Exo 2', sans-serif;
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: #07164F;
+  margin-top: 36px;
+  margin-bottom: 12px;
+  line-height: 1.3;
+}
+
+.doc-content h3 {
+  font-family: 'Exo 2', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: #1F4FB2;
+  margin-top: 22px;
+  margin-bottom: 8px;
+}
+
+.doc-content p {
+  font-family: Arial, Helvetica, sans-serif;
+  color: #334155;
+  font-size: 1rem;
+  line-height: 1.85;
+  margin-bottom: 18px;
+}
+
+.doc-content ul {
+  margin: 12px 0 20px 24px;
+  color: #334155;
+  line-height: 1.85;
+}
+
+.doc-content li {
+  margin-bottom: 10px;
+}
+
+.doc-content a {
+  color: #1F4FB2;
+  text-decoration: underline;
+  font-weight: 600;
+  transition: color 0.15s;
+}
+.doc-content a:hover {
+  color: #8B5CF6;
+}
+
+.doc-note-box {
+  background: #F3E8FF;
+  border-left: 4px solid #8B5CF6;
+  padding: 14px 18px;
+  border-radius: 0 8px 8px 0;
+  margin-bottom: 24px;
+  font-size: 0.95rem;
+  color: #38216E;
+  font-family: Arial, Helvetica, sans-serif;
+  line-height: 1.7;
+}
+
+/* ── Responsive Table ── */
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+  margin: 20px 0 28px;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+}
+.doc-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 0.95rem;
+}
+.doc-table th {
+  background: #f8fafc;
+  color: #07164F;
+  font-family: 'Exo 2', sans-serif;
+  font-weight: 800;
+  padding: 14px 16px;
+  border-bottom: 2px solid #e2e8f0;
+  white-space: nowrap;
+}
+.doc-table td {
+  padding: 12px 16px;
+  border-bottom: 1px solid #e2e8f0;
+  color: #334155;
+  line-height: 1.6;
+  vertical-align: top;
+}
+.doc-table tr:last-child td {
+  border-bottom: none;
+}
+.doc-table tr:hover td {
+  background: #f8fafc;
+}
+
+/* ════════════════════════════════════════
+   SITE FOOTER
+   ════════════════════════════════════════ */
+.site-footer {
+  background: var(--ws-footer-gradient);
+  color: rgba(255, 255, 255, 0.8);
+  padding: 80px 0 0;
+  margin-top: 60px;
+}
+.container {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+.footer-main-grid {
+  display: grid;
+  grid-template-columns: 1.8fr 1fr 1fr 1fr;
+  gap: 48px;
+  padding-bottom: 60px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+.footer-brand .logo-name {
+  -webkit-text-fill-color: unset;
+  background: var(--grad-logo);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.footer-about-text {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.65);
+  line-height: 1.8;
+  margin: 18px 0 24px;
+}
+.footer-contact-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.fc-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 0.86rem;
+  color: rgba(255, 255, 255, 0.65);
+}
+.fc-item svg {
+  width: 16px; height: 16px;
+  stroke: #c084fc; fill: none;
+  stroke-width: 1.8;
+  flex-shrink: 0;
+  margin-top: 3px;
+}
+.fc-item a { color: rgba(255, 255, 255, 0.65); text-decoration: none; }
+.fc-item a:hover { color: #d8b4fe; }
+
+.footer-social-row { display: flex; gap: 10px; margin-top: 24px; }
+.footer-soc-link {
+  width: 36px; height: 36px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s, border-color 0.2s;
+}
+.footer-soc-link:hover { background: rgba(139, 92, 246, 0.3); border-color: rgba(139, 92, 246, 0.6); }
+.footer-soc-link svg { width: 18px; height: 18px; stroke: #c084fc; fill: none; stroke-width: 1.5; }
+
+.footer-col h4 { font-size: 0.95rem; font-weight: 800; color: #ffffff; margin-bottom: 20px; }
+.footer-links { display: flex; flex-direction: column; gap: 10px; }
+.footer-links a { font-size: 0.86rem; color: rgba(255, 255, 255, 0.65); text-decoration: none; transition: color 0.15s, transform 0.15s; }
+.footer-links a:hover { color: #d8b4fe; transform: translateX(4px); }
+
+.footer-bottom-bar {
+  padding: 24px 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  font-size: 0.84rem;
+}
+.fb-copyright { color: rgba(255, 255, 255, 0.5); }
+.fb-copyright span { color: #ffffff; font-weight: 700; }
+.fb-dmca-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #34d399;
+  font-weight: 600;
+}
+.fb-nav-links { display: flex; gap: 18px; }
+.fb-nav-links a { color: rgba(255, 255, 255, 0.5); text-decoration: none; }
+.fb-nav-links a:hover { color: #ffffff; }
+
+@media (max-width: 1024px) {
+  .nav-links-new, .nav-cta-new { display: none; }
+  .hamburger { display: flex; }
+  .footer-main-grid { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 640px) {
+  .footer-main-grid { grid-template-columns: 1fr; }
+  .footer-bottom-bar { flex-direction: column; text-align: center; }
+}
+</style>
+</head>
+<body>
+
+<!-- ══ SITE HEADER ══ -->
+<header class="site-header">
+  <div class="nav-bar">
+    <a href="index.html" class="logo-wrap">
+      <div class="logo-text-block">
+        <span class="logo-name"><img src="w-logo.png" alt="W" class="w-logo">EBSPIDE</span>
+        <span class="logo-sub">Technology</span>
+      </div>
+    </a>
+
+    <ul class="nav-links-new">
+      <li><a href="index.html"><svg class="nav-icon" viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Home</a></li>
+      <li><a href="aboutus.html"><svg class="nav-icon" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>About Us</a></li>
+      <li class="nav-item-services" id="navServices">
+        <button type="button">
+          <svg class="nav-icon" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+          Services
+          <svg class="nav-arrow" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="mega-dropdown" id="megaDropdown">
+          <div class="mega-inner">
+            <div class="mega-col">
+              <div class="mega-col-header">
+                <div class="mega-col-icon"><svg viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></div>
+                <div class="mega-col-title">Web Development</div>
+              </div>
+              <div class="mega-links">
+                <a href="indexcustom.html" class="mega-link">Custom Web Development</a>
+                <a href="indexword1.html" class="mega-link">WordPress Development</a>
+                <a href="indexfront1.html" class="mega-link">Front-End Development</a>
+                <a href="index1.html" class="mega-link">Back-End Development</a>
+                <a href="indexecom1.html" class="mega-link">E-Commerce Web Development</a>
+                <a href="indexweb1.html" class="mega-link">Web Application Development</a>
+                <a href="indexuiux1.html" class="mega-link">UI/UX Design</a>
+              </div>
+            </div>
+            <div class="mega-col mega-col-app">
+              <div class="mega-col-header">
+                <div class="mega-col-icon"><svg viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg></div>
+                <div class="mega-col-title">App Development</div>
+              </div>
+              <div class="mega-links">
+                <a href="indexandroid1.html" class="mega-link">Android App Development</a>
+                <a href="indexflutter1.html" class="mega-link">Flutter App Development</a>
+                <a href="indexios1.html" class="mega-link">iOS App Development</a>
+                <a href="indexreact1.html" class="mega-link">React Native App Development</a>
+              </div>
+            </div>
+            <div class="mega-col">
+              <div class="mega-col-header">
+                <div class="mega-col-icon"><svg viewBox="0 0 24 24"><path d="M22 2L11 13"/><path d="M22 2L15 22l-4-9-9-4 20-7z"/></svg></div>
+                <div class="mega-col-title">Digital Marketing Services</div>
+              </div>
+              <div class="mega-links" style="display:grid;grid-template-columns:1fr 1fr;gap:0 4px;">
+                <a href="indexseo1.html" class="mega-link">Search Engine Optimization (SEO)</a>
+                <a href="indexsem1.html" class="mega-link">Search Engine Marketing (SEM)</a>
+                <a href="indexsmmarket1.html" class="mega-link">Social Media Marketing</a>
+                <a href="indexmanage1.html" class="mega-link">Social Media Management</a>
+                <a href="indexseocontent1.html" class="mega-link">SEO Content Writing</a>
+                <a href="indexemail1.html" class="mega-link">Email Marketing</a>
+                <a href="indexinfluence1.html" class="mega-link">Influencer Marketing</a>
+                <a href="indexapp1.html" class="mega-link">App Store Optimization (ASO)</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </li>
+      <li class="nav-item-products" id="navProducts">
+        <button type="button">
+          <svg class="nav-icon" viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+          Products
+          <svg class="nav-arrow" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="simple-dropdown" id="simpleDropdown">
+          <a href="#">CMS Platform</a>
+          <a href="#">Analytics Dashboard</a>
+          <a href="#">SEO Toolkit</a>
+          <a href="#">E-Commerce Suite</a>
+        </div>
+      </li>
+      <li><a href="blog.html"><svg class="nav-icon" viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>Blog</a></li>
+      <li><a href="index.html#contact"><svg class="nav-icon" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>Contact Us</a></li>
+    </ul>
+
+    <a href="index.html#contact" class="nav-cta-new">
+      Get a Quote
+      <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+    </a>
+    <button class="hamburger" id="hamburger" aria-label="Toggle menu"><span></span><span></span><span></span></button>
+  </div>
+</header>
+
+<!-- Mobile Menu -->
+<nav class="mobile-menu" id="mobileMenu">
+  <div class="mobile-menu-inner">
+    <a href="index.html" class="mob-link"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Home</a>
+    <a href="aboutus.html" class="mob-link"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>About Us</a>
+    <a href="blog.html" class="mob-link"><svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>Blog</a>
+    <div class="mob-section-title">Web Development</div>
+    <a href="indexcustom.html" class="mob-sub-link">Custom Web Development</a>
+    <a href="indexword1.html" class="mob-sub-link">WordPress Development</a>
+    <a href="indexfront1.html" class="mob-sub-link">Front-End Development</a>
+    <a href="index1.html" class="mob-sub-link">Back-End Development</a>
+    <a href="indexecom1.html" class="mob-sub-link">E-Commerce Web Development</a>
+    <a href="indexweb1.html" class="mob-sub-link">Web Application Development</a>
+    <a href="indexuiux1.html" class="mob-sub-link">UI/UX Design</a>
+    <div class="mob-section-title">App Development</div>
+    <a href="indexandroid1.html" class="mob-sub-link">Android App Development</a>
+    <a href="indexflutter1.html" class="mob-sub-link">Flutter App Development</a>
+    <a href="indexios1.html" class="mob-sub-link">iOS App Development</a>
+    <a href="indexreact1.html" class="mob-sub-link">React Native App Development</a>
+    <div class="mob-section-title">Digital Marketing</div>
+    <a href="indexseo1.html" class="mob-sub-link">Search Engine Optimization (SEO)</a>
+    <a href="indexsem1.html" class="mob-sub-link">Search Engine Marketing (SEM)</a>
+    <a href="indexsmmarket1.html" class="mob-sub-link">Social Media Marketing</a>
+    <a href="indexmanage1.html" class="mob-sub-link">Social Media Management</a>
+    <a href="indexseocontent1.html" class="mob-sub-link">SEO Content Writing</a>
+    <a href="indexemail1.html" class="mob-sub-link">Email Marketing</a>
+    <a href="indexinfluence1.html" class="mob-sub-link">Influencer Marketing</a>
+    <a href="indexapp1.html" class="mob-sub-link">App Store Optimization (ASO)</a>
+    <a href="index.html#contact" class="mob-link" style="margin-top:12px;background:var(--ws-btn-gradient);color:#fff;justify-content:center;">Get a Quote</a>
+  </div>
+</nav>
+
+<!-- ══ PAGE CONTENT ══ -->
+<main class="page-container">
+  <div class="doc-header">
+    <h1 class="doc-title">Webspide Nxt Technologies Pvt Ltd – Disclaimer</h1>
+  </div>
+  <div class="doc-content">
+
+  <div class="doc-note-box">
+    If you need any further information or have questions regarding our site’s disclaimer, please don’t hesitate to contact us at <a href="mailto:sales@webspide.com">sales@webspide.com</a>.
+  </div>
+
+  <h2>Disclaimer for www.webspide.com</h2>
+  <p>All the information on this website – <strong>www.webspide.com</strong> – is published in good faith and for general information purposes only. WebSpide Technologies makes no warranties about the completeness, reliability, or accuracy of this information. Any action you take based on the information you find on this website is strictly at your own risk. WebSpide will not be liable for any losses or damages in connection with the use of our website or services.</p>
+
+  <p>Our website may contain references to various businesses, platforms, and brand names (such as Airbnb, and others) for descriptive and comparative purposes only. WebSpide Technologies is not affiliated with, endorsed by, or in partnership with any of these companies, and we do not use or replicate any of their proprietary technologies, trademarks, or intellectual property.</p>
+
+  <p>We design and develop custom solutions and clone scripts that are inspired by popular platforms, but all source code, UI/UX, and content are original creations of WebSpide Technologies. Any cloned product we offer is built independently and does not include any copyrighted materials of the original platforms.</p>
+
+  <p>Through our website, you may be able to link to other websites which are not under the control of WebSpide. While we strive to provide only useful and ethical links, we have no control over the content or availability of those external sites. The inclusion of such links does not imply a recommendation or endorsement of all content on those sites.</p>
+
+  <p>Please be aware that when you leave our website, other websites may have different privacy policies and terms of use that are beyond our control. We advise you to review the privacy and legal policies of those websites before engaging with them.</p>
+
+  <p>All product names, trademarks, logos, and brands mentioned or displayed on this website remain the property of their respective owners. Any mention of such names is for identification or descriptive purposes only and does not imply endorsement or ownership.</p>
+
+  <p>WebSpide Technologies makes every effort to keep the website up and running smoothly. However, we take no responsibility for, and will not be liable for, the website being temporarily unavailable due to technical issues beyond our control.</p>
+
+  <h2>Consent</h2>
+  <p>By using our website, you hereby consent to this disclaimer and agree to its terms.</p>
+
+  <h2>Updates</h2>
+  <p>Any updates, modifications, or changes to our disclaimer policy will be prominently published on this page.</p>
+
+  </div>
+</main>
+
+<!-- ══ FOOTER SECTION ══ -->
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-main-grid">
+      <div class="footer-brand">
+        <div class="logo-text-block">
+          <span class="logo-name"><img src="w-logo.png" alt="W" class="w-logo">EBSPIDE</span>
+          <span class="logo-sub">Technology</span>
+        </div>
+        <p class="footer-about-text">A premier global digital marketing and software development company delivering high-impact SEO, mobile applications, custom web platforms, and business growth solutions.</p>
+
+        <div class="footer-contact-list">
+          <div class="fc-item">
+            <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            <span>69A/47, Thomas Colony, S S Colony Road, Madurai – 625016, Tamil Nadu, India.</span>
+          </div>
+          <div class="fc-item">
+            <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.15 11.84a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.07 1h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 8.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            <a href="tel:+919943391296">+91 99433 91296</a>
+          </div>
+          <div class="fc-item">
+            <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            <a href="mailto:info@webspide.com">info@webspide.com</a>
+          </div>
+        </div>
+
+        <div class="footer-social-row">
+          <a href="#" class="footer-soc-link" aria-label="LinkedIn"><svg viewBox="0 0 24 24"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg></a>
+          <a href="#" class="footer-soc-link" aria-label="Twitter"><svg viewBox="0 0 24 24"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"/></svg></a>
+          <a href="#" class="footer-soc-link" aria-label="Instagram"><svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg></a>
+          <a href="#" class="footer-soc-link" aria-label="Facebook"><svg viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg></a>
+        </div>
+      </div>
+
+      <div class="footer-col">
+        <h4>Digital Marketing</h4>
+        <div class="footer-links">
+          <a href="indexseo1.html">Search Engine Optimization</a>
+          <a href="indexsem1.html">Search Engine Marketing</a>
+          <a href="indexsmmarket1.html">Social Media Marketing</a>
+          <a href="indexmanage1.html">Social Media Management</a>
+          <a href="indexseocontent1.html">SEO Content Writing</a>
+          <a href="indexemail1.html">Email Marketing</a>
+          <a href="indexinfluence1.html">Influencer Marketing</a>
+          <a href="indexapp1.html">App Store Optimization</a>
+        </div>
+      </div>
+
+      <div class="footer-col">
+        <h4>Web &amp; Mobile Dev</h4>
+        <div class="footer-links">
+          <a href="indexcustom.html">Custom Web Development</a>
+          <a href="indexword1.html">WordPress Development</a>
+          <a href="indexfront1.html">Front-End Development</a>
+          <a href="index1.html">Backend Development</a>
+          <a href="indexecom1.html">Ecommerce Development</a>
+          <a href="indexandroid1.html">Android App Development</a>
+          <a href="indexios1.html">iOS App Development</a>
+          <a href="indexflutter1.html">Flutter App Development</a>
+          <a href="indexreact1.html">React Native Development</a>
+        </div>
+      </div>
+
+      <div class="footer-col">
+        <h4>Company &amp; Legal</h4>
+        <div class="footer-links">
+          <a href="aboutus.html">About Us</a>
+          <a href="blog.html">Latest Insights &amp; Blog</a>
+          <a href="index.html#whyWebspide">Why WebSpide</a>
+          <a href="index.html#industries">Industries We Serve</a>
+          <a href="index.html#contact">Contact Us</a>
+          <a href="disclaimer.html">Disclaimer</a>
+          <a href="privacy-policy.html">Privacy Policy</a>
+          <a href="terms-and-conditions.html">Terms &amp; Conditions</a>
+          <a href="refund-cancellation-policy.html">Refund &amp; Cancellation</a>
+          <a href="end-user-license-agreement.html">End User License Agreement</a>
+          <a href="service-level-agreement.html">Service Level Agreement</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom-bar">
+      <div class="fb-copyright">
+        © 2026 <span>WebSpide Technologies</span>. All rights reserved.
+      </div>
+      <div class="fb-dmca-badge">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        DMCA Protected &amp; Verified
+      </div>
+      <div class="fb-nav-links">
+        <a href="privacy-policy.html">Privacy</a>
+        <a href="terms-and-conditions.html">Terms</a>
+        <a href="disclaimer.html">Disclaimer</a>
+        <a href="index.html#contact">Contact</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+// Mega dropdown toggle
+const navServices = document.getElementById('navServices');
+const megaDropdown = document.getElementById('megaDropdown');
+if (navServices) {
+  navServices.addEventListener('mouseenter', () => navServices.classList.add('open'));
+  navServices.addEventListener('mouseleave', () => navServices.classList.remove('open'));
+}
+
+// Products dropdown toggle
+const navProducts = document.getElementById('navProducts');
+if (navProducts) {
+  navProducts.addEventListener('mouseenter', () => navProducts.classList.add('open'));
+  navProducts.addEventListener('mouseleave', () => navProducts.classList.remove('open'));
+}
+
+// Mobile menu toggle
+const hamburger = document.getElementById('hamburger');
+const mobileMenu = document.getElementById('mobileMenu');
+if (hamburger && mobileMenu) {
+  hamburger.addEventListener('click', () => {
+    hamburger.classList.toggle('active');
+    mobileMenu.classList.toggle('open');
+  });
+}
+</script>
+</body>
+</html>

@@ -1600,6 +1600,25 @@ h5{font-weight:800!important;color:#8B5CF6!important}
   .footer-bottom-bar{flex-direction:column;text-align:center;}
   .modal-content-inner{padding:24px 20px 35px;}
 }
+
+@media (min-width: 1081px) {
+  .nav-item-services:hover .mega-dropdown,
+  .nav-item-services.open .mega-dropdown,
+  .nav-item-products:hover .simple-dropdown,
+  .nav-item-products.open .simple-dropdown {
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+    transform: translateY(0) !important;
+  }
+  .nav-item-services:hover > button .nav-arrow,
+  .nav-item-services.open > button .nav-arrow,
+  .nav-item-products:hover > button .nav-arrow,
+  .nav-item-products.open > button .nav-arrow {
+    transform: rotate(180deg) !important;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -2019,7 +2038,6 @@ h5{font-weight:800!important;color:#8B5CF6!important}
 
 <script>
 /* ── Dropdown Handlers ── */
-// ── Navigation Dropdowns ──
 (function(){
   function setupDropdown(liId){
     const li=document.getElementById(liId);if(!li)return;
@@ -2027,7 +2045,20 @@ h5{font-weight:800!important;color:#8B5CF6!important}
     function open(){if(closeTimer){clearTimeout(closeTimer);closeTimer=null;}li.classList.add('open');}
     function scheduleClose(){closeTimer=setTimeout(function(){li.classList.remove('open');},200);}
     function cancelClose(){if(closeTimer){clearTimeout(closeTimer);closeTimer=null;}}
-    li.addEventListener('mouseenter',open);li.addEventListener('mouseleave',scheduleClose);
+    li.addEventListener('mouseenter',open);
+    li.addEventListener('mouseleave',scheduleClose);
+    const btn = li.querySelector('button');
+    if(btn){
+      btn.addEventListener('click',function(e){
+        e.stopPropagation();
+        const isOpen = li.classList.contains('open');
+        ['navServices','navProducts'].forEach(function(otherId){
+          const other = document.getElementById(otherId);
+          if(other) other.classList.remove('open');
+        });
+        if(!isOpen) li.classList.add('open');
+      });
+    }
     const dropdown=li.querySelector('.mega-dropdown,.simple-dropdown');
     if(dropdown){
       dropdown.addEventListener('mouseenter',cancelClose);
@@ -2064,9 +2095,9 @@ h5{font-weight:800!important;color:#8B5CF6!important}
   document.querySelectorAll('.mob-link,.mob-sub-link').forEach(function(el){el.addEventListener('click',closeMobile);});
 })();
 
-/* ══════════════════════════════════════════
-   BLOG DATA & DYNAMIC RENDERING
-   ══════════════════════════════════════════ */
+/* ════════════════════════════════════════
+   BLOG DATA & SINGLE POST RENDERER
+   ════════════════════════════════════════ */
 const STORAGE_KEY = 'webspide_blogs';
 
 const DEFAULT_SEED_BLOGS = [

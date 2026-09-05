@@ -6,6 +6,25 @@
 <meta name="description" content="Explore expert insights, tutorials, and business intelligence on custom web development, mobile apps, digital marketing, and UI/UX design by Webspide." />
 <meta name="keywords" content="Webspide blog, tech insights, web development blog, app development articles, SEO tips, digital marketing strategies, UI UX trends" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+<meta name="author" content="Webspide Technologies" />
+<meta name="publisher" content="Webspide Technologies" />
+<link rel="canonical" href="https://azhar2006-collab.github.io/Webspideupdated/blog.html" />
+
+<!-- Open Graph / Facebook -->
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Webspide Technologies" />
+<meta property="og:title" content="Blog & Tech Insights | Webspide Technologies" />
+<meta property="og:description" content="Explore expert insights, tutorials, and business intelligence on custom web development, mobile apps, digital marketing, and UI/UX design by Webspide." />
+<meta property="og:url" content="https://azhar2006-collab.github.io/Webspideupdated/blog.html" />
+<meta property="og:image" content="https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1200&q=80" />
+
+<!-- Twitter Cards -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:site" content="@Webspide" />
+<meta name="twitter:title" content="Blog & Tech Insights | Webspide Technologies" />
+<meta name="twitter:description" content="Explore expert insights, tutorials, and business intelligence on custom web development, mobile apps, digital marketing, and UI/UX design by Webspide." />
+<meta name="twitter:image" content="https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1200&q=80" />
 
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Exo+2:wght@300;400;500;600;700;800;900&family=Poppins:wght@400;500;600;700;800&family=Rajdhani:wght@500;600;700&family=Nunito+Sans:wght@300;400;600;700&display=swap" rel="stylesheet" />
 
@@ -2309,9 +2328,9 @@ function renderBlogs() {
     const detailUrl = getBlogDetailUrl(blog);
 
     return `
-      <article class="blog-card" data-id="${escapeHtml(blog.id)}" onclick="window.open('${detailUrl}', '_blank')" style="cursor:pointer;">
+      <article class="blog-card" data-id="${escapeHtml(blog.id)}" onclick="window.location.href='${detailUrl}'" style="cursor:pointer;">
         <div class="blog-card-img-wrap">
-          <a href="${detailUrl}" target="_blank" onclick="event.stopPropagation();" style="display:block;width:100%;height:100%;text-decoration:none;">
+          <a href="${detailUrl}" onclick="event.stopPropagation();" style="display:block;width:100%;height:100%;text-decoration:none;">
             <img src="${imgUrl}" alt="${escapeHtml(blog.imageAlt || blog.title)}" class="blog-card-img" onerror="this.src='${fallbackImg}'" loading="lazy" />
             <span class="blog-card-category">${escapeHtml(blog.category || 'Technology')}</span>
             <span class="blog-card-readtime">
@@ -2327,8 +2346,7 @@ function renderBlogs() {
               <span>${formattedDate}</span>
             </div>
           </div>
-          <!-- Correction 3: Clicking title redirects/opens article in separate browser page with title URL -->
-          <a href="${detailUrl}" target="_blank" onclick="event.stopPropagation();" style="text-decoration:none;">
+          <a href="${detailUrl}" onclick="event.stopPropagation();" style="text-decoration:none;">
             <h3 class="blog-card-title">${escapeHtml(blog.title)}</h3>
           </a>
           <p class="blog-card-excerpt">${escapeHtml(blog.excerpt || '')}</p>
@@ -2337,7 +2355,7 @@ function renderBlogs() {
               <div class="blog-author-avatar">${initial}</div>
               <span class="blog-author-name">${escapeHtml(blog.author || 'Webspide Team')}</span>
             </div>
-            <a href="${detailUrl}" target="_blank" class="blog-read-btn" onclick="event.stopPropagation();" style="text-decoration:none;">
+            <a href="${detailUrl}" class="blog-read-btn" onclick="event.stopPropagation();" style="text-decoration:none;">
               Read Article
               <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
             </a>
@@ -2381,11 +2399,11 @@ function goToPage(page) {
 // Current open blog reference for navigation and sharing
 let currentOpenBlog = null;
 
-// Open Blog Article in Separate Page
+// Open Blog Article in Same Tab
 window.openBlogModal = function(idOrSlug, pushState = false) {
   const blog = allBlogs.find(b => b.id === idOrSlug || b.slug === idOrSlug || generateSlug(b.title) === idOrSlug);
   const detailUrl = blog ? getBlogDetailUrl(blog) : `blog-detail.html?title=${encodeURIComponent(idOrSlug)}`;
-  window.open(detailUrl, '_blank');
+  window.location.href = detailUrl;
 };
 
 // Generate Table of Contents (Correction 7)
@@ -2615,4 +2633,3 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 </body>
 </html>
-

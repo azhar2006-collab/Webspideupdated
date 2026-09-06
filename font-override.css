@@ -319,3 +319,41 @@ img[src*="services"] {
   width: 16px !important;
   height: 16px !important;
 }
+
+/* 8. Mega Menu Header Links */
+a.mega-col-header, .mega-col-header {
+  text-decoration: none !important;
+  cursor: pointer !important;
+  display: flex !important;
+  align-items: center !important;
+}
+
+a.mega-col-header:hover .mega-col-title,
+.mega-col-header:hover .mega-col-title {
+  color: #1F4FB2 !important;
+  -webkit-text-fill-color: #1F4FB2 !important;
+}
+
+.mega-col-header .mega-col-icon {
+  transition: transform 0.2s ease, box-shadow 0.2s ease !important;
+}
+
+a.mega-col-header:hover .mega-col-icon,
+.mega-col-header:hover .mega-col-icon {
+  transform: scale(1.06) !important;
+  box-shadow: 0 8px 24px rgba(139, 92, 246, 0.45) !important;
+}
+
+.mega-col-header .mega-col-title {
+  transition: color 0.2s ease, -webkit-text-fill-color 0.2s ease !important;
+}
+
+a.mob-section-title, .mob-section-title {
+  text-decoration: none !important;
+  cursor: pointer !important;
+  display: block !important;
+}
+
+a.mob-section-title:hover {
+  color: #8B5CF6 !important;
+}

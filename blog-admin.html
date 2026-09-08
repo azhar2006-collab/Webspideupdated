@@ -3804,22 +3804,28 @@ async function syncToGitHub(customCommitMsg = null) {
   const apiUrl = `https://api.github.com/repos/${cfg.owner}/${cfg.repo}/contents/${path}`;
 
   try {
-    // 1. Fetch current file SHA (cache-busted to always get the latest)
+    // 1. Fetch current file SHA (always fetch fresh - required for updating existing files)
     let existingSha = null;
-    try {
-      const getRes = await fetch(`${apiUrl}?ref=${encodeURIComponent(cfg.branch)}&t=${Date.now()}`, {
-        cache: 'no-store',
-        headers: {
-          'Authorization': `Bearer ${cfg.token}`,
-          'Accept': 'application/vnd.github+json',
-          'Cache-Control': 'no-cache'
-        }
-      });
-      if (getRes.ok) {
-        const fileInfo = await getRes.json();
-        existingSha = fileInfo.sha;
+    const getRes = await fetch(`${apiUrl}?ref=${encodeURIComponent(cfg.branch)}&t=${Date.now()}`, {
+      headers: {
+        'Authorization': `Bearer ${cfg.token}`,
+        'Accept': 'application/vnd.github+json'
       }
-    } catch(e) {}
+    });
+    if (getRes.ok) {
+      const fileInfo = await getRes.json();
+      existingSha = fileInfo.sha;
+    } else if (getRes.status === 401) {
+      throw new Error('Invalid or expired token. Please update your GitHub token in Settings → Configure GitHub Sync.');
+    } else if (getRes.status === 403) {
+      throw new Error('Token lacks repo permissions. Make sure your token has the "repo" scope enabled.');
+    } else if (getRes.status === 404) {
+      // File doesn't exist yet — will be created fresh, no SHA needed
+      existingSha = null;
+    } else {
+      const errData = await getRes.json().catch(() => ({}));
+      throw new Error(`Could not fetch file info: ${errData.message || 'HTTP ' + getRes.status}`);
+    }
 
     // 2. Prepare payload
     const payloadCode = generateBlogsDataPayload();

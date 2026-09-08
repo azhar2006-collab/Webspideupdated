@@ -3804,13 +3804,15 @@ async function syncToGitHub(customCommitMsg = null) {
   const apiUrl = `https://api.github.com/repos/${cfg.owner}/${cfg.repo}/contents/${path}`;
 
   try {
-    // 1. Fetch current file SHA
+    // 1. Fetch current file SHA (cache-busted to always get the latest)
     let existingSha = null;
     try {
-      const getRes = await fetch(`${apiUrl}?ref=${encodeURIComponent(cfg.branch)}`, {
+      const getRes = await fetch(`${apiUrl}?ref=${encodeURIComponent(cfg.branch)}&t=${Date.now()}`, {
+        cache: 'no-store',
         headers: {
           'Authorization': `Bearer ${cfg.token}`,
-          'Accept': 'application/vnd.github+json'
+          'Accept': 'application/vnd.github+json',
+          'Cache-Control': 'no-cache'
         }
       });
       if (getRes.ok) {

@@ -12,6 +12,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Exo+2:wght@300;400;500;600;700;800;900&family=Poppins:wght@400;500;600;700;800&family=Rajdhani:wght@500;600;700&family=Nunito+Sans:wght@300;400;600;700&display=swap" rel="stylesheet" />
+<script src="blogs-data.js"></script>
 
 <style>
 /* ════════════════════════════════════════
@@ -6753,6 +6754,11 @@ function resetForm(){
   ];
 
   function getPublishedBlogs() {
+    var canonical = (typeof window !== 'undefined' && window.WEBSPIDE_BLOG_DATA) ? window.WEBSPIDE_BLOG_DATA : null;
+    var baseBlogs = (canonical && Array.isArray(canonical.blogs) && canonical.blogs.length > 0)
+      ? canonical.blogs
+      : DEFAULT_SEED_BLOGS;
+
     var blogs = [];
     var data = localStorage.getItem(STORAGE_KEY);
     if (data) {
@@ -6764,7 +6770,13 @@ function resetForm(){
       } catch (e) {}
     }
     if (blogs.length === 0) {
-      blogs = DEFAULT_SEED_BLOGS.slice();
+      blogs = baseBlogs.slice();
+    } else {
+      // Merge baseBlogs so new published blogs always appear on all devices
+      baseBlogs.forEach(function(baseB) {
+        var exists = blogs.some(function(b) { return b.id === baseB.id || (b.slug && baseB.slug && b.slug === baseB.slug); });
+        if (!exists) blogs.push(baseB);
+      });
     }
 
     var now = new Date();
@@ -6804,6 +6816,9 @@ function resetForm(){
       var category = blog.category || 'Tech';
       var title = blog.title || 'Latest Insights';
       var excerpt = blog.excerpt || (blog.content ? blog.content.replace(/<[^>]*>/g, '').substring(0, 130) + '...' : '');
+      var articleLink = (blog.slug)
+        ? ('blog-detail.html?title=' + encodeURIComponent(blog.slug) + '&id=' + encodeURIComponent(blog.id || ''))
+        : ('blog.html?id=' + encodeURIComponent(blog.id));
 
       return '<div class="insight-card">' +
         '<div class="insight-thumbnail">' +
@@ -6813,7 +6828,7 @@ function resetForm(){
           '<span class="insight-category">' + category + '</span>' +
           '<h3>' + title + '</h3>' +
           '<p>' + excerpt + '</p>' +
-          '<a href="blog.html?id=' + encodeURIComponent(blog.id) + '" class="insight-link">' +
+          '<a href="' + articleLink + '" class="insight-link">' +
             'Read Full Article <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>' +
           '</a>' +
         '</div>' +

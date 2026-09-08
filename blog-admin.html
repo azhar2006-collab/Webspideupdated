@@ -7,6 +7,7 @@
 
 <!-- Google Fonts -->
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800;900&family=Exo+2:wght@400;500;600;700;800;900&family=Open+Sans:wght@400;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<script src="blogs-data.js"></script>
 
 <style>
 /* ══════════════════════════════════════════════
@@ -1281,6 +1282,10 @@ body {
     <button class="wp-bar-item wp-bar-btn-new" onclick="switchView('new-post')">
       + New Post
     </button>
+    <button class="wp-bar-item" id="btnSyncBlogs" onclick="openSyncModal()" style="background:#008a20;color:#fff;border-radius:4px;border:none;font-size:12px;font-weight:600;padding:4px 12px;display:inline-flex;align-items:center;gap:6px;cursor:pointer;margin-left:8px;" title="Sync blogs across all devices">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      Sync to All Devices
+    </button>
   </div>
 
   <div class="wp-bar-right">
@@ -2033,6 +2038,29 @@ body {
   </div>
 </div>
 
+<!-- SYNC TO ALL DEVICES MODAL -->
+<div id="syncModal" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.65);z-index:999999;align-items:center;justify-content:center;">
+  <div style="background:#fff;border-radius:12px;max-width:580px;width:90%;padding:28px;box-shadow:0 24px 60px rgba(0,0,0,0.3);position:relative;">
+    <h3 style="font-size:1.25rem;font-weight:800;color:#07164F;margin-bottom:10px;display:flex;align-items:center;gap:8px;">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#008a20" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      Sync Blogs Across All Devices
+    </h3>
+    <p style="font-size:13.5px;color:#475467;line-height:1.6;margin-bottom:16px;">
+      To make your published blogs visible on <strong>all mobile phones, tablets, and computers</strong> across the internet, update the master <code>blogs-data.js</code> file with your current posts.
+    </p>
+    <div style="background:#f7f9fc;border:1px solid #e2e8f0;border-radius:8px;padding:14px;margin-bottom:20px;font-size:13px;color:#1e293b;line-height:1.6;">
+      <strong>Step 1:</strong> Click <strong>Download Updated blogs-data.js</strong> below.<br>
+      <strong>Step 2:</strong> Replace the <code>blogs-data.js</code> file in your website project folder or Hostinger <code>public_html</code>.<br>
+      <strong>Step 3:</strong> Push to GitHub or upload to Hostinger! All devices clicking your website will immediately see your live blog articles.
+    </div>
+    <div style="display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;">
+      <button type="button" onclick="copyBlogsDataCode()" class="button" style="height:38px;padding:0 14px;font-size:13px;">Copy Code</button>
+      <button type="button" onclick="downloadBlogsDataFile()" class="button button-primary" style="background:#008a20;border-color:#00731a;height:38px;padding:0 18px;font-size:13px;font-weight:600;">Download blogs-data.js</button>
+      <button type="button" onclick="closeSyncModal()" class="button" style="height:38px;padding:0 14px;font-size:13px;">Close</button>
+    </div>
+  </div>
+</div>
+
 <!-- TOAST ALERT -->
 <div class="wp-toast" id="wpToast">Post saved successfully.</div>
 
@@ -2240,15 +2268,35 @@ function autoPublishDueScheduledPosts() {
 }
 
 function loadBlogs() {
+  const canonical = (typeof window !== 'undefined' && window.WEBSPIDE_BLOG_DATA) ? window.WEBSPIDE_BLOG_DATA : null;
+  const baseBlogs = (canonical && Array.isArray(canonical.blogs) && canonical.blogs.length > 0)
+    ? canonical.blogs
+    : DEFAULT_SEED_BLOGS;
+
   const data = localStorage.getItem(STORAGE_KEY);
   if (!data) {
-    blogs = [...DEFAULT_SEED_BLOGS];
+    blogs = [...baseBlogs];
     saveBlogs();
   } else {
     try {
       blogs = JSON.parse(data);
+      if (!Array.isArray(blogs) || blogs.length === 0) {
+        blogs = [...baseBlogs];
+        saveBlogs();
+      } else {
+        // Merge any new blogs from blogs-data.js so new posts appear on all devices
+        let needsSave = false;
+        baseBlogs.forEach(baseB => {
+          const exists = blogs.some(b => b.id === baseB.id || (b.slug && baseB.slug && b.slug === baseB.slug));
+          if (!exists) {
+            blogs.push(baseB);
+            needsSave = true;
+          }
+        });
+        if (needsSave) saveBlogs();
+      }
     } catch(e) {
-      blogs = [...DEFAULT_SEED_BLOGS];
+      blogs = [...baseBlogs];
       saveBlogs();
     }
   }
@@ -3410,7 +3458,7 @@ function saveCurrentPost() {
         showNotice(`Draft saved. <a href="${getBlogDetailUrl({id, slug, title})}" target="_blank" style="margin-left:8px;font-weight:700;">Preview post ↗</a>`);
       } else {
         showToast('Post updated successfully.');
-        showNotice(`Post updated. <a href="${getBlogDetailUrl({id, slug, title})}" target="_blank" style="margin-left:8px;font-weight:700;">View post ↗</a>`);
+        showNotice(`Post updated. <a href="${getBlogDetailUrl({id, slug, title})}" target="_blank" style="margin-left:8px;font-weight:700;">View post ↗</a> | <a href="javascript:void(0)" onclick="openSyncModal()" style="margin-left:6px;font-weight:700;color:#008a20;text-decoration:underline;">Sync to All Devices ⚡</a>`);
       }
     }
   } else {
@@ -3436,7 +3484,7 @@ function saveCurrentPost() {
       showNotice(`Draft created. <a href="${getBlogDetailUrl({id: newId, slug, title})}" target="_blank" style="margin-left:8px;font-weight:700;">Preview post ↗</a>`);
     } else {
       showToast('Post published successfully.');
-      showNotice(`Post published. <a href="${getBlogDetailUrl({id: newId, slug, title})}" target="_blank" style="margin-left:8px;font-weight:700;">View post ↗</a>`);
+      showNotice(`Post published! <a href="${getBlogDetailUrl({id: newId, slug, title})}" target="_blank" style="margin-left:8px;font-weight:700;">View post ↗</a> | <a href="javascript:void(0)" onclick="openSyncModal()" style="margin-left:6px;font-weight:700;color:#008a20;text-decoration:underline;">Sync to All Devices ⚡</a>`);
     }
   }
 
@@ -3474,21 +3522,77 @@ const CATEGORIES_KEY = 'webspide_categories';
 const DEFAULT_CATEGORIES = ['Web Development', 'App Development', 'Digital Marketing', 'SEO & Content', 'UI/UX Design', 'Technology'];
 
 function getAllCategories() {
+  const canonical = (typeof window !== 'undefined' && window.WEBSPIDE_BLOG_DATA) ? window.WEBSPIDE_BLOG_DATA : null;
+  const baseCats = (canonical && Array.isArray(canonical.categories) && canonical.categories.length > 0)
+    ? canonical.categories
+    : DEFAULT_CATEGORIES;
+
   const stored = localStorage.getItem(CATEGORIES_KEY);
-  let cats = DEFAULT_CATEGORIES;
+  let cats = [...baseCats];
   if (stored) {
     try {
       const parsed = JSON.parse(stored);
-      if (Array.isArray(parsed) && parsed.length > 0) cats = parsed;
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        cats = parsed;
+        baseCats.forEach(bc => {
+          if (!cats.some(c => c.toLowerCase() === bc.toLowerCase())) cats.push(bc);
+        });
+      }
     } catch(e) {}
   }
   // Also include any categories present in current blogs
   blogs.forEach(b => {
-    if (b.category && !cats.includes(b.category)) {
+    if (b.category && !cats.some(c => c.toLowerCase() === b.category.toLowerCase())) {
       cats.push(b.category);
     }
   });
   return cats;
+}
+
+/* ══════════════════════════════════════════════
+   CROSS-DEVICE SYNC ENGINE (blogs-data.js)
+   ══════════════════════════════════════════════ */
+function generateBlogsDataPayload() {
+  const allCats = getAllCategories();
+  const payload = {
+    version: '2.0.0',
+    lastUpdated: new Date().toISOString(),
+    categories: allCats,
+    blogs: blogs
+  };
+  return `/**\n * Webspide Technologies - Canonical Blog Database\n * Central source of truth shared across ALL devices and visitors.\n * Loaded by index.html, blog.html, blog-detail.html, and blog-admin.html.\n */\n(function() {\n  var blogPayload = ${JSON.stringify(payload, null, 2)};\n\n  if (typeof window !== 'undefined') {\n    window.WEBSPIDE_BLOG_DATA = blogPayload;\n  }\n  if (typeof module !== 'undefined' && module.exports) {\n    module.exports = blogPayload;\n  }\n})();\n`;
+}
+
+function openSyncModal() {
+  const m = document.getElementById('syncModal');
+  if (m) m.style.display = 'flex';
+}
+
+function closeSyncModal() {
+  const m = document.getElementById('syncModal');
+  if (m) m.style.display = 'none';
+}
+
+function downloadBlogsDataFile() {
+  const code = generateBlogsDataPayload();
+  const blob = new Blob([code], { type: 'application/javascript;charset=utf-8;' });
+  const link = document.createElement('a');
+  link.href = URL.createObjectURL(blob);
+  link.download = 'blogs-data.js';
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  showToast('Downloaded blogs-data.js! Replace it in your project folder.');
+  showNotice('Downloaded <strong>blogs-data.js</strong>. Replace this file in your website / Hostinger public_html to update all devices!');
+}
+
+function copyBlogsDataCode() {
+  const code = generateBlogsDataPayload();
+  navigator.clipboard.writeText(code).then(() => {
+    alert('Code copied to clipboard! Paste it into blogs-data.js in your project.');
+  }).catch(() => {
+    prompt('Copy blogs-data.js code:', code);
+  });
 }
 
 function saveCategories(cats) {

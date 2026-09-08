@@ -27,6 +27,7 @@
 <meta name="twitter:image" content="https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1200&q=80" />
 
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Exo+2:wght@300;400;500;600;700;800;900&family=Poppins:wght@400;500;600;700;800&family=Rajdhani:wght@500;600;700&family=Nunito+Sans:wght@300;400;600;700&display=swap" rel="stylesheet" />
+<script src="blogs-data.js"></script>
 
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -2288,44 +2289,85 @@ function getBlogDetailUrl(blog) {
 const CATEGORIES_KEY = 'webspide_categories';
 const DEFAULT_CATEGORIES = ['Web Development', 'App Development', 'Digital Marketing', 'SEO & Content', 'UI/UX Design', 'Technology'];
 
+function getCanonicalData() {
+  if (typeof window !== 'undefined' && window.WEBSPIDE_BLOG_DATA) {
+    return window.WEBSPIDE_BLOG_DATA;
+  }
+  return null;
+}
+
 function getStoredCategories() {
+  const canonical = getCanonicalData();
+  const baseCats = (canonical && Array.isArray(canonical.categories) && canonical.categories.length > 0)
+    ? canonical.categories
+    : DEFAULT_CATEGORIES;
+
   const stored = localStorage.getItem(CATEGORIES_KEY);
   if (stored) {
     try {
       const parsed = JSON.parse(stored);
-      if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        let updated = false;
+        const merged = [...parsed];
+        baseCats.forEach(c => {
+          if (!merged.some(m => m.toLowerCase() === c.toLowerCase())) {
+            merged.push(c);
+            updated = true;
+          }
+        });
+        if (updated) {
+          try { localStorage.setItem(CATEGORIES_KEY, JSON.stringify(merged)); } catch(e) {}
+        }
+        return merged;
+      }
     } catch(e) {}
   }
-  return DEFAULT_CATEGORIES;
+  return baseCats;
 }
 
 function getStoredBlogs() {
+  const canonical = getCanonicalData();
+  const baseBlogs = (canonical && Array.isArray(canonical.blogs) && canonical.blogs.length > 0)
+    ? canonical.blogs
+    : DEFAULT_SEED_BLOGS;
+
   const data = localStorage.getItem(STORAGE_KEY);
   if (!data) {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(DEFAULT_SEED_BLOGS));
-    return [...DEFAULT_SEED_BLOGS];
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(baseBlogs)); } catch(e) {}
+    return [...baseBlogs];
   }
   try {
     const parsed = JSON.parse(data);
-    if (!Array.isArray(parsed)) return [...DEFAULT_SEED_BLOGS];
-    // Back-fill missing slug fields from DEFAULT_SEED_BLOGS (handles old localStorage data)
+    if (!Array.isArray(parsed) || parsed.length === 0) return [...baseBlogs];
+
+    // Merge: ensure all published blogs from blogs-data.js are always present on any device
     let needsSave = false;
-    const merged = parsed.map(b => {
-      if (!b.slug) {
-        const seed = DEFAULT_SEED_BLOGS.find(s => s.id === b.id);
-        if (seed && seed.slug) {
-          needsSave = true;
-          return { ...b, slug: seed.slug };
-        }
+    const merged = [...parsed];
+
+    baseBlogs.forEach(baseB => {
+      const existingIdx = merged.findIndex(b => b.id === baseB.id || (b.slug && baseB.slug && b.slug === baseB.slug));
+      if (existingIdx === -1) {
+        merged.push(baseB);
+        needsSave = true;
+      } else {
+        const existing = merged[existingIdx];
+        let updated = false;
+        ['slug', 'tags', 'authorRole', 'imageAlt', 'metaTitle', 'metaDescription', 'content', 'readTime', 'category', 'date', 'image'].forEach(f => {
+          if (!existing[f] && baseB[f]) {
+            existing[f] = baseB[f];
+            updated = true;
+          }
+        });
+        if (updated) needsSave = true;
       }
-      return b;
     });
+
     if (needsSave) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(merged));
+      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(merged)); } catch(e) {}
     }
     return merged;
   } catch (e) {
-    return [...DEFAULT_SEED_BLOGS];
+    return [...baseBlogs];
   }
 }
 

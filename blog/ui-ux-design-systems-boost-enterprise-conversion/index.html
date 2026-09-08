@@ -30,6 +30,8 @@
 <meta id="twDesc" name="twitter:description" content="A design system is a shared language between design and engineering that eliminates friction and multiplies user engagement." />
 <meta id="twImage" name="twitter:image" content="https://images.unsplash.com/photo-1581291518857-4e27b48ff24e?auto=format&fit=crop&w=1200&q=80" />
 
+<script src="../../blogs-data.js"></script>
+
 <!-- Structured Data (Schema.org) -->
 <script id="articleSchema" type="application/ld+json">
 {
@@ -1771,16 +1773,47 @@ function getBlogDetailUrl(blog) {
 }
 
 function getStoredBlogs() {
+  const canonical = (typeof window !== 'undefined' && window.WEBSPIDE_BLOG_DATA) ? window.WEBSPIDE_BLOG_DATA : null;
+  const baseBlogs = (canonical && Array.isArray(canonical.blogs) && canonical.blogs.length > 0)
+    ? canonical.blogs
+    : DEFAULT_SEED_BLOGS;
+
   const data = localStorage.getItem(STORAGE_KEY);
   if (!data) {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(DEFAULT_SEED_BLOGS));
-    return [...DEFAULT_SEED_BLOGS];
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(baseBlogs)); } catch(e) {}
+    return [...baseBlogs];
   }
   try {
     const parsed = JSON.parse(data);
-    return Array.isArray(parsed) && parsed.length > 0 ? parsed : [...DEFAULT_SEED_BLOGS];
+    if (!Array.isArray(parsed) || parsed.length === 0) return [...baseBlogs];
+
+    let needsSave = false;
+    const merged = [...parsed];
+
+    baseBlogs.forEach(baseB => {
+      const existingIdx = merged.findIndex(b => b.id === baseB.id || (b.slug && baseB.slug && b.slug === baseB.slug));
+      if (existingIdx === -1) {
+        merged.push(baseB);
+        needsSave = true;
+      } else {
+        const existing = merged[existingIdx];
+        let updated = false;
+        ['slug', 'tags', 'authorRole', 'imageAlt', 'metaTitle', 'metaDescription', 'content', 'readTime', 'category', 'date', 'image'].forEach(f => {
+          if (!existing[f] && baseB[f]) {
+            existing[f] = baseB[f];
+            updated = true;
+          }
+        });
+        if (updated) needsSave = true;
+      }
+    });
+
+    if (needsSave) {
+      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(merged)); } catch(e) {}
+    }
+    return merged;
   } catch(e) {
-    return [...DEFAULT_SEED_BLOGS];
+    return [...baseBlogs];
   }
 }
 

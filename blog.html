@@ -27,7 +27,15 @@
 <meta name="twitter:image" content="https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1200&q=80" />
 
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Exo+2:wght@300;400;500;600;700;800;900&family=Poppins:wght@400;500;600;700;800&family=Rajdhani:wght@500;600;700&family=Nunito+Sans:wght@300;400;600;700&display=swap" rel="stylesheet" />
-<script src="blogs-data.js"></script>
+<script>
+/* Always load fresh blogs-data — bypasses mobile browser cache */
+(function(){
+  var s = document.createElement('script');
+  s.src = 'blogs-data.js?v=' + Date.now();
+  s.async = false;
+  document.head.appendChild(s);
+})();
+</script>
 
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}

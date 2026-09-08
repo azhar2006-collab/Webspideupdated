@@ -2321,31 +2321,21 @@ function getCanonicalData() {
 
 function getStoredCategories() {
   const canonical = getCanonicalData();
-  const baseCats = (canonical && Array.isArray(canonical.categories) && canonical.categories.length > 0)
-    ? canonical.categories
-    : DEFAULT_CATEGORIES;
+  if (canonical && Array.isArray(canonical.categories) && canonical.categories.length > 0) {
+    try { localStorage.setItem(CATEGORIES_KEY, JSON.stringify(canonical.categories)); } catch(e) {}
+    return [...canonical.categories];
+  }
 
   const stored = localStorage.getItem(CATEGORIES_KEY);
   if (stored) {
     try {
       const parsed = JSON.parse(stored);
       if (Array.isArray(parsed) && parsed.length > 0) {
-        let updated = false;
-        const merged = [...parsed];
-        baseCats.forEach(c => {
-          if (!merged.some(m => m.toLowerCase() === c.toLowerCase())) {
-            merged.push(c);
-            updated = true;
-          }
-        });
-        if (updated) {
-          try { localStorage.setItem(CATEGORIES_KEY, JSON.stringify(merged)); } catch(e) {}
-        }
-        return merged;
+        return parsed;
       }
     } catch(e) {}
   }
-  return baseCats;
+  return DEFAULT_CATEGORIES;
 }
 
 function getStoredBlogs() {

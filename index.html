@@ -6778,28 +6778,24 @@ function resetForm(){
 
   function getPublishedBlogs() {
     var canonical = (typeof window !== 'undefined' && window.WEBSPIDE_BLOG_DATA) ? window.WEBSPIDE_BLOG_DATA : null;
-    var baseBlogs = (canonical && Array.isArray(canonical.blogs) && canonical.blogs.length > 0)
-      ? canonical.blogs
-      : DEFAULT_SEED_BLOGS;
+    var blogs;
 
-    var blogs = [];
-    var data = localStorage.getItem(STORAGE_KEY);
-    if (data) {
-      try {
-        var parsed = JSON.parse(data);
-        if (Array.isArray(parsed) && parsed.length > 0) {
-          blogs = parsed;
-        }
-      } catch (e) {}
-    }
-    if (blogs.length === 0) {
-      blogs = baseBlogs.slice();
+    if (canonical && Array.isArray(canonical.blogs) && canonical.blogs.length > 0) {
+      blogs = canonical.blogs.slice();
+      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(blogs)); } catch(e) {}
     } else {
-      // Merge baseBlogs so new published blogs always appear on all devices
-      baseBlogs.forEach(function(baseB) {
-        var exists = blogs.some(function(b) { return b.id === baseB.id || (b.slug && baseB.slug && b.slug === baseB.slug); });
-        if (!exists) blogs.push(baseB);
-      });
+      var data = localStorage.getItem(STORAGE_KEY);
+      if (data) {
+        try {
+          var parsed = JSON.parse(data);
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            blogs = parsed;
+          }
+        } catch (e) {}
+      }
+      if (!blogs || blogs.length === 0) {
+        blogs = DEFAULT_SEED_BLOGS.slice();
+      }
     }
 
     var now = new Date();

@@ -2339,17 +2339,6 @@ function loadBlogs() {
       if (!Array.isArray(blogs) || blogs.length === 0) {
         blogs = [...baseBlogs];
         saveBlogs();
-      } else {
-        // Merge any new blogs from blogs-data.js so new posts appear on all devices
-        let needsSave = false;
-        baseBlogs.forEach(baseB => {
-          const exists = blogs.some(b => b.id === baseB.id || (b.slug && baseB.slug && b.slug === baseB.slug));
-          if (!exists) {
-            blogs.push(baseB);
-            needsSave = true;
-          }
-        });
-        if (needsSave) saveBlogs();
       }
     } catch(e) {
       blogs = [...baseBlogs];
@@ -3566,6 +3555,9 @@ function deletePost(id) {
   if (!b) return;
   if (confirm(`Are you sure you want to move "${b.title}" to Trash?`)) {
     blogs = blogs.filter(item => item.id !== id);
+    if (typeof window !== 'undefined' && window.WEBSPIDE_BLOG_DATA && Array.isArray(window.WEBSPIDE_BLOG_DATA.blogs)) {
+      window.WEBSPIDE_BLOG_DATA.blogs = window.WEBSPIDE_BLOG_DATA.blogs.filter(item => item.id !== id);
+    }
     saveBlogs();
     renderPostsTable();
     showToast('Post moved to Trash.');
@@ -3606,9 +3598,6 @@ function getAllCategories() {
       const parsed = JSON.parse(stored);
       if (Array.isArray(parsed) && parsed.length > 0) {
         cats = parsed;
-        baseCats.forEach(bc => {
-          if (!cats.some(c => c.toLowerCase() === bc.toLowerCase())) cats.push(bc);
-        });
       }
     } catch(e) {}
   }

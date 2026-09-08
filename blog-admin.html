@@ -2107,10 +2107,11 @@ body {
 
     <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;">
       <div id="ghSyncStatusMsg" style="font-size:12px;font-weight:600;color:#64748b;"></div>
-      <div style="display:flex;gap:8px;">
+      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+        <button type="button" class="button" id="btnPullFromGh" onclick="pullFromGitHub()" title="Download the latest version from GitHub into this browser" style="font-size:12px;">Pull from GitHub ⬇️</button>
         <button type="button" class="button" onclick="closeSyncModal()">Cancel</button>
         <button type="button" class="button button-primary" id="btnSaveAndSyncGh" onclick="saveAndSyncGitHub()" style="background:#1F4FB2;border-color:#173e8e;font-weight:700;display:inline-flex;align-items:center;gap:6px;">
-          Save &amp; Sync Now ⚡
+          Save &amp; Push to GitHub ⚡
         </button>
       </div>
     </div>
@@ -3762,7 +3763,7 @@ async function saveAndSyncGitHub() {
 
   if (btn) {
     btn.disabled = false;
-    btn.textContent = 'Save & Sync Now ⚡';
+    btn.textContent = 'Save & Push to GitHub ⚡';
   }
 
   if (result.success) {
@@ -3778,6 +3779,67 @@ async function saveAndSyncGitHub() {
       statusMsg.textContent = '❌ Error: ' + (result.error || 'Connection failed');
       statusMsg.style.color = '#d63638';
     }
+  }
+}
+
+async function pullFromGitHub() {
+  const cfg = getGitHubConfig();
+  const tokenInput = document.getElementById('ghTokenInput');
+  if (tokenInput && tokenInput.value.trim()) {
+    cfg.token = tokenInput.value.trim();
+  }
+  if (!cfg.token) {
+    showToast('Please enter your GitHub token first.');
+    return;
+  }
+  const statusMsg = document.getElementById('ghSyncStatusMsg');
+  const btn = document.getElementById('btnPullFromGh');
+  if (btn) { btn.disabled = true; btn.textContent = 'Pulling... ⏳'; }
+  if (statusMsg) { statusMsg.textContent = 'Fetching blogs from GitHub...'; statusMsg.style.color = '#1F4FB2'; }
+
+  try {
+    const path = 'blogs-data.js';
+    const apiUrl = `https://api.github.com/repos/${cfg.owner}/${cfg.repo}/contents/${path}?ref=${encodeURIComponent(cfg.branch)}&t=${Date.now()}`;
+    const res = await fetch(apiUrl, {
+      headers: {
+        'Authorization': `Bearer ${cfg.token}`,
+        'Accept': 'application/vnd.github+json'
+      }
+    });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.message || 'HTTP ' + res.status);
+    }
+    const data = await res.json();
+    // decode base64 utf-8
+    const rawStr = atob(data.content.replace(/\s/g, ''));
+    let decoded = '';
+    try {
+      decoded = decodeURIComponent(rawStr.split('').map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)).join(''));
+    } catch(e) {
+      decoded = rawStr;
+    }
+
+    const match = decoded.match(/var blogPayload = (\{[\s\S]*?\});/);
+    if (!match) throw new Error('Could not parse payload from GitHub blogs-data.js');
+    const parsedPayload = JSON.parse(match[1]);
+    if (!parsedPayload || !Array.isArray(parsedPayload.blogs)) throw new Error('Invalid payload structure in GitHub file');
+
+    blogs = parsedPayload.blogs;
+    saveBlogs();
+    if (typeof window !== 'undefined') {
+      window.WEBSPIDE_BLOG_DATA = parsedPayload;
+    }
+    renderPostsTable();
+    renderCategoriesTable();
+    showToast('✅ Pulled latest ' + blogs.length + ' posts from GitHub!');
+    if (statusMsg) { statusMsg.textContent = '✅ Pulled ' + blogs.length + ' posts from GitHub!'; statusMsg.style.color = '#008a20'; }
+  } catch(e) {
+    console.error('Pull error:', e);
+    showToast('❌ Pull failed: ' + e.message);
+    if (statusMsg) { statusMsg.textContent = '❌ ' + e.message; statusMsg.style.color = '#d63638'; }
+  } finally {
+    if (btn) { btn.disabled = false; btn.textContent = 'Pull from GitHub ⬇️'; }
   }
 }
 

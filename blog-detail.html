@@ -1944,46 +1944,26 @@ function getBlogDetailUrl(blog) {
 
 function getStoredBlogs() {
   const canonical = (typeof window !== 'undefined' && window.WEBSPIDE_BLOG_DATA) ? window.WEBSPIDE_BLOG_DATA : null;
-  const baseBlogs = (canonical && Array.isArray(canonical.blogs) && canonical.blogs.length > 0)
-    ? canonical.blogs
-    : DEFAULT_SEED_BLOGS;
 
+  // If blogs-data.js has data, it is the SINGLE source of truth.
+  // Never merge with localStorage — deleted posts must stay deleted.
+  if (canonical && Array.isArray(canonical.blogs) && canonical.blogs.length > 0) {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(canonical.blogs)); } catch(e) {}
+    return [...canonical.blogs];
+  }
+
+  // Fallback: no canonical data yet — use localStorage or seed
   const data = localStorage.getItem(STORAGE_KEY);
   if (!data) {
-    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(baseBlogs)); } catch(e) {}
-    return [...baseBlogs];
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(DEFAULT_SEED_BLOGS)); } catch(e) {}
+    return [...DEFAULT_SEED_BLOGS];
   }
   try {
     const parsed = JSON.parse(data);
-    if (!Array.isArray(parsed) || parsed.length === 0) return [...baseBlogs];
-
-    let needsSave = false;
-    const merged = [...parsed];
-
-    baseBlogs.forEach(baseB => {
-      const existingIdx = merged.findIndex(b => b.id === baseB.id || (b.slug && baseB.slug && b.slug === baseB.slug));
-      if (existingIdx === -1) {
-        merged.push(baseB);
-        needsSave = true;
-      } else {
-        const existing = merged[existingIdx];
-        let updated = false;
-        ['slug', 'tags', 'authorRole', 'imageAlt', 'metaTitle', 'metaDescription', 'content', 'readTime', 'category', 'date', 'image'].forEach(f => {
-          if (!existing[f] && baseB[f]) {
-            existing[f] = baseB[f];
-            updated = true;
-          }
-        });
-        if (updated) needsSave = true;
-      }
-    });
-
-    if (needsSave) {
-      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(merged)); } catch(e) {}
-    }
-    return merged;
+    if (!Array.isArray(parsed) || parsed.length === 0) return [...DEFAULT_SEED_BLOGS];
+    return parsed;
   } catch(e) {
-    return [...baseBlogs];
+    return [...DEFAULT_SEED_BLOGS];
   }
 }
 

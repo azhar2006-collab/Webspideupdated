@@ -1,0 +1,10 @@
+{
+  "devDependencies": {
+    "mammoth": "^1.12.0"
+  },
+  "dependencies": {
+    "pdf-parse": "^2.4.5",
+    "pdfjs-dist": "^6.2.108",
+    "sharp": "^0.35.3"
+  }
+}

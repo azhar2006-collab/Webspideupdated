@@ -1,0 +1,9 @@
+<IfModule mod_rewrite.c>
+RewriteEngine On
+RewriteBase /
+
+# Rewrite /blog/<slug>/ to blog-detail.html if static folder doesn't exist
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^blog/([^/]+)/?$ blog-detail.html?title=$1 [L,QSA]
+</IfModule>

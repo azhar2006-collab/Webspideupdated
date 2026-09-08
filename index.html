@@ -13,12 +13,27 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Exo+2:wght@300;400;500;600;700;800;900&family=Poppins:wght@400;500;600;700;800&family=Rajdhani:wght@500;600;700&family=Nunito+Sans:wght@300;400;600;700&display=swap" rel="stylesheet" />
 <script>
-/* Always load fresh blogs-data — bypasses mobile browser cache */
+/* Fetch blogs-data fresh every load — bypasses GitHub Pages CDN cache */
+window.__blogsDataReady = false;
+window.__blogsDataCallbacks = [];
+window.__onBlogsDataReady = function(fn) {
+  if (window.__blogsDataReady) { fn(); } else { window.__blogsDataCallbacks.push(fn); }
+};
 (function(){
-  var s = document.createElement('script');
-  s.src = 'blogs-data.js?v=' + Date.now();
-  s.async = false;
-  document.head.appendChild(s);
+  var url = 'blogs-data.js?nocache=' + Date.now();
+  fetch(url, { cache: 'no-store' })
+    .then(function(r){ return r.text(); })
+    .then(function(code){
+      try { (new Function(code))(); } catch(e){ console.warn('blogs-data eval:', e); }
+      window.__blogsDataReady = true;
+      window.__blogsDataCallbacks.forEach(function(fn){ try{ fn(); }catch(e){} });
+      window.__blogsDataCallbacks = [];
+    })
+    .catch(function(){ 
+      window.__blogsDataReady = true;
+      window.__blogsDataCallbacks.forEach(function(fn){ try{ fn(); }catch(e){} });
+      window.__blogsDataCallbacks = [];
+    });
 })();
 </script>
 
@@ -6844,10 +6859,13 @@ function resetForm(){
     }).join('');
   }
 
+  // Wait for fresh blogs-data.js, then render
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', renderLatestInsights);
+    document.addEventListener('DOMContentLoaded', function() {
+      window.__onBlogsDataReady(renderLatestInsights);
+    });
   } else {
-    renderLatestInsights();
+    window.__onBlogsDataReady(renderLatestInsights);
   }
 
   window.addEventListener('storage', function(e) {

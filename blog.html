@@ -28,12 +28,27 @@
 
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Exo+2:wght@300;400;500;600;700;800;900&family=Poppins:wght@400;500;600;700;800&family=Rajdhani:wght@500;600;700&family=Nunito+Sans:wght@300;400;600;700&display=swap" rel="stylesheet" />
 <script>
-/* Always load fresh blogs-data — bypasses mobile browser cache */
+/* Fetch blogs-data fresh every load — bypasses GitHub Pages CDN cache */
+window.__blogsDataReady = false;
+window.__blogsDataCallbacks = [];
+window.__onBlogsDataReady = function(fn) {
+  if (window.__blogsDataReady) { fn(); } else { window.__blogsDataCallbacks.push(fn); }
+};
 (function(){
-  var s = document.createElement('script');
-  s.src = 'blogs-data.js?v=' + Date.now();
-  s.async = false;
-  document.head.appendChild(s);
+  var url = 'blogs-data.js?nocache=' + Date.now();
+  fetch(url, { cache: 'no-store' })
+    .then(function(r){ return r.text(); })
+    .then(function(code){
+      try { (new Function(code))(); } catch(e){ console.warn('blogs-data eval:', e); }
+      window.__blogsDataReady = true;
+      window.__blogsDataCallbacks.forEach(function(fn){ try{ fn(); }catch(e){} });
+      window.__blogsDataCallbacks = [];
+    })
+    .catch(function(){ 
+      window.__blogsDataReady = true;
+      window.__blogsDataCallbacks.forEach(function(fn){ try{ fn(); }catch(e){} });
+      window.__blogsDataCallbacks = [];
+    });
 })();
 </script>
 
@@ -2774,24 +2789,26 @@ function escapeHtml(str) {
   return str.toString().replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
 }
 
-// Initial render
+// Initial render — waits for fresh blogs-data.js to load before rendering
 document.addEventListener('DOMContentLoaded', function() {
-  allBlogs = getStoredBlogs();
-  renderBlogs();
-
-  // Auto-check for scheduled posts every 30 seconds
-  setInterval(function() {
+  window.__onBlogsDataReady(function() {
+    allBlogs = getStoredBlogs();
     renderBlogs();
-  }, 30000);
 
-  // Check URL query parameters for auto-opening an article (e.g. ?title=... or ?id=...)
-  const urlParams = new URLSearchParams(window.location.search);
-  const articleParam = urlParams.get('title') || urlParams.get('slug') || urlParams.get('id');
-  if (articleParam) {
-    const blog = allBlogs.find(b => b.id === articleParam || b.slug === articleParam || generateSlug(b.title) === articleParam);
-    const detailUrl = blog ? getBlogDetailUrl(blog) : `blog-detail.html?title=${encodeURIComponent(articleParam)}`;
-    window.location.href = detailUrl;
-  }
+    // Auto-check for scheduled posts every 30 seconds
+    setInterval(function() {
+      renderBlogs();
+    }, 30000);
+
+    // Check URL query parameters for auto-opening an article (e.g. ?title=... or ?id=...)
+    const urlParams = new URLSearchParams(window.location.search);
+    const articleParam = urlParams.get('title') || urlParams.get('slug') || urlParams.get('id');
+    if (articleParam) {
+      const blog = allBlogs.find(b => b.id === articleParam || b.slug === articleParam || generateSlug(b.title) === articleParam);
+      const detailUrl = blog ? getBlogDetailUrl(blog) : `blog-detail.html?title=${encodeURIComponent(articleParam)}`;
+      window.location.href = detailUrl;
+    }
+  });
 });
 </script>
 </body>

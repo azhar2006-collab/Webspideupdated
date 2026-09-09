@@ -2766,25 +2766,67 @@ function getBrevoApiKey() {
   return localStorage.getItem('webspide_brevo_api_key') || '';
 }
 
+async function getBrevoVerifiedSender(apiKey) {
+  let cached = localStorage.getItem('webspide_brevo_sender_email');
+  if (cached) return cached;
+  try {
+    const res = await fetch('https://api.brevo.com/v3/senders', {
+      headers: { 'api-key': apiKey, 'Accept': 'application/json' }
+    });
+    if (res.ok) {
+      const data = await res.json();
+      if (data.senders && data.senders.length > 0) {
+        const verified = data.senders.find(s => s.active) || data.senders[0];
+        if (verified && verified.email) {
+          localStorage.setItem('webspide_brevo_sender_email', verified.email);
+          return verified.email;
+        }
+      }
+    }
+  } catch(e) {}
+  // Fallback to account email
+  try {
+    const accRes = await fetch('https://api.brevo.com/v3/account', {
+      headers: { 'api-key': apiKey, 'Accept': 'application/json' }
+    });
+    if (accRes.ok) {
+      const acc = await accRes.json();
+      if (acc.email) {
+        localStorage.setItem('webspide_brevo_sender_email', acc.email);
+        return acc.email;
+      }
+    }
+  } catch(e) {}
+  return localStorage.getItem('webspide_newsletter_target_email') || 'azhar12082006@gmail.com';
+}
+
 async function addBrevoContact(email) {
   const apiKey = getBrevoApiKey();
   if (!apiKey) return false;
   const listId = parseInt(localStorage.getItem('webspide_brevo_list_id') || '0', 10);
   const body = { email: email, updateEnabled: true };
   if (listId > 0) body.listIds = [listId];
-  const res = await fetch('https://api.brevo.com/v3/contacts', {
-    method: 'POST',
-    headers: { 'api-key': apiKey, 'Content-Type': 'application/json', 'Accept': 'application/json' },
-    body: JSON.stringify(body)
-  });
-  return res.ok || res.status === 204 || res.status === 400; // 400 = already exists, still OK
+  try {
+    const res = await fetch('https://api.brevo.com/v3/contacts', {
+      method: 'POST',
+      headers: { 'api-key': apiKey, 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify(body)
+    });
+    return res.ok || res.status === 204 || res.status === 400; // 400 = already exists
+  } catch(err) {
+    console.warn('Brevo contact error:', err);
+    return false;
+  }
 }
 
 async function sendBrevoWelcomeEmail(email) {
   const apiKey = getBrevoApiKey();
-  if (!apiKey) return false;
+  if (!apiKey) return { ok: false, error: 'No API key configured.' };
+  
+  const senderEmail = await getBrevoVerifiedSender(apiKey);
+
   const payload = {
-    sender: { name: 'Webspide Technologies', email: localStorage.getItem('webspide_newsletter_target_email') || 'azhar12082006@gmail.com' },
+    sender: { name: 'Webspide Technologies', email: senderEmail },
     to: [{ email: email }],
     subject: "🎉 Welcome to the Webspide Technologies Blog!",
     htmlContent: `<!DOCTYPE html><html><body style="margin:0;padding:0;background:#f0f4ff;font-family:Arial,sans-serif;">
@@ -2812,12 +2854,23 @@ async function sendBrevoWelcomeEmail(email) {
 </td></tr>
 </table></td></tr></table></body></html>`
   };
-  const res = await fetch('https://api.brevo.com/v3/smtp/email', {
-    method: 'POST',
-    headers: { 'api-key': apiKey, 'Content-Type': 'application/json', 'Accept': 'application/json' },
-    body: JSON.stringify(payload)
-  });
-  return res.ok;
+
+  try {
+    const res = await fetch('https://api.brevo.com/v3/smtp/email', {
+      method: 'POST',
+      headers: { 'api-key': apiKey, 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    if (res.ok) {
+      return { ok: true, sender: senderEmail };
+    }
+    const errData = await res.json().catch(() => ({}));
+    console.error('Brevo API email error:', errData);
+    return { ok: false, error: errData.message || `HTTP ${res.status}`, sender: senderEmail };
+  } catch(err) {
+    console.error('Brevo network exception:', err);
+    return { ok: false, error: err.message };
+  }
 }
 
 async function handleNewsletterSubscribe(e) {
@@ -2861,12 +2914,18 @@ async function handleNewsletterSubscribe(e) {
     // ── Brevo path: add contact + send welcome email ──
     try {
       await addBrevoContact(email);
-      await sendBrevoWelcomeEmail(email);
+      const emailResult = await sendBrevoWelcomeEmail(email);
       if (input) input.value = '';
       if (feedback) {
         feedback.style.display = 'block';
-        feedback.style.color = '#86efac';
-        feedback.innerHTML = '🎉 <strong>Welcome!</strong> You\'re subscribed! Check your inbox for a confirmation email from Webspide Technologies.';
+        if (emailResult.ok) {
+          feedback.style.color = '#86efac';
+          feedback.innerHTML = '🎉 <strong>Welcome!</strong> You\'re subscribed! Check your inbox (or <strong>Spam / Promotions</strong> folder) for your confirmation email.';
+        } else {
+          // Contact added, but Brevo returned a sender or account notice
+          feedback.style.color = '#fde047';
+          feedback.innerHTML = `🎉 <strong>Subscribed!</strong> You're added to our contact list. <em>(Note from email service: ${escapeHtml(emailResult.error || 'Check sender verification')})</em>`;
+        }
       }
     } catch(err) {
       console.warn('Brevo subscription error:', err);

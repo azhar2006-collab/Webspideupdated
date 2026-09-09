@@ -2644,7 +2644,30 @@ async function testBrevoConnection() {
     });
     if (res.ok) {
       const data = await res.json();
-      if (result) { result.style.display = 'inline'; result.style.color = '#008a20'; result.textContent = `✅ Connected! Account: ${data.email || 'verified'}`; }
+      let verifiedSender = data.email || '';
+      // Also query verified senders list from Brevo
+      try {
+        const sRes = await fetch('https://api.brevo.com/v3/senders', {
+          headers: { 'api-key': apiKey, 'Accept': 'application/json' }
+        });
+        if (sRes.ok) {
+          const sData = await sRes.json();
+          if (sData.senders && sData.senders.length > 0) {
+            const activeSender = sData.senders.find(s => s.active) || sData.senders[0];
+            if (activeSender && activeSender.email) {
+              verifiedSender = activeSender.email;
+            }
+          }
+        }
+      } catch(e) {}
+      if (verifiedSender) {
+        localStorage.setItem('webspide_brevo_sender_email', verifiedSender);
+      }
+      if (result) {
+        result.style.display = 'inline';
+        result.style.color = '#008a20';
+        result.innerHTML = `✅ Connected! Verified Sender: <strong>${escapeHtml(verifiedSender || data.email)}</strong>`;
+      }
       updateBrevoStatusBadge(true);
       const infoBox = document.getElementById('brevoInfoBox');
       if (infoBox) infoBox.style.display = 'block';
@@ -2851,7 +2874,7 @@ async function notifySubscribers(post) {
 
   if (allEmails.length === 0) return;
 
-  const senderEmail = localStorage.getItem('webspide_newsletter_target_email') || 'azhar12082006@gmail.com';
+  const senderEmail = localStorage.getItem('webspide_brevo_sender_email') || localStorage.getItem('webspide_newsletter_target_email') || 'azhar12082006@gmail.com';
   const blogUrl = `https://azhar2006-collab.github.io/Webspideupdated/blog/${post.slug || ''}/`;
   const coverImage = post.image || '';
 

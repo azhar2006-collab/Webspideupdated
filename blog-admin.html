@@ -1985,16 +1985,31 @@ body {
               </div>
             </div>
             <div>
+              <label style="font-weight:600;display:block;margin-bottom:4px;font-size:12.5px;">Brevo Sender Email <span style="color:#64748b;font-weight:400;">(Must be a verified sender email in your Brevo account)</span></label>
+              <input type="email" id="settingBrevoSenderEmail" class="wp-input" style="width:100%;" placeholder="e.g. azhar12082006@gmail.com" />
+              <p style="font-size:11.5px;color:#64748b;margin-top:3px;">Tip: If you don't have custom domain DNS records set up for webspide.com yet, use your verified personal Gmail here.</p>
+            </div>
+            <div>
               <label style="font-weight:600;display:block;margin-bottom:4px;font-size:12.5px;">Brevo Contact List ID <span style="color:#64748b;font-weight:400;">(optional — leave 0 to use default list)</span></label>
               <input type="number" id="settingBrevoListId" class="wp-input" style="max-width:200px;" placeholder="0" min="0" />
             </div>
             <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
-              <button type="button" class="button button-primary" onclick="saveBrevoSettings()" style="background:#0ea5e9;border-color:#0284c7;font-weight:600;">Save API Key</button>
+              <button type="button" class="button button-primary" onclick="saveBrevoSettings()" style="background:#0ea5e9;border-color:#0284c7;font-weight:600;">Save Settings</button>
               <button type="button" class="button" onclick="testBrevoConnection()" id="btnTestBrevo">Test Connection</button>
               <span id="brevoTestResult" style="font-size:12.5px;font-weight:600;display:none;"></span>
             </div>
             <div id="brevoInfoBox" style="display:none;background:#f0f9ff;border:1px solid #bae6fd;border-radius:8px;padding:12px 16px;font-size:12.5px;color:#0369a1;line-height:1.6;">
-              <strong>✅ Brevo connected!</strong> Subscribers are now saved to your Brevo contact list and receive automatic welcome emails. Use the "📢 Notify Subscribers" checkbox when publishing blog posts to send email alerts.
+              <strong>✅ Brevo connected!</strong> Subscribers are saved to your Brevo contact list and receive automatic welcome emails.
+              
+              <!-- One-click test email tool -->
+              <div style="margin-top:12px;padding-top:12px;border-top:1px dashed #bae6fd;">
+                <label style="font-weight:700;display:block;margin-bottom:4px;color:#0369a1;">Send an Instant Test Email to Your Inbox:</label>
+                <div style="display:flex;gap:8px;max-width:440px;">
+                  <input type="email" id="inputTestDeliveryEmail" class="wp-input" style="flex:1;" placeholder="Enter your email to test..." />
+                  <button type="button" class="button" onclick="sendTestDeliveryEmail()" id="btnSendTestDelivery" style="background:#0284c7;color:#fff;border-color:#0369a1;font-weight:700;">Send Test 🚀</button>
+                </div>
+                <div id="testDeliveryResult" style="margin-top:8px;font-size:12.5px;font-weight:600;display:none;"></div>
+              </div>
             </div>
           </div>
         </div>
@@ -2543,10 +2558,13 @@ function switchView(viewName, editId = null) {
     // Pre-populate Brevo fields
     const brevoKeyInput = document.getElementById('settingBrevoApiKey');
     const brevoListInput = document.getElementById('settingBrevoListId');
+    const brevoSenderInput = document.getElementById('settingBrevoSenderEmail');
     const savedKey = localStorage.getItem('webspide_brevo_api_key') || '';
     const savedListId = localStorage.getItem('webspide_brevo_list_id') || '0';
+    const savedSender = localStorage.getItem('webspide_brevo_sender_email') || '';
     if (brevoKeyInput) brevoKeyInput.value = savedKey;
     if (brevoListInput) brevoListInput.value = savedListId;
+    if (brevoSenderInput) brevoSenderInput.value = savedSender;
     // Show connected state only if verified
     const isVerified = localStorage.getItem('webspide_brevo_verified') === 'true';
     if (savedKey && isVerified) {
@@ -2599,6 +2617,7 @@ function getBrevoApiKey() {
 function saveBrevoSettings() {
   const keyInput = document.getElementById('settingBrevoApiKey');
   const listInput = document.getElementById('settingBrevoListId');
+  const senderInput = document.getElementById('settingBrevoSenderEmail');
   if (!keyInput) return;
   const val = keyInput.value.trim();
   const listId = listInput ? (parseInt(listInput.value, 10) || 0) : 0;
@@ -2608,13 +2627,70 @@ function saveBrevoSettings() {
   }
   localStorage.setItem('webspide_brevo_api_key', val);
   localStorage.setItem('webspide_brevo_list_id', listId.toString());
-  showToast('Brevo API key saved!');
+  if (senderInput && senderInput.value.trim()) {
+    localStorage.setItem('webspide_brevo_sender_email', senderInput.value.trim());
+  }
+  showToast('Brevo settings saved!');
   if (val) {
-    showNotice('✅ Brevo API key saved. Click <strong>Test Connection</strong> to verify it works.');
-    updateBrevoStatusBadge(true);
+    showNotice('✅ Brevo settings saved. Click <strong>Test Connection</strong> to verify it works.');
   } else {
     updateBrevoStatusBadge(false);
     showNotice('Brevo API key cleared. Subscriber system will use FormSubmit fallback.', 'warning');
+  }
+}
+
+async function sendTestDeliveryEmail() {
+  const apiKey = getBrevoApiKey();
+  const input = document.getElementById('inputTestDeliveryEmail');
+  const btn = document.getElementById('btnSendTestDelivery');
+  const result = document.getElementById('testDeliveryResult');
+  const targetEmail = input ? input.value.trim() : '';
+  if (!targetEmail || !targetEmail.includes('@')) {
+    alert('Please enter a valid email address.');
+    return;
+  }
+  if (!apiKey) {
+    alert('Please save your Brevo API key first.');
+    return;
+  }
+  btn.disabled = true;
+  btn.textContent = 'Sending... ⏳';
+  result.style.display = 'block';
+  result.style.color = '#64748b';
+  result.textContent = 'Contacting Brevo to dispatch test email...';
+
+  const senderEmail = localStorage.getItem('webspide_brevo_sender_email') || 'azhar12082006@gmail.com';
+
+  try {
+    const res = await fetch('https://api.brevo.com/v3/smtp/email', {
+      method: 'POST',
+      headers: { 'api-key': apiKey, 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify({
+        sender: { name: 'Webspide Technologies', email: senderEmail },
+        to: [{ email: targetEmail }],
+        subject: "🎉 Webspide Test Email: Connection Successful!",
+        htmlContent: `<div style="font-family:sans-serif;padding:24px;border:1px solid #e2e8f0;border-radius:12px;max-width:500px;margin:auto;">
+<h2 style="color:#1F4FB2;">✅ Webspide & Brevo Email Test</h2>
+<p>Congratulations! Your Brevo integration is working properly.</p>
+<p><strong>Sender:</strong> ${escapeHtml(senderEmail)}<br><strong>Recipient:</strong> ${escapeHtml(targetEmail)}</p>
+<p style="color:#64748b;font-size:13px;">If you see this, email sending from Webspide is fully active!</p>
+</div>`
+      })
+    });
+    const data = await res.json().catch(() => ({}));
+    if (res.ok) {
+      result.style.color = '#008a20';
+      result.innerHTML = `✅ <strong>Sent successfully!</strong> (Message ID: ${data.messageId || 'ok'}). Check your inbox or Spam/Promotions folder for "${escapeHtml(targetEmail)}".`;
+    } else {
+      result.style.color = '#d63638';
+      result.innerHTML = `❌ <strong>Brevo Error:</strong> ${escapeHtml(data.message || res.statusText)}.<br><span style="font-weight:normal;color:#64748b;font-size:11.5px;">Tip: If sender is "${escapeHtml(senderEmail)}", check that it is a verified sender in Brevo.</span>`;
+    }
+  } catch(err) {
+    result.style.color = '#d63638';
+    result.textContent = `❌ Network error: ${err.message}`;
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Send Test 🚀';
   }
 }
 

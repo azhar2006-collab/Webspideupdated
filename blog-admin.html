@@ -2877,30 +2877,34 @@ ${coverImage ? `<tr><td style="padding:0;"><img src="${coverImage}" alt="${escap
 </td></tr>
 </table></td></tr></table></body></html>`;
 
-  const payload = {
-    sender: { name: 'Webspide Technologies', email: senderEmail },
-    to: allEmails.map(e => ({ email: e })),
-    subject: `📰 New Post: ${post.title}`,
-    htmlContent: htmlContent
-  };
+  // Send individual emails in parallel batches (5 at a time) for 100% subscriber privacy
+  showToast(`📢 Sending notification to ${allEmails.length} subscriber(s)...`);
+  let sentCount = 0;
+  
+  for (let i = 0; i < allEmails.length; i += 5) {
+    const batch = allEmails.slice(i, i + 5);
+    await Promise.all(batch.map(async (recipientEmail) => {
+      try {
+        const res = await fetch('https://api.brevo.com/v3/smtp/email', {
+          method: 'POST',
+          headers: { 'api-key': apiKey, 'Content-Type': 'application/json', 'Accept': 'application/json' },
+          body: JSON.stringify({
+            sender: { name: 'Webspide Technologies', email: senderEmail },
+            to: [{ email: recipientEmail }],
+            subject: `📰 New Post: ${post.title}`,
+            htmlContent: htmlContent
+          })
+        });
+        if (res.ok) sentCount++;
+      } catch(e) {}
+    }));
+  }
 
-  try {
-    const res = await fetch('https://api.brevo.com/v3/smtp/email', {
-      method: 'POST',
-      headers: { 'api-key': apiKey, 'Content-Type': 'application/json', 'Accept': 'application/json' },
-      body: JSON.stringify(payload)
-    });
-    if (res.ok) {
-      showToast(`📢 Email notification sent to ${allEmails.length} subscriber(s)!`);
-      showNotice(`✅ Blog notification emailed to <strong>${allEmails.length}</strong> subscriber(s) via Brevo.`);
-    } else {
-      const errData = await res.json().catch(() => ({}));
-      showToast('⚠️ Could not send subscriber notification.');
-      console.warn('Brevo notification error:', errData);
-    }
-  } catch(err) {
-    showToast('⚠️ Notification skipped (network error).');
-    console.warn('Brevo notify error:', err);
+  if (sentCount > 0) {
+    showToast(`📢 Email notification sent to ${sentCount} subscriber(s)!`);
+    showNotice(`✅ Blog notification emailed to <strong>${sentCount}</strong> subscriber(s) via Brevo.`);
+  } else {
+    showToast('⚠️ Could not dispatch subscriber notifications.');
   }
 }
 

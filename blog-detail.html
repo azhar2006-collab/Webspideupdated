@@ -1478,7 +1478,7 @@ h5{font-weight:800!important;color:#8B5CF6!important}
         <div class="detail-author-avatar" id="detailAuthorAvatar">W</div>
         <div class="detail-author-info">
           <h5 id="detailAuthorName">Author Name</h5>
-          <span id="detailAuthorRole">Webspide Engineering Team</span>
+          <span id="detailAuthorRole">Author</span>
         </div>
       </div>
     </header>
@@ -2270,7 +2270,7 @@ function renderArticle(blog) {
   const authorInitial = blog.author ? blog.author.charAt(0).toUpperCase() : 'W';
   document.getElementById('detailAuthorAvatar').textContent = authorInitial;
   document.getElementById('detailAuthorName').textContent = blog.author || 'Webspide Tech Team';
-  document.getElementById('detailAuthorRole').textContent = blog.authorRole || 'Engineering Team';
+  document.getElementById('detailAuthorRole').textContent = blog.authorRole || 'Author';
 
   // Article Body Content
   let contentHtml = blog.content || '';

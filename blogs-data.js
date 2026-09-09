@@ -6,7 +6,7 @@
 (function() {
   var blogPayload = {
   "version": "2.0.0",
-  "lastUpdated": "2026-09-09T11:57:26.268Z",
+  "lastUpdated": "2026-09-09T11:57:32.243Z",
   "categories": [
     "Web Development",
     "App Development",
@@ -35,7 +35,8 @@
       "metaTitle": "SYED AZHAR HUSSAIN A | WebSpide Technologies",
       "metaDescription": "cwecwecbhwegchwevhcbhwincjwncklmwe",
       "metaKeywords": "Webspide Technologies, web development, website development, software development, digital solutions, web design, technology company",
-      "createdAt": "2026-09-09T11:57:25.563Z"
+      "createdAt": "2026-09-09T11:57:25.563Z",
+      "updatedAt": "2026-09-09T11:57:31.459Z"
     },
     {
       "id": "blog_1",

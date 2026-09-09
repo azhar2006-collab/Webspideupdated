@@ -2547,13 +2547,16 @@ function switchView(viewName, editId = null) {
     const savedListId = localStorage.getItem('webspide_brevo_list_id') || '0';
     if (brevoKeyInput) brevoKeyInput.value = savedKey;
     if (brevoListInput) brevoListInput.value = savedListId;
-    // Show connected state
-    if (savedKey) {
+    // Show connected state only if verified
+    const isVerified = localStorage.getItem('webspide_brevo_verified') === 'true';
+    if (savedKey && isVerified) {
       updateBrevoStatusBadge(true);
       const infoBox = document.getElementById('brevoInfoBox');
       if (infoBox) infoBox.style.display = 'block';
     } else {
       updateBrevoStatusBadge(false);
+      const infoBox = document.getElementById('brevoInfoBox');
+      if (infoBox) infoBox.style.display = 'none';
     }
   } else if (viewName === 'subscribers') {
     document.getElementById('viewSubscribers').style.display = 'block';
@@ -2663,6 +2666,7 @@ async function testBrevoConnection() {
       if (verifiedSender) {
         localStorage.setItem('webspide_brevo_sender_email', verifiedSender);
       }
+      localStorage.setItem('webspide_brevo_verified', 'true');
       if (result) {
         result.style.display = 'inline';
         result.style.color = '#008a20';
@@ -2672,11 +2676,23 @@ async function testBrevoConnection() {
       const infoBox = document.getElementById('brevoInfoBox');
       if (infoBox) infoBox.style.display = 'block';
     } else {
-      if (result) { result.style.display = 'inline'; result.style.color = '#d63638'; result.textContent = `❌ Connection failed (${res.status}). Check your API key.`; }
+      localStorage.setItem('webspide_brevo_verified', 'false');
+      const errData = await res.json().catch(() => ({}));
+      const reason = errData.message ? ` (${errData.message})` : '';
+      if (result) {
+        result.style.display = 'inline';
+        result.style.color = '#d63638';
+        result.innerHTML = `❌ Connection failed (${res.status}): Check your API key.${escapeHtml(reason)}`;
+      }
       updateBrevoStatusBadge(false);
+      const infoBox = document.getElementById('brevoInfoBox');
+      if (infoBox) infoBox.style.display = 'none';
     }
   } catch(err) {
+    localStorage.setItem('webspide_brevo_verified', 'false');
     if (result) { result.style.display = 'inline'; result.style.color = '#d63638'; result.textContent = '❌ Network error. Make sure your API key is correct.'; }
+    const infoBox = document.getElementById('brevoInfoBox');
+    if (infoBox) infoBox.style.display = 'none';
   } finally {
     if (btn) { btn.disabled = false; btn.textContent = 'Test Connection'; }
   }

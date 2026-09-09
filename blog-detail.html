@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <title id="pageTitle">Blog Article | Webspide Technologies</title>
 <meta name="description" id="metaDesc" content="Read expert tech articles, software engineering insights, and digital strategies from Webspide Technologies." />
-<meta name="keywords" id="metaKeywords" content="Web development, custom software, micro-frontends, AI integration, tech insights" />
+<meta name="keywords" id="metaKeywords" content="Webspide Technologies, web development, website development, software development, digital solutions, web design, technology company" />
 <meta name="author" id="metaAuthor" content="Webspide Engineering Team" />
 <meta name="publisher" content="Webspide Technologies" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -1498,9 +1498,9 @@ h5{font-weight:800!important;color:#8B5CF6!important}
           <!-- Injected dynamically -->
         </article>
 
-        <!-- Tags / Keywords Row -->
+        <!-- Tags Row -->
         <div class="detail-tags-row" id="detailTagsRow" style="display:none;">
-          <strong style="font-size:0.92rem;color:#07164F;display:inline-flex;align-items:center;gap:6px;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1F4FB2" stroke-width="2.2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg> Tags / Keywords:</strong>
+          <strong style="font-size:0.92rem;color:#07164F;display:inline-flex;align-items:center;gap:6px;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#1F4FB2" stroke-width="2.2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg> Tags:</strong>
           <div id="detailTagsList" style="display:flex;flex-wrap:wrap;gap:8px;"></div>
         </div>
 
@@ -2096,16 +2096,14 @@ function renderArticle(blog) {
   const metaDesc = document.querySelector('meta[name="description"]');
   if (metaDesc) metaDesc.content = pageDesc;
 
-  // 3. Tags / Keywords (Set meta keywords from blog.tags)
+  // 3. Meta Keywords in Page Source (from blog.metaKeywords)
   let metaKeywords = document.querySelector('meta[name="keywords"]');
   if (!metaKeywords) {
     metaKeywords = document.createElement('meta');
     metaKeywords.name = 'keywords';
     document.head.appendChild(metaKeywords);
   }
-  const keywordsList = (blog.tags && Array.isArray(blog.tags) && blog.tags.length > 0)
-    ? blog.tags.join(', ')
-    : 'Web development, custom software, micro-frontends, AI integration, tech insights';
+  const keywordsList = blog.metaKeywords || (blog.tags && Array.isArray(blog.tags) && blog.tags.length > 0 ? blog.tags.join(', ') : 'Webspide Technologies, web development, website development, software development, digital solutions, web design, technology company');
   metaKeywords.content = keywordsList;
 
   // 4. Canonical URL (Same as page URL)

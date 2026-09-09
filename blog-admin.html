@@ -1352,6 +1352,17 @@ body {
         </a>
       </li>
 
+      <!-- SUBSCRIBERS (NEWSLETTER) -->
+      <li class="wp-menu-item" id="navItemSubscribers">
+        <a href="javascript:void(0)" onclick="switchView('subscribers')" style="display:flex;align-items:center;justify-content:space-between;">
+          <span style="display:flex;align-items:center;gap:10px;">
+            <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            <span>Subscribers</span>
+          </span>
+          <span class="wp-badge" id="subscribersCountBadge" style="background:#8B5CF6;color:#fff;font-size:10.5px;padding:2px 7px;border-radius:10px;font-weight:700;">0</span>
+        </a>
+      </li>
+
       <li class="wp-menu-item">
         <a href="blog.html" target="_blank">
           <svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
@@ -1442,7 +1453,7 @@ body {
             <h1 id="editorPageHeading">Add New Post</h1>
             <a href="javascript:void(0)" class="button" onclick="switchView('posts')">‹ Back to All Posts</a>
           </div>
-          <div style="display:flex;align-items:center;gap:10px;">
+          <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
             <div class="editor-autosave-status" id="autosaveStatusIndicator">
               <span class="autosave-dot"></span>
               <span id="autosaveStatusText">Autosave ready</span>
@@ -1452,6 +1463,11 @@ body {
               Preview
             </button>
             <button type="button" class="button" onclick="saveAsDraft()">Save Draft</button>
+            <!-- Notify Subscribers Checkbox (hidden for drafts) -->
+            <label id="notifySubscribersLabel" style="display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:600;color:#0369a1;background:#f0f9ff;border:1px solid #bae6fd;padding:5px 10px;border-radius:6px;cursor:pointer;white-space:nowrap;" title="Send email to all subscribers when this post is published">
+              <input type="checkbox" id="chkNotifySubscribers" style="accent-color:#0ea5e9;" />
+              📢 Notify Subscribers
+            </label>
             <button type="submit" class="button button-primary" id="btnPublishPost">Publish</button>
           </div>
         </div>
@@ -1648,6 +1664,16 @@ body {
                   <textarea id="postMetaDesc" class="wp-input" rows="3" style="width:100%;resize:vertical;" placeholder="e.g. Learn the differences between WordPress and custom website development and discover which solution is right for your business." oninput="updateSeoPreview()"></textarea>
                 </div>
 
+                <!-- Meta Keywords (Separate Box for Page Source Meta Tag) -->
+                <div>
+                  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+                    <label style="font-weight:600;font-size:12.5px;">Meta Keywords (Page Source):</label>
+                    <span style="font-size:11px;color:var(--wp-text-muted);">&lt;meta name=&quot;keywords&quot;&gt;</span>
+                  </div>
+                  <textarea id="postMetaKeywords" class="wp-input" rows="2" style="width:100%;resize:vertical;" placeholder="e.g. Webspide Technologies, web development, website development, software development, digital solutions, web design, technology company"></textarea>
+                  <span style="font-size:11.5px;color:var(--wp-text-muted);display:block;margin-top:3px;">Comma-separated keywords injected into page source <code>&lt;meta name=&quot;keywords&quot; content=&quot;...&quot;&gt;</code>.</span>
+                </div>
+
               </div>
             </div>
 
@@ -1743,10 +1769,10 @@ body {
               </div>
             </div>
 
-            <!-- 8. TAGS / KEYWORDS POSTBOX (Correction 8) -->
+            <!-- 8. TAGS POSTBOX (Correction 8) -->
             <div class="postbox">
               <div class="postbox-header">
-                <span>Tags / Keywords</span>
+                <span>Tags</span>
               </div>
               <div class="postbox-inside">
                 <label style="font-size:12px;color:var(--wp-text-muted);">Add tags (press Enter or comma):</label>
@@ -1926,7 +1952,55 @@ body {
           <button class="button" onclick="exportJsonData()">Download Export JSON</button>
         </div>
 
+        <!-- Newsletter Target Email Section -->
+        <div>
+          <h3 style="font-size:16px;margin-bottom:6px;display:flex;align-items:center;gap:8px;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#8B5CF6" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            Newsletter Autoresponder Email
+          </h3>
+          <p style="color:var(--wp-text-muted);margin-bottom:12px;">Recipient email that receives subscriber alerts and powers the FormSubmit auto-confirmation return email.</p>
+          <div style="display:flex;gap:10px;max-width:440px;">
+            <input type="email" id="settingNewsletterTargetEmail" class="wp-input" style="flex:1;" placeholder="azhar12082006@gmail.com" />
+            <button type="button" class="button button-primary" onclick="saveNewsletterTargetEmail()" style="background:#1F4FB2;border-color:#173e8e;font-weight:600;">Save</button>
+          </div>
+        </div>
+
         <hr style="border:none;border-top:1px solid var(--wp-border-light);" />
+
+        <!-- Brevo Email API Integration Section -->
+        <div>
+          <h3 style="font-size:16px;margin-bottom:6px;display:flex;align-items:center;gap:8px;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0ea5e9" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.5 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.42 1.1h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.91 8.5a16 16 0 0 0 6 6l1.27-.83a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            Brevo Email API Integration
+            <span id="brevoStatusBadge" style="font-size:11px;font-weight:700;padding:2px 10px;border-radius:20px;background:#f1f5f9;color:#64748b;margin-left:4px;">⚪ Not connected</span>
+          </h3>
+          <p style="color:var(--wp-text-muted);margin-bottom:14px;">Connect your free <a href="https://app.brevo.com/" target="_blank" style="color:#1F4FB2;font-weight:600;">Brevo account</a> to enable cloud subscriber storage, automatic welcome emails, and blog post notifications to all subscribers.</p>
+          
+          <div style="display:flex;flex-direction:column;gap:12px;max-width:520px;">
+            <div>
+              <label style="font-weight:600;display:block;margin-bottom:4px;font-size:12.5px;">Brevo API Key <span style="color:#64748b;font-weight:400;">(starts with <code>xkeysib-</code>)</span></label>
+              <div style="display:flex;gap:8px;">
+                <input type="password" id="settingBrevoApiKey" class="wp-input" style="flex:1;" placeholder="xkeysib-xxxxxxxxxxxxxxxxxxxxxxxx" />
+                <button type="button" class="button" onclick="toggleBrevoKeyVisibility()" id="btnToggleBrevoKey" title="Show/Hide API Key" style="padding:0 10px;">👁</button>
+              </div>
+            </div>
+            <div>
+              <label style="font-weight:600;display:block;margin-bottom:4px;font-size:12.5px;">Brevo Contact List ID <span style="color:#64748b;font-weight:400;">(optional — leave 0 to use default list)</span></label>
+              <input type="number" id="settingBrevoListId" class="wp-input" style="max-width:200px;" placeholder="0" min="0" />
+            </div>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
+              <button type="button" class="button button-primary" onclick="saveBrevoSettings()" style="background:#0ea5e9;border-color:#0284c7;font-weight:600;">Save API Key</button>
+              <button type="button" class="button" onclick="testBrevoConnection()" id="btnTestBrevo">Test Connection</button>
+              <span id="brevoTestResult" style="font-size:12.5px;font-weight:600;display:none;"></span>
+            </div>
+            <div id="brevoInfoBox" style="display:none;background:#f0f9ff;border:1px solid #bae6fd;border-radius:8px;padding:12px 16px;font-size:12.5px;color:#0369a1;line-height:1.6;">
+              <strong>✅ Brevo connected!</strong> Subscribers are now saved to your Brevo contact list and receive automatic welcome emails. Use the "📢 Notify Subscribers" checkbox when publishing blog posts to send email alerts.
+            </div>
+          </div>
+        </div>
+
+        <hr style="border:none;border-top:1px solid var(--wp-border-light);" />
+
 
         <!-- Reset Section -->
         <div>
@@ -1934,6 +2008,63 @@ body {
           <p style="color:var(--wp-text-muted);margin-bottom:12px;">Reset your blog inventory back to the default curated sample posts.</p>
           <button class="button" onclick="resetToSeedSamples()">Restore Sample Data</button>
         </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════
+         SCREEN 5: SUBSCRIBERS
+         ══════════════════════════════════════════════ -->
+    <section id="viewSubscribers" style="display:none;">
+      <div class="wrap-title-bar">
+        <h1>Newsletter Subscribers</h1>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          <button type="button" class="button" onclick="renderSubscribersTable()" style="display:inline-flex;align-items:center;gap:6px;">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+            Refresh
+          </button>
+          <button type="button" class="button button-primary" onclick="exportSubscribersCSV()" style="background:#1F4FB2;border-color:#173e8e;font-weight:600;display:inline-flex;align-items:center;gap:6px;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Export to CSV
+          </button>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));gap:14px;margin-bottom:20px;">
+        <div style="background:#fff;padding:16px 20px;border-radius:8px;border:1px solid var(--wp-border);box-shadow:0 1px 3px rgba(0,0,0,0.05);">
+          <span style="font-size:12px;color:var(--wp-text-muted);font-weight:600;text-transform:uppercase;">Total Subscribers</span>
+          <h2 style="font-size:28px;color:#07164F;margin-top:4px;" id="statTotalSubscribers">0</h2>
+        </div>
+        <div style="background:#fff;padding:16px 20px;border-radius:8px;border:1px solid var(--wp-border);box-shadow:0 1px 3px rgba(0,0,0,0.05);">
+          <span style="font-size:12px;color:var(--wp-text-muted);font-weight:600;text-transform:uppercase;">Data Source</span>
+          <h2 id="subscriberSourceLabel" style="font-size:14px;color:#007cb2;margin-top:8px;display:flex;align-items:center;gap:6px;">
+            <span style="display:inline-block;width:10px;height:10px;background:#64748b;border-radius:50%;"></span>
+            Checking...
+          </h2>
+        </div>
+        <div style="background:#fff;padding:16px 20px;border-radius:8px;border:1px solid var(--wp-border);box-shadow:0 1px 3px rgba(0,0,0,0.05);">
+          <span style="font-size:12px;color:var(--wp-text-muted);font-weight:600;text-transform:uppercase;">Welcome Email</span>
+          <h2 id="welcomeEmailStatusLabel" style="font-size:14px;margin-top:8px;display:flex;align-items:center;gap:6px;color:#008a20;">
+            <span style="display:inline-block;width:10px;height:10px;background:#008a20;border-radius:50%;"></span>
+            Active
+          </h2>
+        </div>
+      </div>
+
+      <div class="settings-card">
+        <table class="wp-list-table">
+          <thead>
+            <tr>
+              <th style="width:50px;">#</th>
+              <th>Subscriber Email</th>
+              <th>Subscribed Date</th>
+              <th>Status</th>
+              <th style="width:100px;text-align:center;">Action</th>
+            </tr>
+          </thead>
+          <tbody id="subscribersTableBody">
+            <!-- Dynamically Rendered -->
+          </tbody>
+        </table>
       </div>
     </section>
 
@@ -2376,8 +2507,11 @@ function showNotice(msg, type='success') {
    VIEW SWITCHER (WP Admin Screens)
    ══════════════════════════════════════════════ */
 function switchView(viewName, editId = null) {
-  const views = ['viewAllPosts', 'viewPostEditor', 'viewCategories', 'viewSettings'];
-  views.forEach(v => document.getElementById(v).style.display = 'none');
+  const views = ['viewAllPosts', 'viewPostEditor', 'viewCategories', 'viewSettings', 'viewSubscribers'];
+  views.forEach(v => {
+    const el = document.getElementById(v);
+    if (el) el.style.display = 'none';
+  });
 
   // Submenu states
   document.getElementById('subAllPosts').classList.remove('current-sub');
@@ -2402,6 +2536,371 @@ function switchView(viewName, editId = null) {
     renderCategoriesTable();
   } else if (viewName === 'settings') {
     document.getElementById('viewSettings').style.display = 'block';
+    const emailInput = document.getElementById('settingNewsletterTargetEmail');
+    if (emailInput) {
+      emailInput.value = localStorage.getItem('webspide_newsletter_target_email') || 'azhar12082006@gmail.com';
+    }
+    // Pre-populate Brevo fields
+    const brevoKeyInput = document.getElementById('settingBrevoApiKey');
+    const brevoListInput = document.getElementById('settingBrevoListId');
+    const savedKey = localStorage.getItem('webspide_brevo_api_key') || '';
+    const savedListId = localStorage.getItem('webspide_brevo_list_id') || '0';
+    if (brevoKeyInput) brevoKeyInput.value = savedKey;
+    if (brevoListInput) brevoListInput.value = savedListId;
+    // Show connected state
+    if (savedKey) {
+      updateBrevoStatusBadge(true);
+      const infoBox = document.getElementById('brevoInfoBox');
+      if (infoBox) infoBox.style.display = 'block';
+    } else {
+      updateBrevoStatusBadge(false);
+    }
+  } else if (viewName === 'subscribers') {
+    document.getElementById('viewSubscribers').style.display = 'block';
+    renderSubscribersTable();
+  }
+}
+
+/* ══════════════════════════════════════════════
+   NEWSLETTER SUBSCRIBERS MANAGEMENT
+   ══════════════════════════════════════════════ */
+function getSubscribers() {
+  try {
+    return JSON.parse(localStorage.getItem('webspide_subscribers') || '[]');
+  } catch(e) {
+    return [];
+  }
+}
+
+
+function saveNewsletterTargetEmail() {
+  const input = document.getElementById('settingNewsletterTargetEmail');
+  if (!input) return;
+  const val = input.value.trim();
+  if (val && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val)) {
+    showNotice('Please enter a valid email address.', 'error');
+    return;
+  }
+  localStorage.setItem('webspide_newsletter_target_email', val || 'azhar12082006@gmail.com');
+  showToast('Newsletter recipient email updated!');
+  showNotice('✅ Newsletter recipient email updated successfully.');
+}
+
+/* ══════════════════════════════════════════════
+   BREVO EMAIL API INTEGRATION
+   ══════════════════════════════════════════════ */
+function getBrevoApiKey() {
+  return localStorage.getItem('webspide_brevo_api_key') || '';
+}
+
+function saveBrevoSettings() {
+  const keyInput = document.getElementById('settingBrevoApiKey');
+  const listInput = document.getElementById('settingBrevoListId');
+  if (!keyInput) return;
+  const val = keyInput.value.trim();
+  const listId = listInput ? (parseInt(listInput.value, 10) || 0) : 0;
+  if (val && !val.startsWith('xkeysib-')) {
+    showNotice('❌ Invalid Brevo API key. It should start with <code>xkeysib-</code>.', 'error');
+    return;
+  }
+  localStorage.setItem('webspide_brevo_api_key', val);
+  localStorage.setItem('webspide_brevo_list_id', listId.toString());
+  showToast('Brevo API key saved!');
+  if (val) {
+    showNotice('✅ Brevo API key saved. Click <strong>Test Connection</strong> to verify it works.');
+    updateBrevoStatusBadge(true);
+  } else {
+    updateBrevoStatusBadge(false);
+    showNotice('Brevo API key cleared. Subscriber system will use FormSubmit fallback.', 'warning');
+  }
+}
+
+function toggleBrevoKeyVisibility() {
+  const input = document.getElementById('settingBrevoApiKey');
+  const btn = document.getElementById('btnToggleBrevoKey');
+  if (!input) return;
+  if (input.type === 'password') {
+    input.type = 'text';
+    if (btn) btn.textContent = '🙈';
+  } else {
+    input.type = 'password';
+    if (btn) btn.textContent = '👁';
+  }
+}
+
+async function testBrevoConnection() {
+  const apiKey = getBrevoApiKey();
+  const btn = document.getElementById('btnTestBrevo');
+  const result = document.getElementById('brevoTestResult');
+  if (!apiKey) {
+    if (result) { result.style.display = 'inline'; result.style.color = '#d63638'; result.textContent = '❌ No API key saved. Please save your key first.'; }
+    return;
+  }
+  if (btn) { btn.disabled = true; btn.textContent = 'Testing...'; }
+  if (result) { result.style.display = 'inline'; result.style.color = '#64748b'; result.textContent = 'Connecting to Brevo...'; }
+  try {
+    const res = await fetch('https://api.brevo.com/v3/account', {
+      headers: { 'api-key': apiKey, 'Accept': 'application/json' }
+    });
+    if (res.ok) {
+      const data = await res.json();
+      if (result) { result.style.display = 'inline'; result.style.color = '#008a20'; result.textContent = `✅ Connected! Account: ${data.email || 'verified'}`; }
+      updateBrevoStatusBadge(true);
+      const infoBox = document.getElementById('brevoInfoBox');
+      if (infoBox) infoBox.style.display = 'block';
+    } else {
+      if (result) { result.style.display = 'inline'; result.style.color = '#d63638'; result.textContent = `❌ Connection failed (${res.status}). Check your API key.`; }
+      updateBrevoStatusBadge(false);
+    }
+  } catch(err) {
+    if (result) { result.style.display = 'inline'; result.style.color = '#d63638'; result.textContent = '❌ Network error. Make sure your API key is correct.'; }
+  } finally {
+    if (btn) { btn.disabled = false; btn.textContent = 'Test Connection'; }
+  }
+}
+
+function updateBrevoStatusBadge(connected) {
+  const badge = document.getElementById('brevoStatusBadge');
+  if (!badge) return;
+  if (connected) {
+    badge.textContent = '🟢 Connected';
+    badge.style.background = '#e6f4ea';
+    badge.style.color = '#137333';
+  } else {
+    badge.textContent = '⚪ Not connected';
+    badge.style.background = '#f1f5f9';
+    badge.style.color = '#64748b';
+  }
+}
+
+async function fetchBrevoContacts() {
+  const apiKey = getBrevoApiKey();
+  if (!apiKey) return null;
+  try {
+    const listId = parseInt(localStorage.getItem('webspide_brevo_list_id') || '0', 10);
+    let url = 'https://api.brevo.com/v3/contacts?limit=1000&sort=desc';
+    if (listId > 0) url = `https://api.brevo.com/v3/contacts/lists/${listId}/contacts?limit=1000&sort=desc`;
+    const res = await fetch(url, {
+      headers: { 'api-key': apiKey, 'Accept': 'application/json' }
+    });
+    if (!res.ok) return null;
+    const data = await res.json();
+    // Handle both /contacts and /contacts/lists/:id/contacts response shapes
+    const contacts = data.contacts || data.contacts || [];
+    return contacts.map(c => ({
+      email: c.email,
+      date: c.createdAt || c.modifiedAt || null,
+      status: (c.emailBlacklisted || c.smsBlacklisted) ? 'Unsubscribed' : 'Active'
+    }));
+  } catch(e) {
+    return null;
+  }
+}
+
+async function renderSubscribersTable() {
+  const tbody = document.getElementById('subscribersTableBody');
+  const badge = document.getElementById('subscribersCountBadge');
+  const statTotal = document.getElementById('statTotalSubscribers');
+  const sourceLabel = document.getElementById('subscriberSourceLabel');
+  const welcomeLabel = document.getElementById('welcomeEmailStatusLabel');
+  const apiKey = getBrevoApiKey();
+
+  if (tbody) tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;padding:36px 20px;color:var(--wp-text-muted);font-size:13px;">Loading subscribers...</td></tr>`;
+
+  let subs = [];
+  let usingBrevo = false;
+
+  if (apiKey) {
+    // Try Brevo cloud first
+    const brevoContacts = await fetchBrevoContacts();
+    if (brevoContacts !== null) {
+      subs = brevoContacts;
+      usingBrevo = true;
+      // Merge any local-only entries that may not be in Brevo yet
+      const localSubs = getSubscribers();
+      localSubs.forEach(ls => {
+        if (!subs.some(s => s.email.toLowerCase() === ls.email.toLowerCase())) {
+          subs.push(ls);
+        }
+      });
+    } else {
+      subs = getSubscribers();
+    }
+  } else {
+    subs = getSubscribers();
+  }
+
+  if (badge) badge.textContent = subs.length;
+  if (statTotal) statTotal.textContent = subs.length;
+
+  // Update source label
+  if (sourceLabel) {
+    if (usingBrevo) {
+      sourceLabel.innerHTML = '<span style="display:inline-block;width:10px;height:10px;background:#008a20;border-radius:50%;"></span> Brevo Cloud ☁️';
+      sourceLabel.style.color = '#008a20';
+    } else {
+      sourceLabel.innerHTML = '<span style="display:inline-block;width:10px;height:10px;background:#dba617;border-radius:50%;"></span> Local Browser';
+      sourceLabel.style.color = '#dba617';
+    }
+  }
+
+  // Update welcome email status
+  if (welcomeLabel) {
+    if (apiKey) {
+      welcomeLabel.innerHTML = '<span style="display:inline-block;width:10px;height:10px;background:#008a20;border-radius:50%;"></span> Active (Brevo)';
+      welcomeLabel.style.color = '#008a20';
+    } else {
+      welcomeLabel.innerHTML = '<span style="display:inline-block;width:10px;height:10px;background:#008a20;border-radius:50%;"></span> Active (FormSubmit)';
+      welcomeLabel.style.color = '#008a20';
+    }
+  }
+
+  if (!tbody) return;
+
+  if (subs.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;padding:36px 20px;color:var(--wp-text-muted);font-size:13px;">No newsletter subscribers yet. Once visitors enter their email on the blog, they will appear here!</td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = subs.map((s, idx) => {
+    const d = s.date ? new Date(s.date).toLocaleString() : 'Recent';
+    const emailEscaped = escapeHtml(s.email);
+    const statusColor = s.status === 'Unsubscribed' ? '#fef9c3' : '#e6f4ea';
+    const statusTextColor = s.status === 'Unsubscribed' ? '#854d0e' : '#137333';
+    const statusLabel = s.status || 'Active';
+    return `<tr>
+      <td>${idx + 1}</td>
+      <td><strong>${emailEscaped}</strong></td>
+      <td style="color:#64748b;font-size:12.5px;">${d}</td>
+      <td><span style="display:inline-block;padding:3px 8px;border-radius:12px;font-size:11px;font-weight:700;background:${statusColor};color:${statusTextColor};">${statusLabel}</span></td>
+      <td style="text-align:center;">
+        <button type="button" class="button" onclick="deleteSubscriber('${encodeURIComponent(s.email)}')" style="color:#d63638;border-color:#fca5a5;font-size:11.5px;padding:2px 8px;">Remove</button>
+      </td>
+    </tr>`;
+  }).join('');
+}
+
+async function deleteSubscriber(encodedEmail) {
+  const email = decodeURIComponent(encodedEmail);
+  if (!confirm(`Are you sure you want to remove "${email}" from the subscribers list?`)) return;
+  // Remove from localStorage
+  let subs = getSubscribers().filter(s => s.email.toLowerCase() !== email.toLowerCase());
+  localStorage.setItem('webspide_subscribers', JSON.stringify(subs));
+  // Also remove from Brevo if connected
+  const apiKey = getBrevoApiKey();
+  if (apiKey) {
+    try {
+      await fetch(`https://api.brevo.com/v3/contacts/${encodeURIComponent(email)}`, {
+        method: 'DELETE',
+        headers: { 'api-key': apiKey }
+      });
+    } catch(e) {}
+  }
+  renderSubscribersTable();
+  showToast('Subscriber removed.');
+}
+
+async function exportSubscribersCSV() {
+  const apiKey = getBrevoApiKey();
+  let subs = [];
+  if (apiKey) {
+    const brevoContacts = await fetchBrevoContacts();
+    if (brevoContacts && brevoContacts.length > 0) {
+      subs = brevoContacts;
+    } else {
+      subs = getSubscribers();
+    }
+  } else {
+    subs = getSubscribers();
+  }
+  if (subs.length === 0) {
+    showToast('No subscribers to export.');
+    return;
+  }
+  let csv = 'Email,SubscribedDate,Status\n';
+  subs.forEach(s => {
+    csv += `"${s.email.replace(/"/g, '""')}","${s.date || ''}","${s.status || 'Active'}"\n`;
+  });
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const link = document.createElement('a');
+  link.href = URL.createObjectURL(blob);
+  link.download = `webspide_subscribers_${new Date().toISOString().split('T')[0]}.csv`;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  showToast(`Exported ${subs.length} subscriber(s) to CSV!`);
+}
+
+async function notifySubscribers(post) {
+  const apiKey = getBrevoApiKey();
+  if (!apiKey) return;
+
+  // Fetch all contacts from Brevo
+  const contacts = await fetchBrevoContacts();
+  const localSubs = getSubscribers();
+  let allEmails = [];
+
+  if (contacts && contacts.length > 0) {
+    contacts.filter(c => c.status !== 'Unsubscribed').forEach(c => {
+      if (!allEmails.includes(c.email)) allEmails.push(c.email);
+    });
+  }
+  localSubs.forEach(s => {
+    if (!allEmails.includes(s.email)) allEmails.push(s.email);
+  });
+
+  if (allEmails.length === 0) return;
+
+  const senderEmail = localStorage.getItem('webspide_newsletter_target_email') || 'azhar12082006@gmail.com';
+  const blogUrl = `https://azhar2006-collab.github.io/Webspideupdated/blog/${post.slug || ''}/`;
+  const coverImage = post.image || '';
+
+  const htmlContent = `<!DOCTYPE html><html><body style="margin:0;padding:0;background:#f0f4ff;font-family:Arial,sans-serif;">
+<table width="100%" cellpadding="0" cellspacing="0"><tr><td align="center" style="padding:40px 20px;">
+<table width="620" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 4px 24px rgba(31,79,178,0.10);">
+<tr><td style="background:linear-gradient(135deg,#1F4FB2,#8B5CF6);padding:30px 40px;text-align:center;">
+<h1 style="color:#fff;font-size:20px;margin:0 0 6px;font-weight:700;">📰 New Article from Webspide</h1>
+<p style="color:rgba(255,255,255,0.85);font-size:13px;margin:0;">You're receiving this because you subscribed to our blog</p>
+</td></tr>
+${coverImage ? `<tr><td style="padding:0;"><img src="${coverImage}" alt="${escapeHtml(post.title)}" style="width:100%;max-height:300px;object-fit:cover;display:block;" /></td></tr>` : ''}
+<tr><td style="padding:32px 40px;">
+<p style="color:#64748b;font-size:12px;font-weight:700;text-transform:uppercase;margin:0 0 8px;">${escapeHtml(post.category || 'Blog')}</p>
+<h2 style="color:#07164F;font-size:22px;font-weight:800;margin:0 0 14px;line-height:1.35;">${escapeHtml(post.title)}</h2>
+<p style="color:#334155;font-size:14px;line-height:1.7;margin:0 0 24px;">${escapeHtml(post.excerpt || '')}</p>
+<div style="text-align:center;margin:24px 0;">
+<a href="${blogUrl}" style="display:inline-block;background:linear-gradient(90deg,#1F4FB2,#8B5CF6);color:#fff;font-weight:700;font-size:15px;padding:14px 36px;border-radius:50px;text-decoration:none;">Read Full Article →</a>
+</div>
+<p style="color:#64748b;font-size:13px;">By <strong>${escapeHtml(post.author || 'Webspide Team')}</strong> · ${post.readTime || '5 min read'}</p>
+</td></tr>
+<tr><td style="background:#f8faff;padding:20px 40px;text-align:center;border-top:1px solid #e2e8f0;">
+<p style="color:#64748b;font-size:12px;margin:0;">© 2026 Webspide Technologies · <a href="https://azhar2006-collab.github.io/Webspideupdated/blog.html" style="color:#1F4FB2;">Unsubscribe</a></p>
+</td></tr>
+</table></td></tr></table></body></html>`;
+
+  const payload = {
+    sender: { name: 'Webspide Technologies', email: senderEmail },
+    to: allEmails.map(e => ({ email: e })),
+    subject: `📰 New Post: ${post.title}`,
+    htmlContent: htmlContent
+  };
+
+  try {
+    const res = await fetch('https://api.brevo.com/v3/smtp/email', {
+      method: 'POST',
+      headers: { 'api-key': apiKey, 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    if (res.ok) {
+      showToast(`📢 Email notification sent to ${allEmails.length} subscriber(s)!`);
+      showNotice(`✅ Blog notification emailed to <strong>${allEmails.length}</strong> subscriber(s) via Brevo.`);
+    } else {
+      const errData = await res.json().catch(() => ({}));
+      showToast('⚠️ Could not send subscriber notification.');
+      console.warn('Brevo notification error:', errData);
+    }
+  } catch(err) {
+    showToast('⚠️ Notification skipped (network error).');
+    console.warn('Brevo notify error:', err);
   }
 }
 
@@ -3234,6 +3733,7 @@ function performAutosave() {
     imageAlt: document.getElementById('postImageAlt').value,
     metaTitle: document.getElementById('postMetaTitle').value,
     metaDesc: document.getElementById('postMetaDesc').value,
+    metaKeywords: document.getElementById('postMetaKeywords') ? document.getElementById('postMetaKeywords').value : '',
     editId: document.getElementById('editPostId').value,
     timestamp: new Date().toISOString()
   };
@@ -3335,6 +3835,7 @@ function resetEditorForm() {
   document.getElementById('postImageAlt').value = '';
   document.getElementById('postMetaTitle').value = '';
   document.getElementById('postMetaDesc').value = '';
+  if (document.getElementById('postMetaKeywords')) document.getElementById('postMetaKeywords').value = '';
 
   const now = new Date();
   const dateStr = now.toISOString().split('T')[0];
@@ -3374,6 +3875,9 @@ function loadPostIntoEditor(id) {
   document.getElementById('postImageAlt').value = b.imageAlt || '';
   document.getElementById('postMetaTitle').value = b.metaTitle || '';
   document.getElementById('postMetaDesc').value = b.metaDescription || '';
+  if (document.getElementById('postMetaKeywords')) {
+    document.getElementById('postMetaKeywords').value = b.metaKeywords || (Array.isArray(b.tags) && b.tags.length ? b.tags.join(', ') : '');
+  }
 
   const postDate = b.date || new Date().toISOString().split('T')[0];
   const postTime = b.publishTime || (b.publishDateTime ? b.publishDateTime.split('T')[1]?.substring(0,5) : '12:00');
@@ -3418,6 +3922,7 @@ function saveCurrentPost() {
   const imageAlt = document.getElementById('postImageAlt').value.trim() || title;
   const metaTitle = document.getElementById('postMetaTitle').value.trim() || `${title} | WebSpide Technologies`;
   const metaDescription = document.getElementById('postMetaDesc').value.trim() || excerpt;
+  const metaKeywords = (document.getElementById('postMetaKeywords') ? document.getElementById('postMetaKeywords').value.trim() : '') || 'Webspide Technologies, web development, website development, software development, digital solutions, web design, technology company';
   const tags = [...currentEditingTags];
 
   // Correction 8: Mandatory validation check for Title, Permalink, Description (Excerpt), and Featured Image
@@ -3491,7 +3996,7 @@ function saveCurrentPost() {
         publishTime: time,
         publishDateTime,
         image, imageAlt,
-        metaTitle, metaDescription,
+        metaTitle, metaDescription, metaKeywords,
         updatedAt: new Date().toISOString()
       };
       saveBlogs();
@@ -3503,6 +4008,13 @@ function saveCurrentPost() {
         showToast('Draft saved successfully.');
         showNotice(`Draft saved. <a href="${getBlogDetailUrl({id, slug, title})}" target="_blank" style="margin-left:8px;font-weight:700;">Preview post ↗</a>`);
       } else {
+        // Notify subscribers if checkbox is checked
+        const notifyChk = document.getElementById('chkNotifySubscribers');
+        if (notifyChk && notifyChk.checked) {
+          const updatedPost = blogs.find(b => b.id === id);
+          if (updatedPost) notifySubscribers(updatedPost);
+          notifyChk.checked = false;
+        }
         const ghCfg = getGitHubConfig();
         if (ghCfg.token) {
           showToast('Post updated! Syncing with GitHub...');
@@ -3522,7 +4034,7 @@ function saveCurrentPost() {
       publishTime: time,
       publishDateTime,
       image, imageAlt,
-      metaTitle, metaDescription,
+      metaTitle, metaDescription, metaKeywords,
       createdAt: new Date().toISOString()
     };
     blogs.unshift(newPost);
@@ -3535,6 +4047,12 @@ function saveCurrentPost() {
       showToast('Draft saved successfully.');
       showNotice(`Draft created. <a href="${getBlogDetailUrl({id: newId, slug, title})}" target="_blank" style="margin-left:8px;font-weight:700;">Preview post ↗</a>`);
     } else {
+      // Notify subscribers if checkbox is checked
+      const notifyChk = document.getElementById('chkNotifySubscribers');
+      if (notifyChk && notifyChk.checked) {
+        notifySubscribers(newPost);
+        notifyChk.checked = false;
+      }
       const ghCfg = getGitHubConfig();
       if (ghCfg.token) {
         showToast('Post published! Syncing with GitHub...');

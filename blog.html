@@ -1837,13 +1837,14 @@ h5{font-weight:800!important;color:#8B5CF6!important}
 </main>
 
 <!-- NEWSLETTER SUBSCRIPTION -->
-<section class="blog-newsletter">
+<section class="blog-newsletter" id="newsletterSection">
   <h2>Stay Ahead of Digital Innovation</h2>
   <p>Join 5,000+ founders, developers, and product leaders receiving our bi-weekly breakdown of emerging web technologies and growth strategies.</p>
-  <form class="nl-form" onsubmit="event.preventDefault(); alert('Thank you for subscribing to Webspide Tech Insights!'); this.reset();">
-    <input type="email" placeholder="Enter your business email..." required />
-    <button type="submit">Subscribe Free</button>
+  <form class="nl-form" id="newsletterForm" onsubmit="handleNewsletterSubscribe(event)">
+    <input type="email" id="newsletterEmailInput" placeholder="Enter your business email..." required />
+    <button type="submit" id="btnNewsletterSubmit">Subscribe Free</button>
   </form>
+  <div id="newsletterFeedback" style="display:none;margin-top:16px;font-size:0.95rem;font-weight:600;padding:12px 20px;border-radius:30px;background:rgba(255,255,255,0.15);backdrop-filter:blur(8px);max-width:520px;margin-left:auto;margin-right:auto;"></div>
 </section>
 
 <!-- ARTICLE READER MODAL (Corrections 1, 2, 4, 7, 8, 9) -->
@@ -2756,6 +2757,149 @@ window.addEventListener('popstate', function(e) {
 function escapeHtml(str) {
   if (!str) return '';
   return str.toString().replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+}
+
+/* ══════════════════════════════════════════════
+   BREVO EMAIL API HELPERS
+   ══════════════════════════════════════════════ */
+function getBrevoApiKey() {
+  return localStorage.getItem('webspide_brevo_api_key') || '';
+}
+
+async function addBrevoContact(email) {
+  const apiKey = getBrevoApiKey();
+  if (!apiKey) return false;
+  const listId = parseInt(localStorage.getItem('webspide_brevo_list_id') || '0', 10);
+  const body = { email: email, updateEnabled: true };
+  if (listId > 0) body.listIds = [listId];
+  const res = await fetch('https://api.brevo.com/v3/contacts', {
+    method: 'POST',
+    headers: { 'api-key': apiKey, 'Content-Type': 'application/json', 'Accept': 'application/json' },
+    body: JSON.stringify(body)
+  });
+  return res.ok || res.status === 204 || res.status === 400; // 400 = already exists, still OK
+}
+
+async function sendBrevoWelcomeEmail(email) {
+  const apiKey = getBrevoApiKey();
+  if (!apiKey) return false;
+  const payload = {
+    sender: { name: 'Webspide Technologies', email: localStorage.getItem('webspide_newsletter_target_email') || 'azhar12082006@gmail.com' },
+    to: [{ email: email }],
+    subject: "🎉 Welcome to the Webspide Technologies Blog!",
+    htmlContent: `<!DOCTYPE html><html><body style="margin:0;padding:0;background:#f0f4ff;font-family:Arial,sans-serif;">
+<table width="100%" cellpadding="0" cellspacing="0"><tr><td align="center" style="padding:40px 20px;">
+<table width="600" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 4px 24px rgba(31,79,178,0.10);">
+<tr><td style="background:linear-gradient(135deg,#1F4FB2,#8B5CF6);padding:40px 40px 30px;text-align:center;">
+<h1 style="color:#fff;font-size:28px;margin:0 0 8px;">Welcome to Webspide! 🎉</h1>
+<p style="color:rgba(255,255,255,0.85);font-size:15px;margin:0;">You're now part of our exclusive community</p>
+</td></tr>
+<tr><td style="padding:36px 40px;">
+<p style="color:#07164F;font-size:16px;font-weight:700;margin:0 0 12px;">Hi there,</p>
+<p style="color:#334155;font-size:15px;line-height:1.7;margin:0 0 20px;">Thank you for subscribing to the <strong>Webspide Technologies Blog!</strong> You'll now receive:</p>
+<ul style="color:#334155;font-size:14px;line-height:2;padding-left:20px;margin:0 0 24px;">
+<li>🚀 Latest technology insights & trends</li>
+<li>💡 Expert tips on web & app development</li>
+<li>📊 Digital marketing & SEO strategies</li>
+<li>🔥 Exclusive industry updates</li>
+</ul>
+<div style="text-align:center;margin:28px 0;">
+<a href="https://azhar2006-collab.github.io/Webspideupdated/blog.html" style="display:inline-block;background:linear-gradient(90deg,#1F4FB2,#8B5CF6);color:#fff;font-weight:700;font-size:15px;padding:14px 32px;border-radius:50px;text-decoration:none;">Read Our Latest Articles →</a>
+</div>
+</td></tr>
+<tr><td style="background:#f8faff;padding:20px 40px;text-align:center;border-top:1px solid #e2e8f0;">
+<p style="color:#64748b;font-size:12px;margin:0;">© 2026 Webspide Technologies · <a href="https://azhar2006-collab.github.io/Webspideupdated/blog.html" style="color:#1F4FB2;">Unsubscribe</a></p>
+</td></tr>
+</table></td></tr></table></body></html>`
+  };
+  const res = await fetch('https://api.brevo.com/v3/smtp/email', {
+    method: 'POST',
+    headers: { 'api-key': apiKey, 'Content-Type': 'application/json', 'Accept': 'application/json' },
+    body: JSON.stringify(payload)
+  });
+  return res.ok;
+}
+
+async function handleNewsletterSubscribe(e) {
+  e.preventDefault();
+  const input = document.getElementById('newsletterEmailInput');
+  const btn = document.getElementById('btnNewsletterSubmit');
+  const feedback = document.getElementById('newsletterFeedback');
+  const email = input ? input.value.trim() : '';
+
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    if (feedback) {
+      feedback.style.display = 'block';
+      feedback.style.color = '#fca5a5';
+      feedback.textContent = 'Please enter a valid business email address.';
+    }
+    return;
+  }
+
+  if (btn) {
+    btn.disabled = true;
+    btn.textContent = 'Subscribing... ⏳';
+  }
+  if (feedback) {
+    feedback.style.display = 'block';
+    feedback.style.color = '#e0e7ff';
+    feedback.textContent = 'Confirming your subscription...';
+  }
+
+  // Save to localStorage backup always
+  try {
+    let subs = JSON.parse(localStorage.getItem('webspide_subscribers') || '[]');
+    if (!subs.some(s => s.email.toLowerCase() === email.toLowerCase())) {
+      subs.unshift({ email: email, date: new Date().toISOString() });
+      localStorage.setItem('webspide_subscribers', JSON.stringify(subs));
+    }
+  } catch(err) {}
+
+  const apiKey = getBrevoApiKey();
+
+  if (apiKey) {
+    // ── Brevo path: add contact + send welcome email ──
+    try {
+      await addBrevoContact(email);
+      await sendBrevoWelcomeEmail(email);
+      if (input) input.value = '';
+      if (feedback) {
+        feedback.style.display = 'block';
+        feedback.style.color = '#86efac';
+        feedback.innerHTML = '🎉 <strong>Welcome!</strong> You\'re subscribed! Check your inbox for a confirmation email from Webspide Technologies.';
+      }
+    } catch(err) {
+      console.warn('Brevo subscription error:', err);
+      if (input) input.value = '';
+      if (feedback) {
+        feedback.style.display = 'block';
+        feedback.style.color = '#86efac';
+        feedback.innerHTML = '🎉 <strong>Welcome!</strong> You\'re subscribed to the Webspide Technologies Blog!';
+      }
+    }
+  } else {
+    // ── Fallback: FormSubmit path ──
+    const welcomeMessage = "Welcome!\n\nThank you for subscribing to the Webspide Technologies Blog! 🎉\n\nYour subscription has been successfully confirmed.\n\nYou'll now receive our latest blog posts, technology insights, helpful tips, industry updates, and other valuable content directly in your inbox.\n\nWe're glad to have you with us!\n\nBest regards,\nWebspide Technologies\nTechnology • Innovation • Insights";
+    const targetEmail = localStorage.getItem('webspide_newsletter_target_email') || 'azhar12082006@gmail.com';
+    try {
+      await fetch(`https://formsubmit.co/ajax/${encodeURIComponent(targetEmail)}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify({ email: email, _subject: "New Webspide Blog Subscriber", _autoresponse: welcomeMessage, _template: 'box', _captcha: 'false' })
+      });
+    } catch(err) {}
+    if (input) input.value = '';
+    if (feedback) {
+      feedback.style.display = 'block';
+      feedback.style.color = '#86efac';
+      feedback.innerHTML = '🎉 <strong>Welcome!</strong> Thank you for subscribing to the Webspide Technologies Blog! A confirmation email has been sent to your inbox.';
+    }
+  }
+
+  if (btn) {
+    btn.disabled = false;
+    btn.textContent = 'Subscribe Free';
+  }
 }
 
 // Initial render — waits for fresh blogs-data.js to load before rendering

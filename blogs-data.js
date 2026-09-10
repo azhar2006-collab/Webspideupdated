@@ -6,7 +6,7 @@
 (function() {
   var blogPayload = {
   "version": "2.0.0",
-  "lastUpdated": "2026-09-10T15:30:45.208Z",
+  "lastUpdated": "2026-09-10T15:31:56.096Z",
   "categories": [
     "Web Development",
     "App Development",
@@ -35,7 +35,8 @@
       "metaTitle": "AZHAR | WebSpide Technologies",
       "metaDescription": "ewfweve,gfkerugipohwe4uigfnjklsenfjklwejiogfjwqe;ssaf",
       "metaKeywords": "Webspide Technologies, web development, website development, software development, digital solutions, web design, technology company",
-      "createdAt": "2026-09-10T15:30:44.074Z"
+      "createdAt": "2026-09-10T15:30:44.074Z",
+      "updatedAt": "2026-09-10T15:31:55.201Z"
     },
     {
       "id": "blog_1788955045563",

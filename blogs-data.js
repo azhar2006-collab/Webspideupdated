@@ -6,7 +6,7 @@
 (function() {
   var blogPayload = {
   "version": "2.0.0",
-  "lastUpdated": "2026-09-10T16:02:42.333Z",
+  "lastUpdated": "2026-09-10T16:02:48.581Z",
   "categories": [
     "Web Development",
     "App Development",
@@ -35,7 +35,8 @@
       "metaTitle": "AZHAR HUSSAIN | WebSpide Technologies",
       "metaDescription": "f4f4w3f3rfe4fg4fg",
       "metaKeywords": "f4fg4tf4f54f4f",
-      "createdAt": "2026-09-10T16:02:41.659Z"
+      "createdAt": "2026-09-10T16:02:41.659Z",
+      "updatedAt": "2026-09-10T16:02:47.964Z"
     },
     {
       "id": "blog_1788955045563",

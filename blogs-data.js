@@ -6,7 +6,7 @@
 (function() {
   var blogPayload = {
   "version": "2.0.0",
-  "lastUpdated": "2026-09-10T16:02:48.581Z",
+  "lastUpdated": "2026-09-12T14:29:48.568Z",
   "categories": [
     "Web Development",
     "App Development",

@@ -6,7 +6,7 @@
 (function() {
   var blogPayload = {
   "version": "2.0.0",
-  "lastUpdated": "2026-09-14T15:43:10.983Z",
+  "lastUpdated": "2026-09-14T15:43:12.543Z",
   "categories": [
     "Web Development",
     "App Development",
@@ -16,28 +16,6 @@
     "Technology"
   ],
   "blogs": [
-    {
-      "id": "blog_1789056161659",
-      "title": "AZHAR HUSSAIN",
-      "slug": "azhar-hussain",
-      "content": "jkjijhjiogjiot4jgiornfjkl3iofgu34iof",
-      "excerpt": "f4f4w3f3rfe4fg4fg",
-      "status": "published",
-      "category": "Web Development",
-      "tags": [],
-      "author": "Webspide Team",
-      "readTime": "5 min read",
-      "date": "2026-09-10",
-      "publishTime": "21:32",
-      "publishDateTime": "2026-09-10T21:32",
-      "image": "https://images.unsplash.com/photo-1563986768609-322da13575f3?auto=format&fit=crop&w=1200&q=80",
-      "imageAlt": "AZHAR HUSSAIN",
-      "metaTitle": "AZHAR HUSSAIN | WebSpide Technologies",
-      "metaDescription": "f4f4w3f3rfe4fg4fg",
-      "metaKeywords": "f4fg4tf4f54f4f",
-      "createdAt": "2026-09-10T16:02:41.659Z",
-      "updatedAt": "2026-09-10T16:02:47.964Z"
-    },
     {
       "id": "blog_1788955045563",
       "title": "SYED AZHAR HUSSAIN A",

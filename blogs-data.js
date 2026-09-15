@@ -6,7 +6,7 @@
 (function() {
   var blogPayload = {
   "version": "2.0.0",
-  "lastUpdated": "2026-09-15T11:22:43.786Z",
+  "lastUpdated": "2026-09-15T11:26:53.398Z",
   "categories": [
     "Web Development",
     "App Development",
@@ -18,7 +18,7 @@
   "blogs": [
     {
       "id": "blog_1789471196884",
-      "title": "fdgyscvgywsvcgywsvcgygc",
+      "title": "WEB",
       "slug": "fdgyscvgywsvcgywsvcgygc",
       "content": "dwecwnkenbcghwe bjc wej cjn<div>cwehjvcvbhwe cnjw enc nwe cnwenjkcnwe</div>",
       "excerpt": "cwecm,we cn wenmc mwd, cmkwmejklcmklec",
@@ -35,7 +35,8 @@
       "metaTitle": "fdgyscvgywsvcgywsvcgygc | WebSpide Technologies",
       "metaDescription": "cwecm,we cn wenmc mwd, cmkwmejklcmklec",
       "metaKeywords": "Webspide Technologies, web development, website development, software development, digital solutions, web design, technology company",
-      "createdAt": "2026-09-15T11:19:56.884Z"
+      "createdAt": "2026-09-15T11:19:56.884Z",
+      "updatedAt": "2026-09-15T11:26:51.608Z"
     },
     {
       "id": "blog_1788955045563",

@@ -6803,7 +6803,6 @@ function resetForm(){
       if (!b) return false;
       if (b.status === 'draft') return false;
       if (b.status === 'published' || !b.status) {
-        if (b.publishDateTime && new Date(b.publishDateTime) > now) return false;
         return true;
       }
       if (b.status === 'scheduled') {

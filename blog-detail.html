@@ -1972,8 +1972,7 @@ function getStoredBlogs() {
 function isPostLive(b) {
   if (!b) return false;
   if (b.status === 'draft') return false;
-  if (b.status === 'published') {
-    if (b.publishDateTime && new Date(b.publishDateTime) > new Date()) return false;
+  if (b.status === 'published' || !b.status) {
     return true;
   }
   if (b.status === 'scheduled') {

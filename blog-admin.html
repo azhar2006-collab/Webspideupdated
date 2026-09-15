@@ -8,6 +8,30 @@
 <!-- Google Fonts -->
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800;900&family=Exo+2:wght@400;500;600;700;800;900&family=Open+Sans:wght@400;600;700&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
 <script src="blogs-data.js"></script>
+<script>
+/* Fetch blogs-data fresh every load — bypasses CDN/browser caching on all devices */
+window.__blogsDataReady = false;
+window.__blogsDataCallbacks = [];
+window.__onBlogsDataReady = function(fn) {
+  if (window.__blogsDataReady) { fn(); } else { window.__blogsDataCallbacks.push(fn); }
+};
+(function(){
+  var url = 'blogs-data.js?nocache=' + Date.now();
+  fetch(url, { cache: 'no-store' })
+    .then(function(r){ return r.text(); })
+    .then(function(code){
+      try { (new Function(code))(); } catch(e){ console.warn('blogs-data eval:', e); }
+      window.__blogsDataReady = true;
+      window.__blogsDataCallbacks.forEach(function(fn){ try{ fn(); }catch(e){} });
+      window.__blogsDataCallbacks = [];
+    })
+    .catch(function(){ 
+      window.__blogsDataReady = true;
+      window.__blogsDataCallbacks.forEach(function(fn){ try{ fn(); }catch(e){} });
+      window.__blogsDataCallbacks = [];
+    });
+})();
+</script>
 
 <style>
 /* ══════════════════════════════════════════════
@@ -1381,6 +1405,17 @@ body {
       <button onclick="document.getElementById('wpNotice').style.display='none'" style="border:none;background:none;cursor:pointer;font-size:16px;">&times;</button>
     </div>
 
+    <!-- GITHUB SYNC WARNING BANNER (shown when no token is set) -->
+    <div id="ghSyncWarningBanner" style="display:none;background:#fff8e1;border:1px solid #f59e0b;border-left:4px solid #f59e0b;border-radius:4px;padding:12px 16px;margin-bottom:18px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#b45309" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      <div style="flex:1;min-width:0;">
+        <strong style="color:#92400e;font-size:13px;">GitHub Sync not configured</strong>
+        <span style="color:#78350f;font-size:12.5px;margin-left:6px;">Blogs you publish here will NOT appear on other devices or for visitors until GitHub Sync is set up.</span>
+      </div>
+      <button onclick="openSyncModal()" style="background:#f59e0b;color:#fff;border:none;border-radius:4px;padding:6px 14px;font-size:12.5px;font-weight:700;cursor:pointer;white-space:nowrap;">Set Up GitHub Sync ⚡</button>
+      <button onclick="document.getElementById('ghSyncWarningBanner').style.display='none'" style="background:transparent;border:none;color:#92400e;cursor:pointer;font-size:16px;padding:0 4px;" title="Dismiss">&times;</button>
+    </div>
+
     <!-- ══════════════════════════════════════════════
          SCREEN 1: ALL POSTS TABLE VIEW
          ══════════════════════════════════════════════ -->
@@ -2254,6 +2289,7 @@ body {
     <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;">
       <div id="ghSyncStatusMsg" style="font-size:12px;font-weight:600;color:#64748b;"></div>
       <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+        <button type="button" class="button" onclick="copyDeviceSetupLink()" title="Generate a 1-click link to configure GitHub Sync on your phone or other device" style="font-size:12px;color:#1F4FB2;border-color:#72aee6;">📱 Copy Setup Link for Other Devices</button>
         <button type="button" class="button" id="btnPullFromGh" onclick="pullFromGitHub()" title="Download the latest version from GitHub into this browser" style="font-size:12px;">Pull from GitHub ⬇️</button>
         <button type="button" class="button" onclick="closeSyncModal()">Cancel</button>
         <button type="button" class="button button-primary" id="btnSaveAndSyncGh" onclick="saveAndSyncGitHub()" style="background:#1F4FB2;border-color:#173e8e;font-weight:700;display:inline-flex;align-items:center;gap:6px;">
@@ -2472,24 +2508,29 @@ function autoPublishDueScheduledPosts() {
 
 function loadBlogs() {
   const canonical = (typeof window !== 'undefined' && window.WEBSPIDE_BLOG_DATA) ? window.WEBSPIDE_BLOG_DATA : null;
-  const baseBlogs = (canonical && Array.isArray(canonical.blogs) && canonical.blogs.length > 0)
-    ? canonical.blogs
-    : DEFAULT_SEED_BLOGS;
 
-  const data = localStorage.getItem(STORAGE_KEY);
-  if (!data) {
-    blogs = [...baseBlogs];
-    saveBlogs();
+  // If blogs-data.js (canonical) has data, it is the SINGLE source of truth.
+  // Always prefer it over localStorage so all devices see the same data.
+  if (canonical && Array.isArray(canonical.blogs) && canonical.blogs.length > 0) {
+    blogs = [...canonical.blogs];
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(blogs)); } catch(e) {}
   } else {
-    try {
-      blogs = JSON.parse(data);
-      if (!Array.isArray(blogs) || blogs.length === 0) {
-        blogs = [...baseBlogs];
+    // Fallback: no canonical data yet — use localStorage or seed
+    const data = localStorage.getItem(STORAGE_KEY);
+    if (!data) {
+      blogs = [...DEFAULT_SEED_BLOGS];
+      saveBlogs();
+    } else {
+      try {
+        blogs = JSON.parse(data);
+        if (!Array.isArray(blogs) || blogs.length === 0) {
+          blogs = [...DEFAULT_SEED_BLOGS];
+          saveBlogs();
+        }
+      } catch(e) {
+        blogs = [...DEFAULT_SEED_BLOGS];
         saveBlogs();
       }
-    } catch(e) {
-      blogs = [...baseBlogs];
-      saveBlogs();
     }
   }
   autoPublishDueScheduledPosts();
@@ -2500,6 +2541,11 @@ function loadBlogs() {
 
 function saveBlogs() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(blogs));
+  // Keep window.WEBSPIDE_BLOG_DATA in sync so all in-page reads are consistent
+  if (typeof window !== 'undefined') {
+    if (!window.WEBSPIDE_BLOG_DATA) window.WEBSPIDE_BLOG_DATA = {};
+    window.WEBSPIDE_BLOG_DATA.blogs = blogs;
+  }
   window.dispatchEvent(new Event('storage'));
 }
 
@@ -4135,13 +4181,14 @@ function saveCurrentPost() {
           notifyChk.checked = false;
         }
         const ghCfg = getGitHubConfig();
-        if (ghCfg.token) {
-          showToast('Post updated! Syncing with GitHub...');
-          syncToGitHub(`Update blog: "${title}"`);
-        } else {
-          showToast('Post updated successfully.');
-          showNotice(`Post updated. <a href="${getBlogDetailUrl({id, slug, title})}" target="_blank" style="margin-left:8px;font-weight:700;">View post ↗</a> | <a href="javascript:void(0)" onclick="openSyncModal()" style="margin-left:6px;font-weight:700;color:#1F4FB2;text-decoration:underline;">Connect GitHub to auto-sync to all devices ⚡</a>`);
-        }
+          if (ghCfg.token) {
+            showToast('Post updated! Syncing with GitHub...');
+            syncToGitHub(`Update blog: "${title}"`);
+          } else {
+            showToast('Post updated locally on this device.');
+            showNotice(`⚠️ <strong>Post updated locally, but NOT yet synced to GitHub!</strong> Other devices will not see the changes until GitHub Sync is connected. <a href="javascript:void(0)" onclick="openSyncModal()" style="margin-left:8px;font-weight:700;color:#1F4FB2;text-decoration:underline;">Connect GitHub Sync Now ⚡</a>`, 'warning');
+            openSyncModal();
+          }
       }
     }
   } else {
@@ -4177,8 +4224,9 @@ function saveCurrentPost() {
         showToast('Post published! Syncing with GitHub...');
         syncToGitHub(`Publish blog: "${title}"`);
       } else {
-        showToast('Post published successfully.');
-        showNotice(`Post published! <a href="${getBlogDetailUrl({id: newId, slug, title})}" target="_blank" style="margin-left:8px;font-weight:700;">View post ↗</a> | <a href="javascript:void(0)" onclick="openSyncModal()" style="margin-left:6px;font-weight:700;color:#1F4FB2;text-decoration:underline;">Connect GitHub to auto-sync to all devices ⚡</a>`);
+        showToast('Post saved locally on this device.');
+        showNotice(`⚠️ <strong>Post saved locally, but NOT yet uploaded to GitHub!</strong> It will not show on other devices until GitHub Sync is connected on this device. <a href="javascript:void(0)" onclick="openSyncModal()" style="margin-left:8px;font-weight:700;color:#1F4FB2;text-decoration:underline;">Connect GitHub Sync Now ⚡</a>`, 'warning');
+        openSyncModal();
       }
     }
   }
@@ -4289,6 +4337,10 @@ function updateGitHubStatusUI() {
   const badge = document.getElementById('settingsGhStatusBadge');
   const btnLabel = document.getElementById('btnSyncBlogsLabel');
   const btn = document.getElementById('btnSyncBlogs');
+  const warningBanner = document.getElementById('ghSyncWarningBanner');
+  if (warningBanner) {
+    warningBanner.style.display = hasToken ? 'none' : 'flex';
+  }
 
   if (hasToken) {
     if (badge) {
@@ -4357,6 +4409,28 @@ function openSyncModal() {
 function closeSyncModal() {
   const m = document.getElementById('syncModal');
   if (m) m.style.display = 'none';
+}
+
+function copyDeviceSetupLink() {
+  const cfg = getGitHubConfig();
+  const token = (document.getElementById('ghTokenInput') && document.getElementById('ghTokenInput').value) || cfg.token;
+  if (!token) {
+    alert('Please enter your GitHub token first, then click "Copy Setup Link".');
+    return;
+  }
+  const rawRepo = (document.getElementById('ghRepoInput') && document.getElementById('ghRepoInput').value) || (cfg.owner + '/' + cfg.repo);
+  const branch = (document.getElementById('ghBranchInput') && document.getElementById('ghBranchInput').value) || cfg.branch || 'main';
+  const url = window.location.origin + window.location.pathname + '?gh_token=' + encodeURIComponent(token) + '&gh_repo=' + encodeURIComponent(rawRepo) + '&gh_branch=' + encodeURIComponent(branch);
+  
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(url).then(() => {
+      alert('✅ 1-Click Setup Link copied to clipboard!\n\nOpen this link on your phone, tablet, or another computer. It will automatically connect GitHub Sync on that device!');
+    }).catch(() => {
+      prompt('Copy this setup link and open it on your other device:', url);
+    });
+  } else {
+    prompt('Copy this setup link and open it on your other device:', url);
+  }
 }
 
 async function saveAndSyncGitHub() {
@@ -4503,6 +4577,34 @@ async function syncToGitHub(customCommitMsg = null) {
     if (getRes.ok) {
       const fileInfo = await getRes.json();
       existingSha = fileInfo.sha;
+      // Cross-device safety: merge any remote blogs missing locally before push
+      if (fileInfo.content) {
+        try {
+          const rawBase64 = fileInfo.content.replace(/\s/g, '');
+          const decodedText = decodeURIComponent(escape(atob(rawBase64)));
+          const match = decodedText.match(/var blogPayload = (\{[\s\S]*?\});/);
+          if (match) {
+            const remotePayload = JSON.parse(match[1]);
+            if (remotePayload && Array.isArray(remotePayload.blogs)) {
+              const localIds = new Set(blogs.map(b => b.id));
+              const localSlugs = new Set(blogs.map(b => b.slug));
+              let addedAny = false;
+              remotePayload.blogs.forEach(rb => {
+                if (rb && rb.id && !localIds.has(rb.id) && !localSlugs.has(rb.slug)) {
+                  blogs.push(rb);
+                  addedAny = true;
+                }
+              });
+              if (addedAny) {
+                saveBlogs();
+                renderPostsTable();
+              }
+            }
+          }
+        } catch(decodeErr) {
+          console.warn('Cross-device merge note:', decodeErr);
+        }
+      }
     } else if (getRes.status === 401) {
       throw new Error('Invalid or expired token. Please update your GitHub token in Settings → Configure GitHub Sync.');
     } else if (getRes.status === 403) {
@@ -4795,7 +4897,33 @@ function initAdminCredentialsUI() {
 
 // Initialization
 document.addEventListener('DOMContentLoaded', function() {
-  loadBlogs();
+  // Check for 1-Click Device Setup Link in URL
+  const urlParams = new URLSearchParams(window.location.search);
+  const setupToken = urlParams.get('gh_token');
+  if (setupToken) {
+    const setupRepo = urlParams.get('gh_repo') || 'azhar2006-collab/Webspideupdated';
+    const setupBranch = urlParams.get('gh_branch') || 'main';
+    const parts = setupRepo.split('/');
+    const cfg = {
+      owner: (parts[0] || 'azhar2006-collab').trim(),
+      repo: (parts[1] || 'Webspideupdated').trim(),
+      branch: setupBranch.trim(),
+      token: setupToken.trim()
+    };
+    saveGitHubConfig(cfg);
+    sessionStorage.setItem(SESSION_KEY, 'ws_auth_synced_' + Date.now());
+    localStorage.setItem(SESSION_KEY, 'ws_auth_synced_' + Date.now());
+    window.history.replaceState({}, document.title, window.location.pathname);
+    showToast('✅ GitHub Sync successfully configured on this device!');
+  }
+
+  if (window.__onBlogsDataReady) {
+    window.__onBlogsDataReady(function() {
+      loadBlogs();
+    });
+  } else {
+    loadBlogs();
+  }
   initAdminCredentialsUI();
 
   // Active timer to auto-transition scheduled posts to published in real-time
@@ -4843,7 +4971,7 @@ document.addEventListener('DOMContentLoaded', function() {
   // Update GitHub Cloud Sync UI status
   updateGitHubStatusUI();
 
-  const urlParams = new URLSearchParams(window.location.search);
+
   const editId = urlParams.get('edit');
   const action = urlParams.get('action');
 

@@ -2317,6 +2317,7 @@ const SESSION_KEY = 'webspide_admin_session';
 
 const STORAGE_KEY = 'webspide_blogs';
 const DRAFT_AUTOSAVE_KEY = 'webspide_blog_autosave_draft';
+const DELETED_IDS_KEY = 'webspide_deleted_blog_ids'; // Tracks permanently deleted post IDs
 
 // Default seed blogs with full correction models
 const DEFAULT_SEED_BLOGS = [
@@ -2509,6 +2510,12 @@ function autoPublishDueScheduledPosts() {
 function loadBlogs() {
   const canonical = (typeof window !== 'undefined' && window.WEBSPIDE_BLOG_DATA) ? window.WEBSPIDE_BLOG_DATA : null;
 
+  // Import any remotely tracked deletions
+  if (canonical && Array.isArray(canonical.deletedIds)) {
+    canonical.deletedIds.forEach(did => addDeletedId(did));
+  }
+  const deletedIds = getDeletedIds();
+
   // Check localStorage FIRST — admin deletions/edits are saved here.
   // If localStorage has data, use it as the source of truth so deletions persist.
   const storedData = localStorage.getItem(STORAGE_KEY);
@@ -2516,20 +2523,22 @@ function loadBlogs() {
     try {
       const parsed = JSON.parse(storedData);
       if (Array.isArray(parsed)) {
-        blogs = parsed;
+        blogs = parsed.filter(b => b && b.id && !deletedIds.has(b.id));
         // Merge any brand-new posts from canonical that are not yet in localStorage
+        // but SKIP any that were deliberately deleted by the admin
         if (canonical && Array.isArray(canonical.blogs) && canonical.blogs.length > 0) {
           const storedIds = new Set(blogs.map(b => b.id));
-          const newFromCanonical = canonical.blogs.filter(b => !storedIds.has(b.id));
+          const newFromCanonical = canonical.blogs.filter(b => b && b.id && !storedIds.has(b.id) && !deletedIds.has(b.id));
           if (newFromCanonical.length > 0) {
             blogs = [...blogs, ...newFromCanonical];
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(blogs));
           }
         }
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(blogs));
         // Keep window.WEBSPIDE_BLOG_DATA in sync
         if (typeof window !== 'undefined') {
           if (!window.WEBSPIDE_BLOG_DATA) window.WEBSPIDE_BLOG_DATA = {};
           window.WEBSPIDE_BLOG_DATA.blogs = blogs;
+          window.WEBSPIDE_BLOG_DATA.deletedIds = Array.from(deletedIds);
         }
         autoPublishDueScheduledPosts();
         refreshCategoryDropdowns();
@@ -2542,10 +2551,10 @@ function loadBlogs() {
 
   // No localStorage data — fall back to canonical or seed
   if (canonical && Array.isArray(canonical.blogs) && canonical.blogs.length > 0) {
-    blogs = [...canonical.blogs];
+    blogs = canonical.blogs.filter(b => b && b.id && !deletedIds.has(b.id));
     try { localStorage.setItem(STORAGE_KEY, JSON.stringify(blogs)); } catch(e) {}
   } else {
-    blogs = [...DEFAULT_SEED_BLOGS];
+    blogs = [...DEFAULT_SEED_BLOGS].filter(b => b && b.id && !deletedIds.has(b.id));
     saveBlogs();
   }
   autoPublishDueScheduledPosts();
@@ -2562,6 +2571,20 @@ function saveBlogs() {
     window.WEBSPIDE_BLOG_DATA.blogs = blogs;
   }
   window.dispatchEvent(new Event('storage'));
+}
+
+// Returns a Set of post IDs that have been permanently deleted by the admin
+function getDeletedIds() {
+  try {
+    return new Set(JSON.parse(localStorage.getItem(DELETED_IDS_KEY) || '[]'));
+  } catch(e) { return new Set(); }
+}
+
+// Records a post ID as permanently deleted so it won't be re-added from canonical
+function addDeletedId(id) {
+  const set = getDeletedIds();
+  set.add(id);
+  localStorage.setItem(DELETED_IDS_KEY, JSON.stringify([...set]));
 }
 
 function showToast(msg) {
@@ -4254,7 +4277,9 @@ function saveCurrentPost() {
 function deletePost(id) {
   const b = blogs.find(item => item.id === id);
   if (!b) return;
-  if (confirm(`Are you sure you want to move "${b.title}" to Trash?`)) {
+  const safeTitle = (b.title || 'this post').replace(/"/g, "'");
+  if (confirm(`Are you sure you want to move "${safeTitle}" to Trash?`)) {
+    addDeletedId(id); // Permanently record this deletion so it won't be re-added from canonical on reload
     blogs = blogs.filter(item => item.id !== id);
     if (typeof window !== 'undefined' && window.WEBSPIDE_BLOG_DATA && Array.isArray(window.WEBSPIDE_BLOG_DATA.blogs)) {
       window.WEBSPIDE_BLOG_DATA.blogs = window.WEBSPIDE_BLOG_DATA.blogs.filter(item => item.id !== id);
@@ -4265,7 +4290,7 @@ function deletePost(id) {
     showNotice('Post deleted from inventory.', 'warning');
     const ghCfg = getGitHubConfig();
     if (ghCfg.token) {
-      syncToGitHub(`Delete blog: "${b.title}"`);
+      syncToGitHub(`Delete blog: "${safeTitle}"`);
     }
   }
 }
@@ -4600,19 +4625,28 @@ async function syncToGitHub(customCommitMsg = null) {
           const match = decodedText.match(/var blogPayload = (\{[\s\S]*?\});/);
           if (match) {
             const remotePayload = JSON.parse(match[1]);
-            if (remotePayload && Array.isArray(remotePayload.blogs)) {
-              const localIds = new Set(blogs.map(b => b.id));
-              const localSlugs = new Set(blogs.map(b => b.slug));
-              let addedAny = false;
-              remotePayload.blogs.forEach(rb => {
-                if (rb && rb.id && !localIds.has(rb.id) && !localSlugs.has(rb.slug)) {
-                  blogs.push(rb);
-                  addedAny = true;
+            if (remotePayload) {
+              if (Array.isArray(remotePayload.deletedIds)) {
+                remotePayload.deletedIds.forEach(did => addDeletedId(did));
+              }
+              const deletedIds = getDeletedIds();
+              // Remove any deleted blogs from local state
+              blogs = blogs.filter(b => b && b.id && !deletedIds.has(b.id));
+
+              if (Array.isArray(remotePayload.blogs)) {
+                const localIds = new Set(blogs.map(b => b.id));
+                const localSlugs = new Set(blogs.map(b => b.slug));
+                let addedAny = false;
+                remotePayload.blogs.forEach(rb => {
+                  if (rb && rb.id && !localIds.has(rb.id) && !localSlugs.has(rb.slug) && !deletedIds.has(rb.id)) {
+                    blogs.push(rb);
+                    addedAny = true;
+                  }
+                });
+                if (addedAny) {
+                  saveBlogs();
+                  renderPostsTable();
                 }
-              });
-              if (addedAny) {
-                saveBlogs();
-                renderPostsTable();
               }
             }
           }
@@ -4672,11 +4706,14 @@ async function syncToGitHub(customCommitMsg = null) {
 
 function generateBlogsDataPayload() {
   const allCats = getAllCategories();
+  const deletedIds = Array.from(getDeletedIds());
+  const validBlogs = blogs.filter(b => b && b.id && !deletedIds.includes(b.id));
   const payload = {
     version: '2.0.0',
     lastUpdated: new Date().toISOString(),
     categories: allCats,
-    blogs: blogs
+    deletedIds: deletedIds,
+    blogs: validBlogs
   };
   return `/**\n * Webspide Technologies - Canonical Blog Database\n * Central source of truth shared across ALL devices and visitors.\n * Loaded by index.html, blog.html, blog-detail.html, and blog-admin.html.\n */\n(function() {\n  var blogPayload = ${JSON.stringify(payload, null, 2)};\n\n  if (typeof window !== 'undefined') {\n    window.WEBSPIDE_BLOG_DATA = blogPayload;\n  }\n  if (typeof module !== 'undefined' && module.exports) {\n    module.exports = blogPayload;\n  }\n})();\n`;
 }

@@ -6781,7 +6781,8 @@ function resetForm(){
     var blogs;
 
     if (canonical && Array.isArray(canonical.blogs) && canonical.blogs.length > 0) {
-      blogs = canonical.blogs.slice();
+      var deletedIds = new Set(Array.isArray(canonical.deletedIds) ? canonical.deletedIds : []);
+      blogs = canonical.blogs.filter(function(b) { return b && b.id && !deletedIds.has(b.id); });
       try { localStorage.setItem(STORAGE_KEY, JSON.stringify(blogs)); } catch(e) {}
     } else {
       var data = localStorage.getItem(STORAGE_KEY);

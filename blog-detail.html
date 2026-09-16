@@ -1950,8 +1950,10 @@ function getStoredBlogs() {
   // If blogs-data.js has data, it is the SINGLE source of truth.
   // Never merge with localStorage — deleted posts must stay deleted.
   if (canonical && Array.isArray(canonical.blogs) && canonical.blogs.length > 0) {
-    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(canonical.blogs)); } catch(e) {}
-    return [...canonical.blogs];
+    const deletedIds = new Set(Array.isArray(canonical.deletedIds) ? canonical.deletedIds : []);
+    const validBlogs = canonical.blogs.filter(b => b && b.id && !deletedIds.has(b.id));
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(validBlogs)); } catch(e) {}
+    return [...validBlogs];
   }
 
   // Fallback: no canonical data yet — use localStorage or seed

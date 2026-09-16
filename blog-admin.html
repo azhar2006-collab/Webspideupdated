@@ -2509,29 +2509,44 @@ function autoPublishDueScheduledPosts() {
 function loadBlogs() {
   const canonical = (typeof window !== 'undefined' && window.WEBSPIDE_BLOG_DATA) ? window.WEBSPIDE_BLOG_DATA : null;
 
-  // If blogs-data.js (canonical) has data, it is the SINGLE source of truth.
-  // Always prefer it over localStorage so all devices see the same data.
+  // Check localStorage FIRST — admin deletions/edits are saved here.
+  // If localStorage has data, use it as the source of truth so deletions persist.
+  const storedData = localStorage.getItem(STORAGE_KEY);
+  if (storedData) {
+    try {
+      const parsed = JSON.parse(storedData);
+      if (Array.isArray(parsed)) {
+        blogs = parsed;
+        // Merge any brand-new posts from canonical that are not yet in localStorage
+        if (canonical && Array.isArray(canonical.blogs) && canonical.blogs.length > 0) {
+          const storedIds = new Set(blogs.map(b => b.id));
+          const newFromCanonical = canonical.blogs.filter(b => !storedIds.has(b.id));
+          if (newFromCanonical.length > 0) {
+            blogs = [...blogs, ...newFromCanonical];
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(blogs));
+          }
+        }
+        // Keep window.WEBSPIDE_BLOG_DATA in sync
+        if (typeof window !== 'undefined') {
+          if (!window.WEBSPIDE_BLOG_DATA) window.WEBSPIDE_BLOG_DATA = {};
+          window.WEBSPIDE_BLOG_DATA.blogs = blogs;
+        }
+        autoPublishDueScheduledPosts();
+        refreshCategoryDropdowns();
+        renderPostsTable();
+        renderCategoriesTable();
+        return;
+      }
+    } catch(e) {}
+  }
+
+  // No localStorage data — fall back to canonical or seed
   if (canonical && Array.isArray(canonical.blogs) && canonical.blogs.length > 0) {
     blogs = [...canonical.blogs];
     try { localStorage.setItem(STORAGE_KEY, JSON.stringify(blogs)); } catch(e) {}
   } else {
-    // Fallback: no canonical data yet — use localStorage or seed
-    const data = localStorage.getItem(STORAGE_KEY);
-    if (!data) {
-      blogs = [...DEFAULT_SEED_BLOGS];
-      saveBlogs();
-    } else {
-      try {
-        blogs = JSON.parse(data);
-        if (!Array.isArray(blogs) || blogs.length === 0) {
-          blogs = [...DEFAULT_SEED_BLOGS];
-          saveBlogs();
-        }
-      } catch(e) {
-        blogs = [...DEFAULT_SEED_BLOGS];
-        saveBlogs();
-      }
-    }
+    blogs = [...DEFAULT_SEED_BLOGS];
+    saveBlogs();
   }
   autoPublishDueScheduledPosts();
   refreshCategoryDropdowns();

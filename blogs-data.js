@@ -15,6 +15,11 @@
     "UI/UX Design",
     "Technology"
   ],
+  "deletedIds": [
+    "blog_1789471196884",
+    "blog_1788955045563",
+    "blog_1789560766781"
+  ],
   "blogs": [
     {
       "id": "blog_1789545233864",
@@ -182,17 +187,13 @@
       "metaTitle": "UI/UX Design Systems That Boost Enterprise Conversion Rates | WebSpide",
       "metaDescription": "A design system is a shared language between design and engineering that eliminates friction and multiplies user engagement."
     }
-  ],
-  "deletedIds": [
-    "blog_1789471196884",
-    "blog_1788955045563"
   ]
 };
 
   if (typeof window !== 'undefined') {
     window.WEBSPIDE_BLOG_DATA = blogPayload;
   }
-  if (typeof module !== 'undefined') {
+  if (typeof module !== 'undefined' && module.exports) {
     module.exports = blogPayload;
   }
 })();

@@ -40,12 +40,14 @@ window.__onBlogsDataReady = function(fn) {
     .then(function(r){ return r.text(); })
     .then(function(code){
       try { (new Function(code))(); } catch(e){ console.warn('blogs-data eval:', e); }
+      window.__freshBlogsLoaded = true;
       window.__blogsDataReady = true;
       window.__blogsDataCallbacks.forEach(function(fn){ try{ fn(); }catch(e){} });
       window.__blogsDataCallbacks = [];
-      if (typeof loadArticle === 'function') { loadArticle(); }
+      if (typeof loadArticle === 'function') { loadArticle(true); }
     })
     .catch(function(){ 
+      window.__freshBlogsLoaded = true;
       window.__blogsDataReady = true;
       window.__blogsDataCallbacks.forEach(function(fn){ try{ fn(); }catch(e){} });
       window.__blogsDataCallbacks = [];
@@ -1994,7 +1996,7 @@ function escapeHtml(str) {
   return str.toString().replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
 }
 
-function loadArticle() {
+function loadArticle(isFreshData) {
   allBlogs = getStoredBlogs();
   const urlParams = new URLSearchParams(window.location.search);
   
@@ -2044,6 +2046,16 @@ function loadArticle() {
   const container = document.getElementById('detailContainer');
 
   if (!currentArticle) {
+    // If fresh data hasn't arrived yet, show a subtle loading state and wait
+    if (!isFreshData && !window.__freshBlogsLoaded) {
+      container.innerHTML = `
+        <div class="detail-not-found" style="opacity:0.5;">
+          <p style="font-size:1.1rem;color:#64748b;">Loading article&hellip;</p>
+        </div>
+      `;
+      return;
+    }
+    // Fresh data confirmed — article genuinely doesn't exist
     const root = getProjectRoot();
     container.innerHTML = `
       <div class="detail-not-found">

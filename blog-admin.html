@@ -4708,15 +4708,40 @@ function generateBlogsDataPayload() {
   const allCats = getAllCategories();
   const deletedIds = Array.from(getDeletedIds());
   const validBlogs = blogs.filter(b => b && b.id && !deletedIds.includes(b.id));
+
+  // Sort latest-first before saving to blogs-data.js
+  function getBlogTimestampAdmin(b) {
+    if (!b) return 0;
+    if (b.publishDateTime) { const t = new Date(b.publishDateTime).getTime(); if (!isNaN(t) && t > 0) return t; }
+    if (b.date && b.publishTime) { const t = new Date(`${b.date}T${b.publishTime}`).getTime(); if (!isNaN(t) && t > 0) return t; }
+    if (b.date) { const t = new Date(b.date).getTime(); if (!isNaN(t) && t > 0) return t; }
+    if (b.createdAt) { const t = new Date(b.createdAt).getTime(); if (!isNaN(t) && t > 0) return t; }
+    if (b.id && typeof b.id === 'string' && b.id.startsWith('blog_')) {
+      const num = parseInt(b.id.replace('blog_', ''), 10);
+      if (!isNaN(num) && num > 1000000000000) return num;
+    }
+    return 0;
+  }
+  const sortedBlogs = validBlogs.slice().sort((a, b) => {
+    const timeA = getBlogTimestampAdmin(a);
+    const timeB = getBlogTimestampAdmin(b);
+    if (timeB !== timeA) return timeB - timeA;
+    const createA = a && a.createdAt ? new Date(a.createdAt).getTime() : 0;
+    const createB = b && b.createdAt ? new Date(b.createdAt).getTime() : 0;
+    if (createB !== createA) return createB - createA;
+    return String(b.id || '').localeCompare(String(a.id || ''));
+  });
+
   const payload = {
     version: '2.0.0',
     lastUpdated: new Date().toISOString(),
     categories: allCats,
     deletedIds: deletedIds,
-    blogs: validBlogs
+    blogs: sortedBlogs
   };
   return `/**\n * Webspide Technologies - Canonical Blog Database\n * Central source of truth shared across ALL devices and visitors.\n * Loaded by index.html, blog.html, blog-detail.html, and blog-admin.html.\n */\n(function() {\n  var blogPayload = ${JSON.stringify(payload, null, 2)};\n\n  if (typeof window !== 'undefined') {\n    window.WEBSPIDE_BLOG_DATA = blogPayload;\n  }\n  if (typeof module !== 'undefined' && module.exports) {\n    module.exports = blogPayload;\n  }\n})();\n`;
 }
+
 
 function downloadBlogsDataFile() {
   const code = generateBlogsDataPayload();

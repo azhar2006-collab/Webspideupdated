@@ -2552,6 +2552,50 @@ function getStoredCategories() {
   return DEFAULT_CATEGORIES;
 }
 
+function getBlogTimestamp(b) {
+  if (!b) return 0;
+  if (b.publishDateTime) {
+    const t = new Date(b.publishDateTime).getTime();
+    if (!isNaN(t) && t > 0) return t;
+  }
+  if (b.date && b.publishTime) {
+    const t = new Date(`${b.date}T${b.publishTime}`).getTime();
+    if (!isNaN(t) && t > 0) return t;
+  }
+  if (b.date) {
+    const t = new Date(b.date).getTime();
+    if (!isNaN(t) && t > 0) return t;
+  }
+  if (b.createdAt) {
+    const t = new Date(b.createdAt).getTime();
+    if (!isNaN(t) && t > 0) return t;
+  }
+  if (b.id && typeof b.id === 'string' && b.id.startsWith('blog_')) {
+    const num = parseInt(b.id.replace('blog_', ''), 10);
+    if (!isNaN(num) && num > 1000000000000) return num;
+  }
+  return 0;
+}
+
+function sortBlogsLatestFirst(blogsList) {
+  if (!Array.isArray(blogsList)) return [];
+  return blogsList.slice().sort((a, b) => {
+    const timeA = getBlogTimestamp(a);
+    const timeB = getBlogTimestamp(b);
+    if (timeB !== timeA) {
+      return timeB - timeA;
+    }
+    const createA = a && a.createdAt ? new Date(a.createdAt).getTime() : 0;
+    const createB = b && b.createdAt ? new Date(b.createdAt).getTime() : 0;
+    if (createB !== createA) {
+      return createB - createA;
+    }
+    const idA = (a && a.id) ? String(a.id) : '';
+    const idB = (b && b.id) ? String(b.id) : '';
+    return idB.localeCompare(idA);
+  });
+}
+
 function getStoredBlogs() {
   const canonical = getCanonicalData();
 
@@ -2560,22 +2604,24 @@ function getStoredBlogs() {
   if (canonical && Array.isArray(canonical.blogs) && canonical.blogs.length > 0) {
     const deletedIds = new Set(Array.isArray(canonical.deletedIds) ? canonical.deletedIds : []);
     const validBlogs = canonical.blogs.filter(b => b && b.id && !deletedIds.has(b.id));
-    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(validBlogs)); } catch(e) {}
-    return [...validBlogs];
+    const sortedBlogs = sortBlogsLatestFirst(validBlogs);
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(sortedBlogs)); } catch(e) {}
+    return sortedBlogs;
   }
 
   // Fallback: no canonical data yet — use localStorage or seed
   const data = localStorage.getItem(STORAGE_KEY);
   if (!data) {
-    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(DEFAULT_SEED_BLOGS)); } catch(e) {}
-    return [...DEFAULT_SEED_BLOGS];
+    const sortedSeed = sortBlogsLatestFirst(DEFAULT_SEED_BLOGS);
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(sortedSeed)); } catch(e) {}
+    return sortedSeed;
   }
   try {
     const parsed = JSON.parse(data);
-    if (!Array.isArray(parsed) || parsed.length === 0) return [...DEFAULT_SEED_BLOGS];
-    return parsed;
+    if (!Array.isArray(parsed) || parsed.length === 0) return sortBlogsLatestFirst(DEFAULT_SEED_BLOGS);
+    return sortBlogsLatestFirst(parsed);
   } catch (e) {
-    return [...DEFAULT_SEED_BLOGS];
+    return sortBlogsLatestFirst(DEFAULT_SEED_BLOGS);
   }
 }
 
@@ -2630,6 +2676,9 @@ function renderBlogs() {
   const paginationControls = document.getElementById('blogPaginationControls');
   const paginationInfo = document.getElementById('blogPaginationInfo');
 
+  // Ensure allBlogs is always sorted latest first
+  allBlogs = sortBlogsLatestFirst(allBlogs);
+
   // Filter only live & scheduled-due blogs
   let filtered = allBlogs.filter(isPostLive);
 
@@ -2649,6 +2698,9 @@ function renderBlogs() {
       (b.tags && b.tags.some(t => t.toLowerCase().includes(q)))
     );
   }
+
+  // Ensure filtered articles are strictly sorted latest first
+  filtered = sortBlogsLatestFirst(filtered);
 
   // Update pill counts
   updateCategoryPillCounts();
@@ -2821,7 +2873,7 @@ function generatePrevNextNavigation(currentBlog) {
   const navEl = document.getElementById('modalPrevNextNav');
   if (!navEl) return;
 
-  const liveBlogs = allBlogs.filter(isPostLive);
+  const liveBlogs = sortBlogsLatestFirst(allBlogs.filter(isPostLive));
   const idx = liveBlogs.findIndex(b => b.id === currentBlog.id);
 
   const prevBlog = idx > 0 ? liveBlogs[idx - 1] : null;

@@ -721,6 +721,8 @@ h5{font-weight:800!important;color:#8B5CF6!important}
 .detail-author-box {
   display: flex;
   align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
   gap: 16px;
   padding: 16px 22px;
   background: #ffffff;
@@ -728,6 +730,11 @@ h5{font-weight:800!important;color:#8B5CF6!important}
   border-radius: 12px;
   box-shadow: 0 4px 18px rgba(7, 22, 79, 0.04);
   margin-bottom: 34px;
+}
+.detail-author-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
 }
 .detail-author-avatar {
   width: 48px;
@@ -753,6 +760,25 @@ h5{font-weight:800!important;color:#8B5CF6!important}
   font-size: 0.82rem;
   color: #64748b;
   font-weight: 500;
+}
+.detail-author-share {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+@media (max-width: 680px) {
+  .detail-author-box {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+  }
+  .detail-author-share {
+    width: 100%;
+    justify-content: space-between;
+    padding-top: 12px;
+    border-top: 1px solid rgba(7, 22, 79, 0.06);
+  }
 }
 
 /* ════════════════════════════════════════
@@ -1477,12 +1503,27 @@ h5{font-weight:800!important;color:#8B5CF6!important}
       <!-- MAIN H1 TITLE: Exactly 1 H1 per page -->
       <h1 class="detail-title" id="detailTitle">Article Title</h1>
 
-      <!-- Author Box -->
+      <!-- Author Box with Share Icons -->
       <div class="detail-author-box">
-        <div class="detail-author-avatar" id="detailAuthorAvatar">W</div>
-        <div class="detail-author-info">
-          <h5 id="detailAuthorName">Author Name</h5>
-          <span id="detailAuthorRole">Author</span>
+        <div class="detail-author-left">
+          <div class="detail-author-avatar" id="detailAuthorAvatar">W</div>
+          <div class="detail-author-info">
+            <h5 id="detailAuthorName">Author Name</h5>
+            <span id="detailAuthorRole">Author</span>
+          </div>
+        </div>
+        <div class="detail-author-share" id="detailShareSection">
+          <div class="blog-share-label">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1F4FB2" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+            Share this article:
+          </div>
+          <div class="blog-share-btns">
+            <button type="button" class="share-icon-btn in" onclick="shareArticle('linkedin')" title="Share on LinkedIn"><svg viewBox="0 0 24 24"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.46 10.9v8.37H9.2V10.9H6.46M7.83 6.64a1.64 1.64 0 1 0 1.64 1.64 1.64 1.64 0 0 0-1.64-1.64z"/></svg></button>
+            <button type="button" class="share-icon-btn tw" onclick="shareArticle('twitter')" title="Share on X (Twitter)"><svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></button>
+            <button type="button" class="share-icon-btn fb" onclick="shareArticle('facebook')" title="Share on Facebook"><svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></button>
+            <button type="button" class="share-icon-btn wa" onclick="shareArticle('whatsapp')" title="Share on WhatsApp"><svg viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.312.045-.634.077-1.748-.383-1.423-.588-2.339-2.037-2.41-2.13-.07-.095-.578-.771-.578-1.469 0-.698.366-1.042.497-1.184.131-.143.287-.179.383-.179.096 0 .191.002.274.006.09.004.21-.034.329.252.12.286.411 1.002.447 1.074.036.072.06.156.012.252-.048.096-.072.155-.144.239-.072.084-.151.187-.216.252-.072.072-.148.15-.064.294.084.143.373.615.8 1.002.551.498.995.666 1.139.738.144.072.228.06.312-.036.084-.096.359-.418.455-.562.096-.144.192-.12.323-.072.131.048.837.394.981.466.144.072.24.108.275.168.036.06.036.347-.108.752zM12 2C6.477 2 2 6.477 2 12c0 1.891.524 3.66 1.434 5.176L2 22l4.954-1.399C8.423 21.49 10.153 22 12 22c5.523 0 10-4.477 10-10S17.523 2 12 2z"/></svg></button>
+            <button type="button" class="share-icon-btn copy" onclick="copyArticleLink()" title="Copy Article Link"><svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+          </div>
         </div>
       </div>
     </header>
@@ -1510,20 +1551,7 @@ h5{font-weight:800!important;color:#8B5CF6!important}
           <div id="detailTagsList" style="display:flex;flex-wrap:wrap;gap:8px;"></div>
         </div>
 
-        <!-- Social Share Bar -->
-        <div class="blog-share-section" id="detailShareSection">
-          <div class="blog-share-label">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1F4FB2" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
-            Share this article:
-          </div>
-          <div class="blog-share-btns">
-            <button type="button" class="share-icon-btn in" onclick="shareArticle('linkedin')" title="Share on LinkedIn"><svg viewBox="0 0 24 24"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.46 10.9v8.37H9.2V10.9H6.46M7.83 6.64a1.64 1.64 0 1 0 1.64 1.64 1.64 1.64 0 0 0-1.64-1.64z"/></svg></button>
-            <button type="button" class="share-icon-btn tw" onclick="shareArticle('twitter')" title="Share on X (Twitter)"><svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></button>
-            <button type="button" class="share-icon-btn fb" onclick="shareArticle('facebook')" title="Share on Facebook"><svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></button>
-            <button type="button" class="share-icon-btn wa" onclick="shareArticle('whatsapp')" title="Share on WhatsApp"><svg viewBox="0 0 24 24"><path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.312.045-.634.077-1.748-.383-1.423-.588-2.339-2.037-2.41-2.13-.07-.095-.578-.771-.578-1.469 0-.698.366-1.042.497-1.184.131-.143.287-.179.383-.179.096 0 .191.002.274.006.09.004.21-.034.329.252.12.286.411 1.002.447 1.074.036.072.06.156.012.252-.048.096-.072.155-.144.239-.072.084-.151.187-.216.252-.072.072-.148.15-.064.294.084.143.373.615.8 1.002.551.498.995.666 1.139.738.144.072.228.06.312-.036.084-.096.359-.418.455-.562.096-.144.192-.12.323-.072.131.048.837.394.981.466.144.072.24.108.275.168.036.06.036.347-.108.752zM12 2C6.477 2 2 6.477 2 12c0 1.891.524 3.66 1.434 5.176L2 22l4.954-1.399C8.423 21.49 10.153 22 12 22c5.523 0 10-4.477 10-10S17.523 2 12 2z"/></svg></button>
-            <button type="button" class="share-icon-btn copy" onclick="copyArticleLink()" title="Copy Article Link"><svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
-          </div>
-        </div>
+
 
         <!-- Previous & Next Navigation -->
         <div class="blog-prev-next-nav" id="detailPrevNextNav">

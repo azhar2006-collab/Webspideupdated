@@ -26,9 +26,10 @@
 <meta id="twDesc" name="twitter:description" content="Explore tech insights and software development strategies from Webspide Technologies." />
 <meta id="twImage" name="twitter:image" content="https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1200&q=80" />
 
+<script src="blogs-data.js"></script>
 <script>
 /* Fetch blogs-data fresh every load — bypasses GitHub Pages CDN cache */
-window.__blogsDataReady = false;
+window.__blogsDataReady = (typeof window !== 'undefined' && typeof window.WEBSPIDE_BLOG_DATA !== 'undefined' && window.WEBSPIDE_BLOG_DATA !== null);
 window.__blogsDataCallbacks = [];
 window.__onBlogsDataReady = function(fn) {
   if (window.__blogsDataReady) { fn(); } else { window.__blogsDataCallbacks.push(fn); }
@@ -42,6 +43,7 @@ window.__onBlogsDataReady = function(fn) {
       window.__blogsDataReady = true;
       window.__blogsDataCallbacks.forEach(function(fn){ try{ fn(); }catch(e){} });
       window.__blogsDataCallbacks = [];
+      if (typeof loadArticle === 'function') { loadArticle(); }
     })
     .catch(function(){ 
       window.__blogsDataReady = true;
@@ -2063,7 +2065,7 @@ function renderArticle(blog) {
 
   // Update address bar to clean directory URL: /blog/<slug>/ matching user reference
   try {
-    if (window.location.protocol.startsWith('http')) {
+    if (window.location.protocol.startsWith('http') && PHYSICAL_BLOG_SLUGS.includes(slug)) {
       const cleanPath = `${root}blog/${encodeURIComponent(slug)}/`;
       const currentNorm = window.location.pathname.replace(/\/index\.html$/i, '/');
       if (currentNorm !== cleanPath && window.location.pathname !== `${root}blog/${encodeURIComponent(slug)}`) {
@@ -2464,9 +2466,13 @@ window.addEventListener('storage', function(e) {
 });
 
 // Load on DOM ready — waits for fresh blogs-data.js before loading article
-document.addEventListener('DOMContentLoaded', function() {
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', function() {
+    window.__onBlogsDataReady(loadArticle);
+  });
+} else {
   window.__onBlogsDataReady(loadArticle);
-});
+}
 </script>
 </body>
 </html>

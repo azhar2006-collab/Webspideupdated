@@ -27,9 +27,10 @@
 <meta name="twitter:image" content="https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1200&q=80" />
 
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Exo+2:wght@300;400;500;600;700;800;900&family=Poppins:wght@400;500;600;700;800&family=Rajdhani:wght@500;600;700&family=Nunito+Sans:wght@300;400;600;700&display=swap" rel="stylesheet" />
+<script src="blogs-data.js"></script>
 <script>
 /* Fetch blogs-data fresh every load — bypasses GitHub Pages CDN cache */
-window.__blogsDataReady = false;
+window.__blogsDataReady = (typeof window !== 'undefined' && typeof window.WEBSPIDE_BLOG_DATA !== 'undefined' && window.WEBSPIDE_BLOG_DATA !== null);
 window.__blogsDataCallbacks = [];
 window.__onBlogsDataReady = function(fn) {
   if (window.__blogsDataReady) { fn(); } else { window.__blogsDataCallbacks.push(fn); }
@@ -741,13 +742,16 @@ h5{font-weight:800!important;color:#8B5CF6!important}
   box-shadow:0 6px 24px rgba(7,22,79,0.06);
   display:flex;
   flex-direction:column;
-  transition:all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  transition:transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
   position:relative;
 }
 .blog-card:hover{
-  transform:translateY(-8px);
+  transform:translateY(-4px);
   border-color:rgba(139,92,246,0.45);
-  box-shadow:0 18px 40px rgba(139,92,246,0.18);
+  box-shadow:0 12px 32px rgba(139,92,246,0.14);
+}
+.blog-card:active{
+  transform:translateY(-1px);
 }
 
 .blog-card-img-wrap{
@@ -2515,12 +2519,21 @@ const PHYSICAL_BLOG_SLUGS = [
 function getBlogDetailUrl(blog) {
   if (!blog) return 'blog.html';
   const slug = blog.slug || generateSlug(blog.title);
-  // Physical directory exists for seed blogs
-  if (PHYSICAL_BLOG_SLUGS.includes(slug)) {
+  // Physical directory exists for seed blogs when on web server
+  if (window.location.protocol !== 'file:' && PHYSICAL_BLOG_SLUGS.includes(slug)) {
     return `blog/${encodeURIComponent(slug)}/`;
   }
   // Dynamic posts added via admin route to blog-detail.html with title & id
   return `blog-detail.html?title=${encodeURIComponent(slug)}&id=${encodeURIComponent(blog.id || '')}`;
+}
+
+function navigateToArticle(e, url) {
+  if (e) {
+    if (typeof e.stopPropagation === 'function') e.stopPropagation();
+  }
+  if (url) {
+    window.location.href = url;
+  }
 }
 
 const CATEGORIES_KEY = 'webspide_categories';
@@ -2740,16 +2753,16 @@ function renderBlogs() {
     const detailUrl = getBlogDetailUrl(blog);
 
     return `
-      <article class="blog-card" data-id="${escapeHtml(blog.id)}" onclick="window.location.href='${detailUrl}'" style="cursor:pointer;">
+      <article class="blog-card" data-id="${escapeHtml(blog.id)}" onclick="navigateToArticle(event, '${escapeHtml(detailUrl)}')" style="cursor:pointer;">
         <div class="blog-card-img-wrap">
-          <a href="${detailUrl}" onclick="event.stopPropagation();" style="display:block;width:100%;height:100%;text-decoration:none;">
+          <div style="display:block;width:100%;height:100%;">
             <img src="${imgUrl}" alt="${escapeHtml(blog.imageAlt || blog.title)}" class="blog-card-img" onerror="this.src='${fallbackImg}'" loading="lazy" />
             <span class="blog-card-category">${escapeHtml(blog.category || 'Technology')}</span>
             <span class="blog-card-readtime">
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
               ${escapeHtml(blog.readTime || '5 min read')}
             </span>
-          </a>
+          </div>
         </div>
         <div class="blog-card-body">
           <div class="blog-card-meta">
@@ -2758,16 +2771,14 @@ function renderBlogs() {
               <span>${formattedDate}</span>
             </div>
           </div>
-          <a href="${detailUrl}" onclick="event.stopPropagation();" style="text-decoration:none;">
-            <h3 class="blog-card-title">${escapeHtml(blog.title)}</h3>
-          </a>
+          <h3 class="blog-card-title">${escapeHtml(blog.title)}</h3>
           <p class="blog-card-excerpt">${escapeHtml(blog.excerpt || '')}</p>
           <div class="blog-card-footer">
             <div class="blog-card-author">
               <div class="blog-author-avatar">${initial}</div>
               <span class="blog-author-name">${escapeHtml(blog.author || 'Webspide Team')}</span>
             </div>
-            <a href="${detailUrl}" class="blog-read-btn" onclick="event.stopPropagation();" style="text-decoration:none;">
+            <a href="${detailUrl}" class="blog-read-btn" onclick="navigateToArticle(event, '${escapeHtml(detailUrl)}'); return false;" style="text-decoration:none;">
               Read Article
               <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
             </a>

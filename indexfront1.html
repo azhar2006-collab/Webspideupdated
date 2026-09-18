@@ -1061,6 +1061,7 @@ section,.cta-section,.contact-section,.sections,.banner{scroll-margin-top:var(--
 .svc-btn-link:hover{color:var(--cyan)}
 .svc-btn-link .rm-chevron{width:11px;height:11px;stroke:currentColor;fill:none;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round;transition:transform .3s;flex-shrink:0}
 .svc-btn-link.expanded .rm-chevron{transform:rotate(180deg)}
+.svc-btn-link.active .rm-chevron{transform:rotate(180deg)}
 
 .card-desc-extra{
   max-height:0;
@@ -1072,7 +1073,7 @@ section,.cta-section,.contact-section,.sections,.banner{scroll-margin-top:var(--
   line-height:1.75;
   transition:max-height .5s cubic-bezier(.4,0,.2,1),opacity .4s ease,margin-top .4s ease;
 }
-.card-desc-extra.open{
+.card-desc-extra.open{max-height:2000px!important;
   opacity:1;
   margin-top:14px;
 }
